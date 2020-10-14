@@ -7,7 +7,7 @@ import java.security.InvalidParameterException;
 
 public class Main
 {
-    public static void main(String[] args) throws Exception
+    public static void main(String[] args) throws FileNotFoundException, IOException 
     {
         if (args.length != 1)
         {
@@ -15,11 +15,16 @@ public class Main
         }
 
         Main main = new Main();
-        String sourceCode = main.readFile(args[0]);
-        System.out.println(sourceCode);
+        main.start(args[0]);
     }
 
-    private String readFile(String fileName) throws FileNotFoundException, IOException
+    private void start(String filePath) throws FileNotFoundException, IOException
+    {
+        String sourceCode = readFile(filePath);
+        System.out.println(sourceCode);
+	}
+
+	private String readFile(String fileName) throws FileNotFoundException, IOException
     {
         File file = new File(fileName);
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
