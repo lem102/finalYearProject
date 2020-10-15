@@ -1,0 +1,12 @@
+* What have I done?
+** I have written part of the introduction.
+** Actually my code does look kind of like an algorithm
+* Now what?
+** what level of teaching am i targeting?
+** what language?
+- java taught at cambridge, bristol, warwick, manchester, 
+
+** identify the problem with other courses available in terms of the practical side.
+** find stuff to talk about in literature review, similar things etc.
+** define language, do research.
+** put implementation language choice debates in final report.

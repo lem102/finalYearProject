@@ -1,0 +1,23 @@
+* Introduction - due in 30/10/2020
+** Problem Statement
+
+In the world of computer science, and computer programming in general, there is an abundance of learning materials freely available from which students can learn how to program, how to use a certain programming language, how to use a framework for that language, etc.. One area of study that is not as well developed in terms of learning materials is compiler design. It would be unfair to say that there is nothing for a beginner to make use of, however these resources have a tendency to ignore or gloss over the gory details, advising that tools are used to generate complex parts of the compiler for them. 
+
+This is good advice, and indeed in a "real world" situation an organisation that wanted to create a compiler would use these tools as the popular ones [TODO: do reference here, LLVM is used by Apple] are tried and tested, and simplify the compiler creation process immensely. However, if a learner wished to understand what these tools did, they would need to either read the source code of these tools (this would be difficult, as some of the projects are massive and very complex.), or read books of a technical nature, such as the Dragon Book. [TODO: write proper name of book, say henceforth referred to as the dragon book.] While the Dragon book is an excellent resource for designing compilers, it is too dense for a learner who wants to apply any knowledge s/he can glean from it. 
+
+This is the problem. There is an absence of material that shows the learner that they can create a compiler with only their own code, and without becoming a computer science professor first!
+
+In order to rectify this problem, I propose the following: 
+
+** Product Description
+
+The product that I will produce at the end of this project is a compiler for a general purpose programming language of my own creation. The compiler will be able to compile a program written in said programming language into assembly language targeting the x86 CPU architecture. The compiler will be written in a modular, easily understandable way using the Java programming language. It will be written in this way to encourage learning about the various stages of compilation. 
+
+** Users or Audience
+
+
+
+* Background Research - due in 7/12/2020
+** Necessary Background Material
+** Related Work
+** Professional, Legal, Ethical & Social Issues
