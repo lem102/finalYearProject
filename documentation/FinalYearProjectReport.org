@@ -15,9 +15,14 @@ The product that I will produce at the end of this project is a compiler for a g
 
 ** Users or Audience
 
-
+The users that I imagine would be interested in this project would be anyone who is interested in the inner workings of a compiler, and how they could go about creating their own compiler without leaning on other available tools. As compiler design is quite a technical subject, I would expect that the users of this project would be at university level or equivalent in terms of their education in computer science or programmming.
 
 * Background Research - due in 7/12/2020
 ** Necessary Background Material
 ** Related Work
 ** Professional, Legal, Ethical & Social Issues
+
+* MISC
+
+** comments
+Inline comments within the source code will be kept to a minimum, this is done to prevent noise when reading the source code. An overview of the structure of the program will be stored in the README.org file found at the root of the project.
