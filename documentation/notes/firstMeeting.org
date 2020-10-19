@@ -1,0 +1,19 @@
+these are notes from the first meeting I had with my final year project supervisor.
+
+* What I should do right now
+find purpose for toy language
+language must have specific purpose.
+find stuff to reference.
+
+** PLESI
+pro is easy , talk about writing clean code, coding standards.
+social, no immediate impact. if used as a learning tool, could be used for younger programmers.
+legal - malicious compiler, person using compiler to create evil code.
+ethics review form on brightspace.
+
+* What I need to do in the future
+
+talk about agile or RAD
+gannt chart for plan.
+need to present a video.
+
