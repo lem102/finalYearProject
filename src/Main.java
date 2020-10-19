@@ -24,9 +24,9 @@ public class Main
         System.out.println(sourceCode);
 	}
 
-	private String readFile(String fileName) throws FileNotFoundException, IOException
+	private String readFile(String filePath) throws FileNotFoundException, IOException
     {
-        File file = new File(fileName);
+        File file = new File(filePath);
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         String sourceCode;
         
