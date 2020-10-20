@@ -1,9 +1,13 @@
-import java.io.BufferedReader;
-import java.io.File;
+package src;
+
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.InvalidParameterException;
+import java.util.List;
+
+import src.compilerComponent.Lexer;
 
 public class Main
 {
@@ -20,23 +24,14 @@ public class Main
 
     private void start(String filePath) throws FileNotFoundException, IOException
     {
-        String sourceCode = readFile(filePath);
+        String sourceCode = Files.readString(Path.of(filePath));
         System.out.println(sourceCode);
+
+        Lexer lexer = new Lexer(sourceCode);
+        List<Token> tokenList = lexer.output;
+
+        // printTokenList(tokenList);
+
+        // Parser parser = new Parser(tokenList);
 	}
-
-	private String readFile(String filePath) throws FileNotFoundException, IOException
-    {
-        File file = new File(filePath);
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-        String sourceCode;
-        
-        while ((sourceCode = bufferedReader.readLine()) != null)
-        {
-            System.out.println(sourceCode);
-        }
-
-        bufferedReader.close();
-
-        return sourceCode;
-    }
 }
