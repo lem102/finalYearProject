@@ -4,17 +4,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import src.classLibrary.Token;
+import src.classLibrary.TokenType;
+
 public class Lexer
 {
     public List<Token> output;
     
-    public Lexer(String sourceCode)
+    public Lexer(String sourceCode) throws Exception
     {
         List<String> tokens = splitSourceIntoTokens(sourceCode);
         output = convertStringsToTokens(tokens);
     }
 
-	private List<Token> convertStringsToTokens(List<String> tokens)
+	private List<Token> convertStringsToTokens(List<String> tokens) throws Exception
     {
         ArrayList<Token> tokenList = new ArrayList<Token>();
         
@@ -26,7 +29,7 @@ public class Lexer
 		return tokenList;
 	}
 
-	private Token createToken(String tokenString)
+	private Token createToken(String tokenString) throws Exception
     {
         TokenType tokenType;
 
@@ -160,7 +163,7 @@ public class Lexer
 	private List<String> splitSourceIntoTokens(String sourceCode)
     {
         List<String> tokens = new ArrayList<String>();
-        sourceCode = sourceCode.replaceAll("\s+", " ");
+        sourceCode = sourceCode.replaceAll("\\s+", " ");
 
         String currentToken = "";
 
