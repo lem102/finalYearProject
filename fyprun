@@ -1,5 +1,0 @@
-#!/bin/bash
-
-pushd ./bin/
-java Main ../example/test1.jpl
-popd
