@@ -1,3 +1,12 @@
+#+LaTeX_CLASS: article
+#+LaTeX_CLASS_OPTIONS: [a4paper,12pt]
+#+LATEX_COMPILER: pdflatex
+
+#+LATEX_HEADER: \tolerance=1
+#+LATEX_HEADER: \emergencystretch=\maxdimen
+#+LATEX_HEADER: \hyphenpenalty=10000
+#+LATEX_HEADER: \hbadness=10000
+
 #+OPTIONS: toc:nil
 
 * Introduction - due in 30/10/2020
