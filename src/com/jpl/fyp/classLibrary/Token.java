@@ -21,4 +21,9 @@ public class Token
     {
         return tokenValue;
     }
+
+    public String toString()
+    {
+        return String.format("Token: {%-20s %-10s}", tokenType, tokenValue);
+    }
 }
