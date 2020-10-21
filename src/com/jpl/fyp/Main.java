@@ -7,12 +7,12 @@ import java.util.List;
 
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.compilerComponent.Lexer;
+import com.jpl.fyp.compilerComponent.Parser;
 
 public class Main
 {
     public static void main(String[] args) throws Exception 
     {
-        System.out.println("Hello, World.");
         if (args.length != 1)
         {
             throw new InvalidParameterException("A source file must be provided.");
@@ -29,9 +29,9 @@ public class Main
         Lexer lexer = new Lexer(sourceCode);
         List<Token> tokenList = lexer.output;
 
-        printTokenList(tokenList);
+        // printTokenList(tokenList);
 
-        // Parser parser = new Parser(tokenList);
+        Parser parser = new Parser(tokenList);
 	}
 
 	private void printTokenList(List<Token> tokenList)
