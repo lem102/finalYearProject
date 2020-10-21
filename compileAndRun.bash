@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# compile
-javac -d bin -cp bin $(find . -name "*.java")
-
-# run
-java -cp bin com.jpl.fyp.Main $1
+if javac -d bin -cp bin $(find . -name "*.java")
+then
+    java -cp bin com.jpl.fyp.Main $1
+fi
