@@ -1,11 +1,11 @@
-package src.compilerComponent;
+package com.jpl.fyp.compilerComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import src.classLibrary.Token;
-import src.classLibrary.TokenType;
+import com.jpl.fyp.classLibrary.Token;
+import com.jpl.fyp.classLibrary.TokenType;
 
 public class Lexer
 {

@@ -1,19 +1,18 @@
-package src;
+package com.jpl.fyp;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.InvalidParameterException;
 import java.util.List;
 
-import src.classLibrary.Token;
-import src.compilerComponent.Lexer;
+import com.jpl.fyp.classLibrary.Token;
+import com.jpl.fyp.compilerComponent.Lexer;
 
 public class Main
 {
     public static void main(String[] args) throws Exception 
     {
+        System.out.println("Hello, World.");
         if (args.length != 1)
         {
             throw new InvalidParameterException("A source file must be provided.");
@@ -26,13 +25,20 @@ public class Main
     private void start(String filePath) throws Exception
     {
         String sourceCode = Files.readString(Path.of(filePath));
-        System.out.println(sourceCode);
 
         Lexer lexer = new Lexer(sourceCode);
         List<Token> tokenList = lexer.output;
 
-        // printTokenList(tokenList);
+        printTokenList(tokenList);
 
         // Parser parser = new Parser(tokenList);
+	}
+
+	private void printTokenList(List<Token> tokenList)
+    {
+        for (Token token : tokenList)
+        {
+            System.out.println(token);
+        }
 	}
 }

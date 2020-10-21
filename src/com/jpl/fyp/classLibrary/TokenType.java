@@ -1,4 +1,4 @@
-package src.classLibrary;
+package com.jpl.fyp.classLibrary;
 
 public enum TokenType
 {
