@@ -5,9 +5,9 @@ import java.util.List;
 
 public class DefinitionNode extends ContainingNode
 {
-    public String definitionName;
+    private String definitionName;
 
-    public List<ArgumentNode> arguments;
+    private List<ArgumentNode> arguments;
 
     public DefinitionNode() 
     {
