@@ -6,6 +6,7 @@
 #+LATEX_HEADER: \emergencystretch=\maxdimen
 #+LATEX_HEADER: \hyphenpenalty=10000
 #+LATEX_HEADER: \hbadness=10000
+#+LATEX_HEADER: \frenchspacing=1
 
 #+OPTIONS: toc:nil
 
@@ -32,8 +33,16 @@ The users that I imagine would be interested in this project would be anyone who
 
 * Background Research - due in 7/12/2020
 ** Necessary Background Material
+
+what does the examiner need to read
+
 ** Related Work
+
+similar products that exist
+
 ** Professional, Legal, Ethical & Social Issues
+
+???
 
 * MISC
 

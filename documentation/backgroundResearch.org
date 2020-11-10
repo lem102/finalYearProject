@@ -1,0 +1,44 @@
+#+LaTeX_CLASS: article
+#+LaTeX_CLASS_OPTIONS: [a4paper,12pt]
+#+LATEX_COMPILER: pdflatex
+
+#+LATEX_HEADER: \tolerance=1
+#+LATEX_HEADER: \emergencystretch=\maxdimen
+#+LATEX_HEADER: \hyphenpenalty=10000
+#+LATEX_HEADER: \hbadness=10000
+#+LATEX_HEADER: \frenchspacing=1
+
+#+OPTIONS: toc:nil
+
+* Background Research - due in 7/12/2020
+** Necessary Background Material
+
+what does the examiner need to read or know
+
+To understand the source code aspect of my project, a reader would need to understand basic programming concepts such as statements, and be decently familiar with either Java or another mainly object oriented language (for example, C\#). They would also need to understand object oriented concepts, such as classes, objects and inheritance. A basic understanding of assembly would also be useful for the later parts of the compiler where we are creating machine code, but I will be documenting these quite intensely.
+
+For a simple definition of what a compiler is, I would reccomend the BBC Bitesize page on assemblers, compilers and interpreters.
+
+https://www.bbc.co.uk/bitesize/guides/zgmpr82/revision/2
+
+From there, I would recommend reading the first chapter of Compilers: Principles techniques and tools (AKA The Dragon Book). This chapter gives an overview of the various components of a compiler and the various transformations that the code that is being compiled needs to undergo before it can be processed by the CPU. An especially useful resource to understand these concepts is figure 1.7, which can be found on page 7. This figure shows how the code to be compiled will look through the various stages of compilation. 
+
+Other topics of interest that are located within this chapter are the concepts of tokens, syntax trees and intermediate representation. These are what the source code of this project will be attempting to produce and then use in later parts of the compiler input's journey through the compiler. 
+
+** Related Work
+
+similar products that exist
+
+https://dl.acm.org/doi/10.1145/611892.611974 very similar project from 2003.
+
+This project sounds like it has a comparable spirit to mine in that it espouses similar ideas regarding how the use of compiler creation tools effect educational benefits, but this compiler is designed in order to teach a course, whereas mine is simply a supplement.
+
+https://www.researchgate.net/publication/220807902_A_set_of_tools_to_teach_compiler_construction enhanced tools for compiler creation that are more suited to education from 2008. Based on GNU bison.
+
+This paper introduces a set of tools to aid in the teaching of compilers, as the authors of the paper found that some of the tools commonly used in compiler construction were either obsolete or lacking in terms of educational features. One example of how they remedied this is by making use of a modified GNU bison, which outputs a detailed description of the various states the parser is in whilst parsing the input tokens. This information was lacking in the original bison, making it very difficult to find errors in either the input or the parser code.
+
+My project differs from the tools described in the above paper quite significantly. In the paper, they still make use of tools to create code which skips over the gory details. These tools are better for education, which is an improvement, but I want to stick to just using a programming language in my project. My intention with this is to reveal how a normal student could create a compiler with out the use of complicated tools and theories, therefore making the student totally understand the process of compilation.
+
+** Professional, Legal, Ethical & Social Issues
+
+???
