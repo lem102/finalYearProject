@@ -31,7 +31,7 @@ similar products that exist
 
 https://dl.acm.org/doi/10.1145/611892.611974 very similar project from 2003.
 
-This project sounds like it has a comparable spirit to mine in that it espouses similar ideas regarding how the use of compiler creation tools effect educational benefits, but this compiler is designed in order to teach a course, whereas mine is simply a supplement.
+This project sounds like it has a comparable spirit to mine in that it espouses similar ideas regarding how the use of compiler creation tools effect educational benefits, but the above paper discusses a compiler that is designed in order to teach a course, whereas mine is simply a resource from which you can see how a compiler could be implemented without the use of compiler creation tools.
 
 https://www.researchgate.net/publication/220807902_A_set_of_tools_to_teach_compiler_construction enhanced tools for compiler creation that are more suited to education from 2008. Based on GNU bison.
 
