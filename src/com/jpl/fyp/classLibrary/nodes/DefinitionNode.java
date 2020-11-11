@@ -15,7 +15,8 @@ public class DefinitionNode extends ContainingNode
         statements = new ArrayList<StatementNode>();
     }
 
-    public String ToString()
+    @Override
+    public String toString()
     {
         String output = String.format("function: %s\n(\n", definitionName);
 

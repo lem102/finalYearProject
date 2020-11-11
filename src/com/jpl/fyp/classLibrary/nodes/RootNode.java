@@ -12,7 +12,8 @@ public class RootNode
         definitions = new ArrayList<DefinitionNode>();
     }
 
-    public String ToString()
+    @Override
+    public String toString()
     {
         String output = "";
         

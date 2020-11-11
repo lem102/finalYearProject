@@ -8,7 +8,8 @@ public class ArgumentNode
         
     public String identifier;
 
-    public String ToString()
+    @Override
+    public String toString()
     {
         return String.format("Type: %s, Identifier: %s\n", type, identifier);
     }
