@@ -25,6 +25,12 @@ From there, I would recommend reading the first chapter of Compilers: Principles
 
 Other topics of interest that are located within this chapter are the concepts of tokens, syntax trees and intermediate representation. These are what the source code of this project will be attempting to produce and then use in later parts of the compiler input's journey through the compiler. 
 
+** A bit of compiled programming language history
+
+talk about history here
+
+
+
 ** Related Work
 
 similar products that exist
