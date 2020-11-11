@@ -25,7 +25,7 @@ public class Lexer
         {
             tokenList.add(createToken(tokenString));
         }
-        
+
 		return tokenList;
 	}
 
@@ -266,7 +266,11 @@ public class Lexer
     {
         if (Character.getType(currentChar) == 24
             ||
-            Character.getType(currentChar) == 25)
+            Character.getType(currentChar) == 25
+            ||
+            Character.getType(currentChar) == 21
+            ||
+            Character.getType(currentChar) == 22)
         {
             return true;
         }
