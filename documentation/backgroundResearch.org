@@ -15,13 +15,13 @@
 
 what does the examiner need to read or know
 
-To understand the source code aspect of my project, a reader would need to understand basic programming concepts such as statements, and be decently familiar with either Java or another mainly object oriented language (for example, C\#). They would also need to understand object oriented concepts, such as classes, objects and inheritance. A basic understanding of assembly would also be useful for the later parts of the compiler where we are creating machine code, but I will be documenting these quite intensely.
+To understand the source code aspect of my project, a reader would need to understand basic programming concepts such as what a statement is, how basic logic such as if statements and loop statements work, and be decently familiar with either Java or another mainly object oriented language (for example, C\#). They would also need to understand object oriented concepts, such as classes, objects and inheritance. A basic understanding of assembly would also be useful for the later parts of the compiler where we are creating machine code, but I will be documenting these quite intensely and intend to make them as simple as possible.
 
 For a simple definition of what a compiler is, I would reccomend the BBC Bitesize page on assemblers, compilers and interpreters.
 
 https://www.bbc.co.uk/bitesize/guides/zgmpr82/revision/2
 
-From there, I would recommend reading the first chapter of Compilers: Principles techniques and tools (AKA The Dragon Book). This chapter gives an overview of the various components of a compiler and the various transformations that the code that is being compiled needs to undergo before it can be processed by the CPU. An especially useful resource to understand these concepts is figure 1.7, which can be found on page 7. This figure shows how the code to be compiled will look through the various stages of compilation. 
+From there, I would recommend reading the first chapter of Compilers: Principles techniques and tools (AKA The Dragon Book). This chapter gives an overview of the various components of a compiler and the different transformations that the code that is being compiled needs to undergo before it can be processed by the CPU. An especially useful resource to understand these concepts is figure 1.7, which can be found on page 7. This figure shows how the code to be compiled will look through the various stages of compilation.
 
 Other topics of interest that are located within this chapter are the concepts of tokens, syntax trees and intermediate representation. These are what the source code of this project will be attempting to produce and then use in later parts of the compiler input's journey through the compiler. 
 
