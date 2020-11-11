@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
+import com.jpl.fyp.classLibrary.JPLType;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 import com.jpl.fyp.classLibrary.nodes.ArgumentNode;
@@ -131,6 +132,43 @@ public class Parser
         {
             definitionNode.getArguments().add(new ArgumentNode());
             ArgumentNode argumentNode = definitionNode.getArguments().get(definitionNode.getArguments().size()-1);
+            // this if needs to include all other declaration tokens if/when they are added.
+            if (tokenList.get(i).getTokenType() != TokenType.IntegerDeclaration)
+            {
+                throwParserException(rootNode,
+                                     "arguments must have a type.");
+            }
+            argumentNode.type = JPLType.Integer;
+            i++;
+            if (tokenList.get(i).getTokenType() != TokenType.Identifier)
+            {
+                throwParserException(rootNode,
+                                     "arguments must have a identifier after their type.");
+            }
+
+            if (tokenList.get(i).getTokenType() != TokenType.IntegerDeclaration)
+            {
+                throwParserException(rootNode,
+                                     "arguments must have a identifier after their type.");
+            }
+
+            argumentNode.identifier = tokenList.get(i).getTokenValue();
+            i++;
+            if (tokenList.get(i).getTokenType() == TokenType.ClosingParenthesis)
+            {
+                i++;
+                break;
+            }
+            else if (tokenList.get(i).getTokenType() == TokenType.Comma)
+            {
+                i++;
+                continue;
+            }
+            else
+            {
+                throwParserException(rootNode,
+                                     "Invalid extra token after argument.");
+            }
         }
 		return i;
 	}
