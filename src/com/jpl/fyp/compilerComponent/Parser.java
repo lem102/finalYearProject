@@ -11,6 +11,7 @@ import com.jpl.fyp.classLibrary.nodes.ArgumentNode;
 import com.jpl.fyp.classLibrary.nodes.ContainingNode;
 import com.jpl.fyp.classLibrary.nodes.DefinitionNode;
 import com.jpl.fyp.classLibrary.nodes.RootNode;
+import com.jpl.fyp.classLibrary.nodes.StatementNode;
 
 public class Parser
 {
@@ -77,7 +78,130 @@ public class Parser
                                 RootNode rootNode,
                                 int i) throws JPLException
     {
-        throwParserException(rootNode, "not implemented.");
+        while (true)
+        {
+            if (tokenList.get(i).getTokenType() == TokenType.ClosingBrace)
+            {
+                nestingStatus.remove(nestingStatus.size() - 1);
+                if (nestingStatus.size() <= 0)
+                {
+                    break;
+                }
+            }
+            else if (tokenList.get(i).getTokenType() == TokenType.While)
+            {
+                i = parseWhileDeclaration(tokenList, nestingStatus, rootNode, i);
+            }
+            else if (tokenList.get(i).getTokenType() == TokenType.IntegerDeclaration)
+            {
+                // this section needs to be expanded in future to handle
+                // other data types. for now we will just have integers.
+                // in the nestingstatus variable, include a reference to
+                // the node with it. then you can add statements to
+                // that reference declaration.
+                i = parseDeclarationStatement(tokenList, nestingStatus, rootNode, i);
+            }
+            else if (tokenList.get(i).getTokenType() == TokenType.Identifier)
+            {
+                i++;
+                // handle non-declarative assignments and standalone method calls
+                if (tokenList.get(i).getTokenType() == TokenType.Assignment)
+                {
+                    i = parseAssignmentStatement(tokenList, nestingStatus, i);
+                }
+                else if (tokenList.get(i).getTokenType() == TokenType.OpeningParenthesis)
+                {
+                    i = parseStandaloneMethodCallStatement(tokenList, nestingStatus, rootNode, i);
+                }
+                else
+                {
+                    throwParserException(rootNode,
+                                         "Invalid token, was expecting either an opening brace token " +
+                                         "in case of a standalone method call or an assignment " +
+                                         "token in case of variable assignment.");
+                }
+            }
+            else if (tokenList.get(i).getTokenType() == TokenType.If)
+            {
+                IfNode ifNode = new IfNode();
+                nestingStatus.get(nestingStatus.size() - 1).statements.add(ifNode);
+                nestingStatus.add(ifNode);
+                i++;
+                i = parseIfStatement(tokenList,
+                                     nestingStatus,
+                                     rootNode,
+                                     i);
+            }
+            else if (tokenList.get(i).getTokenType() == TokenType.Else)
+            {
+                // i should implement a sort of chain, starting with the initial if node.
+                // a property of the if node should be an if or an else node,
+                // which can continue to chain until an else is reached.
+
+                // if node should have a property for a following if node,
+                // this property would be populated if there is an else
+                // statement directly after the if statement.
+
+                StatementNode previousStatementNode = nestingStatus.get(nestingStatus.size() - 1).getStatements().get(nestingStatus.get(nestingStatus.size() - 1).getStatements().size() - 1);
+                if (previousStatementNode.getClass() != IfNode)
+                {
+                    throwParserException(rootNode,
+                                         "else statement can only occur after an if or else if statement.");
+                }
+                IfNode parentIfNode = (IfNode)previousStatementNode;
+                i++;
+                while (parentIfNode.elseStatement != null)
+                {
+                    // TODO: Add a check here to check for rouge else nodes.
+                    parentIfNode = (IfNode)parentIfNode.elseStatement;
+                }
+                if (tokenList.get(i).getTokenType() == TokenType.If)
+                {
+                    // do else if stuff here
+                    IfNode elseIfNode = new IfNode();
+                    parentIfNode.elseStatement(tokenList,
+                                               nestingStatus,
+                                               rootNode,
+                                               elseIfNode,
+                                               i);
+                }
+                else if (tokenList.get(i).getTokenType() == TokenType.OpeningBrace)
+                {
+                    // do else stuff here
+                    ElseNode elseNode = new ElseNode();
+                    parentIfNode.elseStatement;
+                }
+                else
+                {
+                    ThrowParserException(rootNode,
+                                         "else token must be followed by if " +
+                                         "token incase of else if statement or opening paren " +
+                                         "in the case of a straight else statement.");
+                    
+                }
+                throwParserException(rootNode, "not implemented.");
+            }
+            i++;
+        }
+        
+		return i;
+	}
+
+	private int parseDeclarationStatement(List<Token> tokenList,
+                                          List<ContainingNode> nestingStatus,
+                                          RootNode rootNode,
+                                          int i)
+    {
+        DeclarationNode declarationNode = new DeclarationNode();
+        nestingStatus.get(nestingStatus.size() - 1).statements.add(declarationNode);
+        declarationNode.Type = JPLType.Integer;
+        i++;
+        if (tokenList.get(i).getTokenType() != TokenType.Identifier)
+        {
+            throwParserException(rootNode,
+                                 "Missing variable name.");
+        }
+        // this is where you got to 11/11/20
 		return i;
 	}
 
