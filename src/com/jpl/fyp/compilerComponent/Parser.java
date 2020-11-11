@@ -54,6 +54,11 @@ public class Parser
     {
         if (containsDefinitionNode(nestingStatus))
         {
+            throwParserException(rootNode,
+                                 "cannot define function inside of function.");
+        }
+        else
+        {
             i = parseDefinitionDeclaration(tokenList,
                                            nestingStatus,
                                            rootNode,
@@ -63,11 +68,6 @@ public class Parser
                                 nestingStatus,
                                 rootNode,
                                 i);
-        }
-        else
-        {
-            throwParserException(rootNode,
-                                 "cannot define function inside of function.");
         }
 		return i;
 	}
@@ -141,12 +141,6 @@ public class Parser
             argumentNode.type = JPLType.Integer;
             i++;
             if (tokenList.get(i).getTokenType() != TokenType.Identifier)
-            {
-                throwParserException(rootNode,
-                                     "arguments must have a identifier after their type.");
-            }
-
-            if (tokenList.get(i).getTokenType() != TokenType.IntegerDeclaration)
             {
                 throwParserException(rootNode,
                                      "arguments must have a identifier after their type.");
