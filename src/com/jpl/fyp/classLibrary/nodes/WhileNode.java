@@ -14,8 +14,20 @@ public class WhileNode extends ContainingNode
     @Override
     public String toString()
     {
-        return String.format("While Loop:\n(\nTestExpression: %s)\nLoopStatements:\n%s\n",
-                             testExpression,
-                             String.join("\n", statements.stream().toString()));
+        String output = "";
+        output += "While Loop:\n";
+        output += "(\n";
+        output += "Expression:\n";        
+        output += testExpression;
+        output += ")\n";
+
+        output += "{\n";
+        for (StatementNode statementNode : statements)
+        {
+            output += statementNode;
+        }
+        output += "}\n";
+
+        return output;
     }
 }

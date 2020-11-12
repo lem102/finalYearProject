@@ -17,6 +17,13 @@ public class ExpressionNode
     @Override
     public String toString()
     {
-        return "\n" + String.join("\n", expressionTokens.stream().toString()) + "\n";
+        String output = "";
+
+        for (Token token : expressionTokens)
+        {
+            output += token + "\n";
+        }
+        
+        return output;
     }
 }

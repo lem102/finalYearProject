@@ -6,17 +6,33 @@ public class IfNode extends ContainingNode
 
     public ContainingNode elseNode;
 
+    public IfNode()
+    {
+        testExpression = new ExpressionNode();
+    }
+
 	@Override
 	public String toString()
     {
-        String allStatementStrings = statements.stream().toString();
-		return String.format("If Statement: \n" +
-                             "TestExpression: %s\n" +
-                             "Statements: %s\n" +
-                             "Else: %s",
-                             testExpression,
-                             allStatementStrings,
-                             elseNode);
+        String output = "";
+        output += "If Statement:\n";
+        output += "(\n";        
+        output += "Expression:\n";
+        output += testExpression;
+        output += ")\n";
+
+        output += "Statements:\n";
+        output += "{\n";
+        for (StatementNode statementNode : statements)
+        {
+            output += statementNode;
+        }
+        output += "Else:\n";
+        output += "{\n";
+        // output += elseNode + "\n";
+        output += "}\n";
+        output += "}\n";
+        
+		return output;
 	}
-  
 }

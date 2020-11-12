@@ -14,7 +14,7 @@ import com.jpl.fyp.classLibrary.nodes.DeclarationNode;
 import com.jpl.fyp.classLibrary.nodes.DefinitionNode;
 import com.jpl.fyp.classLibrary.nodes.ExpressionNode;
 import com.jpl.fyp.classLibrary.nodes.IfNode;
-import com.jpl.fyp.classLibrary.nodes.MethodCallNode;
+import com.jpl.fyp.classLibrary.nodes.FunctionCallNode;
 import com.jpl.fyp.classLibrary.nodes.RootNode;
 import com.jpl.fyp.classLibrary.nodes.StatementNode;
 import com.jpl.fyp.classLibrary.nodes.WhileNode;
@@ -28,9 +28,9 @@ public class Parser
 
 	private void parse(List<Token> tokenList) throws JPLException
     {
-        List<ContainingNode> nestingStatus = new ArrayList<ContainingNode>();
+        var nestingStatus = new ArrayList<ContainingNode>();
         // List< symbolTable = new List<(int, string, object)>();
-        RootNode rootNode = new RootNode();
+        var rootNode = new RootNode();
 
         for (int i = 0; i < tokenList.size(); i++)
         {
@@ -40,7 +40,8 @@ public class Parser
             }
             else
             {
-                throwParserException(rootNode, "all code must be contained within definitions.");
+                throwParserException(rootNode,
+                                     "all code must be contained within definitions.");
             }
         }
 
@@ -88,7 +89,7 @@ public class Parser
         {
             if (tokenList.get(i).getTokenType() == TokenType.ClosingBrace)
             {
-                nestingStatus.remove(nestingStatus.size() - 1);
+                nestingStatus.remove(getLastElementIndex(nestingStatus));
                 if (nestingStatus.size() <= 0)
                 {
                     break;
@@ -117,7 +118,10 @@ public class Parser
                 }
                 else if (tokenList.get(i).getTokenType() == TokenType.OpeningParenthesis)
                 {
-                    i = parseStandaloneMethodCallStatement(tokenList, nestingStatus, rootNode, i);
+                    i = parseStandaloneMethodCallStatement(tokenList,
+                                                           nestingStatus,
+                                                           rootNode,
+                                                           i);
                 }
                 else
                 {
@@ -130,7 +134,7 @@ public class Parser
             else if (tokenList.get(i).getTokenType() == TokenType.If)
             {
                 IfNode ifNode = new IfNode();
-                nestingStatus.get(nestingStatus.size() - 1).statements.add(ifNode);
+                getLastElement(nestingStatus).statements.add(ifNode);
                 nestingStatus.add(ifNode);
                 i++;
                 i = parseIfStatement(tokenList,
@@ -149,24 +153,23 @@ public class Parser
                 // this property would be populated if there is an else
                 // statement directly after the if statement.
 
-                StatementNode previousStatementNode = nestingStatus.get(nestingStatus.size() - 1).statements.get(nestingStatus.get(nestingStatus.size() - 1).statements.size() - 1);
-                if (previousStatementNode instanceof IfNode)
+                StatementNode previousStatementNode = getLastElement(getLastElement(nestingStatus).statements);
+                if (!(previousStatementNode instanceof IfNode))
                 {
                     throwParserException(rootNode,
                                          "else statement can only occur after an if or else if statement.");
                 }
-                IfNode parentIfNode = (IfNode)previousStatementNode;
                 i++;
-                while (parentIfNode.elseNode != null)
-                {
-                    // TODO: Add a check here to check for rouge else nodes.
-                    parentIfNode = (IfNode)parentIfNode.elseNode;
-                }
+                var parentIfNode = (IfNode)previousStatementNode;
+                parentIfNode = getLastOfIfElseChain(parentIfNode);
+
                 if (tokenList.get(i).getTokenType() == TokenType.If)
                 {
                     // do else if stuff here
-                    IfNode elseIfNode = new IfNode();
+                    var elseIfNode = new IfNode();
                     parentIfNode.elseNode = elseIfNode;
+                    getLastElement(nestingStatus).statements.add(elseIfNode);
+                    nestingStatus.add(elseIfNode);
                     i++;
                     i = parseIfStatement(tokenList,
                                          nestingStatus,
@@ -177,9 +180,9 @@ public class Parser
                 else if (tokenList.get(i).getTokenType() == TokenType.OpeningBrace)
                 {
                     // do else stuff here
-                    // ElseNode elseNode = new ElseNode();
-                    // parentIfNode.elseStatement;
-                    // TODO: This is where you start from once everything else is reimplimented
+                    var elseNode = new ContainingNode();
+                    parentIfNode.elseNode = elseNode;
+                    i++;
                 }
                 else
                 {
@@ -189,12 +192,22 @@ public class Parser
                                          "in the case of a straight else statement.");
                     
                 }
-                throwParserException(rootNode, "not implemented.");
+                // throwParserException(rootNode, "not implemented.");
             }
             i++;
         }
         
 		return i;
+	}
+
+	private IfNode getLastOfIfElseChain(IfNode parentIfNode)
+    {
+        while (parentIfNode.elseNode != null)
+        {
+            // TODO: Add a check here to check for rouge else nodes.
+            parentIfNode = (IfNode)parentIfNode.elseNode;
+        }
+        return parentIfNode;
 	}
 
 	private int parseIfStatement(List<Token> tokenList,
@@ -209,15 +222,14 @@ public class Parser
                                  "Opening parenthesis expected after if token.");
         }
         i++;
-        ifNode.testExpression = new ExpressionNode();
-        List<Token> expressionTokens = new ArrayList<Token>();
-
+        var expressionTokens = new ArrayList<Token>();
+        ifNode.testExpression.expressionTokens = expressionTokens;
+        
         while (tokenList.get(i).getTokenType() != TokenType.ClosingParenthesis)
         {
             expressionTokens.add(tokenList.get(i));
             i++;
         }
-        ifNode.testExpression.expressionTokens = expressionTokens;
         i++;
         if (tokenList.get(i).getTokenType() != TokenType.OpeningBrace)
         {
@@ -233,9 +245,13 @@ public class Parser
                                                    RootNode rootNode,
                                                    int i) throws JPLException
     {
-        MethodCallNode methodCallNode = new MethodCallNode();
-        nestingStatus.get(nestingStatus.size() - 1).statements.add(new MethodCallNode());
-        methodCallNode.identifier = tokenList.get(i - 1).getTokenValue();
+        FunctionCallNode functionCallNode = new FunctionCallNode();
+        // TODO: this code is cursed, watch out for this later
+        getLastElement(nestingStatus).statements.add(functionCallNode);
+        
+        functionCallNode.identifier = tokenList.get(i - 1).getTokenValue();
+        i++;
+        
         if (tokenList.get(i).getTokenType() != TokenType.ClosingParenthesis)
         {
             // start reading args.
@@ -243,12 +259,12 @@ public class Parser
             while (true)
             {
                 // create new argument
-                ExpressionNode expressionNode = new ExpressionNode();
-                methodCallNode.arguments.add(expressionNode);
-                List<Token> expressionTokens = new ArrayList<Token>();
-                
+                var expressionNode = new ExpressionNode();
+                functionCallNode.arguments.add(expressionNode);
+                var expressionTokens = new ArrayList<Token>();
+
                 while (tokenList.get(i).getTokenType() != TokenType.ClosingParenthesis
-                       ||
+                       &&
                        tokenList.get(i).getTokenType() != TokenType.Comma)
                 {
                     // populate argument
@@ -281,12 +297,12 @@ public class Parser
                                          List<ContainingNode> nestingStatus,
                                          int i)
     {
-        AssignmentNode assignmentNode = new AssignmentNode();
-        nestingStatus.get(nestingStatus.size() - 1).statements.add(assignmentNode);
+        var assignmentNode = new AssignmentNode();
+        getLastElement(nestingStatus).statements.add(assignmentNode);
         assignmentNode.assignmentTarget = tokenList.get(i - 1).getTokenValue();
         i++;
         assignmentNode.expression = new ExpressionNode();
-        List<Token> expressionTokens = new ArrayList<Token>();
+        var expressionTokens = new ArrayList<Token>();
         while (tokenList.get(i).getTokenType() != TokenType.Semicolon)
         {
             expressionTokens.add(tokenList.get(i));
@@ -301,8 +317,8 @@ public class Parser
                                       RootNode rootNode,
                                       int i) throws JPLException
     {
-        WhileNode whileNode = new WhileNode();
-        nestingStatus.get(nestingStatus.size() - 1).statements.add(whileNode);
+        var whileNode = new WhileNode();
+        getLastElement(nestingStatus).statements.add(whileNode);
         nestingStatus.add(whileNode);
         i++;
         if (tokenList.get(i).getTokenType() != TokenType.OpeningParenthesis)
@@ -318,12 +334,12 @@ public class Parser
             expressionTokens.add(tokenList.get(i));
             i++;
         }
-        if (expressionTokens.get(expressionTokens.size() - 1).getTokenType() != TokenType.ClosingParenthesis)
+        if (getLastElement(expressionTokens).getTokenType() != TokenType.ClosingParenthesis)
         {
             throwParserException(rootNode,
                                  "While test expression must have closing bracket.");
         }
-        expressionTokens.remove(expressionTokens.size() - 1);
+        expressionTokens.remove(getLastElementIndex(expressionTokens));
         whileNode.testExpression.expressionTokens = expressionTokens;
 		return i;
 	}
@@ -333,8 +349,8 @@ public class Parser
                                           RootNode rootNode,
                                           int i) throws JPLException
     {
-        DeclarationNode declarationNode = new DeclarationNode();
-        nestingStatus.get(nestingStatus.size() - 1).statements.add(declarationNode);
+        var declarationNode = new DeclarationNode();
+        getLastElement(nestingStatus).statements.add(declarationNode);
         declarationNode.type = JPLType.Integer;
         i++;
         if (tokenList.get(i).getTokenType() != TokenType.Identifier)
@@ -348,9 +364,9 @@ public class Parser
         {
             i++;
             declarationNode.expression = new ExpressionNode();
-            List<Token> expressionTokens = new ArrayList<Token>();
+            var expressionTokens = new ArrayList<Token>();
 
-            while (tokenList.get(i).getTokenType() == TokenType.Semicolon)
+            while (tokenList.get(i).getTokenType() != TokenType.Semicolon)
             {
                 expressionTokens.add(tokenList.get(i));
                 i++;
@@ -360,6 +376,7 @@ public class Parser
         else if (tokenList.get(i).getTokenType() == TokenType.Semicolon)
         {
             // i++;
+            // TODO: review whether this should be removed, as it doesnt do shit
         }
         else
         {
@@ -419,8 +436,9 @@ public class Parser
     {
         while (true)
         {
-            definitionNode.getArguments().add(new ArgumentNode());
-            ArgumentNode argumentNode = definitionNode.getArguments().get(definitionNode.getArguments().size()-1);
+            var argumentNode = new ArgumentNode();
+            definitionNode.getArguments().add(argumentNode);
+            
             // this if needs to include all other declaration tokens if/when they are added.
             if (tokenList.get(i).getTokenType() != TokenType.IntegerDeclaration)
             {
@@ -467,4 +485,14 @@ public class Parser
         }
 		return false;
 	}
+
+    private <T> int getLastElementIndex(List<T> arrayList)
+    {
+        return arrayList.size() - 1;
+    }
+
+    private <T> T getLastElement(List<T> arrayList)
+    {
+        return arrayList.get(getLastElementIndex(arrayList));
+    }
 }

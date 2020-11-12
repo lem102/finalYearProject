@@ -13,9 +13,13 @@ public class DeclarationNode extends StatementNode
     @Override
     public String toString()
     {
-        return String.format("Declaration:\nType: %s\nIdentifier: %s\nExpression: %s",
-                             type,
-                             identifier,
-                             expression);
+        String output = "";
+        output += "Declaration:\n";
+        output += "Type: " + type + "\n";
+        output += "Identifier: " + identifier + "\n";
+        output += "Expression:\n";
+        output += expression + "\n";
+        
+        return output;
     }
 }
