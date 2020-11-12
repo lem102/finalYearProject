@@ -11,12 +11,4 @@ public class ContainingNode extends StatementNode
     {
         statements = new ArrayList<StatementNode>();
     }
-
-	public List<StatementNode> getStatements() {
-		return statements;
-	}
-
-	public void setStatements(List<StatementNode> statements) {
-		this.statements = statements;
-	}
 }

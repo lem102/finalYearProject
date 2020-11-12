@@ -8,10 +8,16 @@ import com.jpl.fyp.classLibrary.JPLType;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 import com.jpl.fyp.classLibrary.nodes.ArgumentNode;
+import com.jpl.fyp.classLibrary.nodes.AssignmentNode;
 import com.jpl.fyp.classLibrary.nodes.ContainingNode;
+import com.jpl.fyp.classLibrary.nodes.DeclarationNode;
 import com.jpl.fyp.classLibrary.nodes.DefinitionNode;
+import com.jpl.fyp.classLibrary.nodes.ExpressionNode;
+import com.jpl.fyp.classLibrary.nodes.IfNode;
+import com.jpl.fyp.classLibrary.nodes.MethodCallNode;
 import com.jpl.fyp.classLibrary.nodes.RootNode;
 import com.jpl.fyp.classLibrary.nodes.StatementNode;
+import com.jpl.fyp.classLibrary.nodes.WhileNode;
 
 public class Parser
 {
@@ -130,6 +136,7 @@ public class Parser
                 i = parseIfStatement(tokenList,
                                      nestingStatus,
                                      rootNode,
+                                     ifNode,
                                      i);
             }
             else if (tokenList.get(i).getTokenType() == TokenType.Else)
@@ -142,38 +149,41 @@ public class Parser
                 // this property would be populated if there is an else
                 // statement directly after the if statement.
 
-                StatementNode previousStatementNode = nestingStatus.get(nestingStatus.size() - 1).getStatements().get(nestingStatus.get(nestingStatus.size() - 1).getStatements().size() - 1);
-                if (previousStatementNode.getClass() != IfNode)
+                StatementNode previousStatementNode = nestingStatus.get(nestingStatus.size() - 1).statements.get(nestingStatus.get(nestingStatus.size() - 1).statements.size() - 1);
+                if (previousStatementNode instanceof IfNode)
                 {
                     throwParserException(rootNode,
                                          "else statement can only occur after an if or else if statement.");
                 }
                 IfNode parentIfNode = (IfNode)previousStatementNode;
                 i++;
-                while (parentIfNode.elseStatement != null)
+                while (parentIfNode.elseNode != null)
                 {
                     // TODO: Add a check here to check for rouge else nodes.
-                    parentIfNode = (IfNode)parentIfNode.elseStatement;
+                    parentIfNode = (IfNode)parentIfNode.elseNode;
                 }
                 if (tokenList.get(i).getTokenType() == TokenType.If)
                 {
                     // do else if stuff here
                     IfNode elseIfNode = new IfNode();
-                    parentIfNode.elseStatement(tokenList,
-                                               nestingStatus,
-                                               rootNode,
-                                               elseIfNode,
-                                               i);
+                    parentIfNode.elseNode = elseIfNode;
+                    i++;
+                    i = parseIfStatement(tokenList,
+                                         nestingStatus,
+                                         rootNode,
+                                         elseIfNode,
+                                         i);
                 }
                 else if (tokenList.get(i).getTokenType() == TokenType.OpeningBrace)
                 {
                     // do else stuff here
-                    ElseNode elseNode = new ElseNode();
-                    parentIfNode.elseStatement;
+                    // ElseNode elseNode = new ElseNode();
+                    // parentIfNode.elseStatement;
+                    // TODO: This is where you start from once everything else is reimplimented
                 }
                 else
                 {
-                    ThrowParserException(rootNode,
+                    throwParserException(rootNode,
                                          "else token must be followed by if " +
                                          "token incase of else if statement or opening paren " +
                                          "in the case of a straight else statement.");
@@ -187,21 +197,176 @@ public class Parser
 		return i;
 	}
 
+	private int parseIfStatement(List<Token> tokenList,
+                                 List<ContainingNode> nestingStatus,
+                                 RootNode rootNode,
+                                 IfNode ifNode,
+                                 int i) throws JPLException
+    {
+        if (tokenList.get(i).getTokenType() != TokenType.OpeningParenthesis)
+        {
+            throwParserException(rootNode,
+                                 "Opening parenthesis expected after if token.");
+        }
+        i++;
+        ifNode.testExpression = new ExpressionNode();
+        List<Token> expressionTokens = new ArrayList<Token>();
+
+        while (tokenList.get(i).getTokenType() != TokenType.ClosingParenthesis)
+        {
+            expressionTokens.add(tokenList.get(i));
+            i++;
+        }
+        ifNode.testExpression.expressionTokens = expressionTokens;
+        i++;
+        if (tokenList.get(i).getTokenType() != TokenType.OpeningBrace)
+        {
+            throwParserException(rootNode,
+                                 "Opening brace expected after expression of if statement.");
+        }
+        
+		return i;
+	}
+
+	private int parseStandaloneMethodCallStatement(List<Token> tokenList,
+                                                   List<ContainingNode> nestingStatus,
+                                                   RootNode rootNode,
+                                                   int i) throws JPLException
+    {
+        MethodCallNode methodCallNode = new MethodCallNode();
+        nestingStatus.get(nestingStatus.size() - 1).statements.add(new MethodCallNode());
+        methodCallNode.identifier = tokenList.get(i - 1).getTokenValue();
+        if (tokenList.get(i).getTokenType() != TokenType.ClosingParenthesis)
+        {
+            // start reading args.
+            // each arg will take the form of an expressionNode.
+            while (true)
+            {
+                // create new argument
+                ExpressionNode expressionNode = new ExpressionNode();
+                methodCallNode.arguments.add(expressionNode);
+                List<Token> expressionTokens = new ArrayList<Token>();
+                
+                while (tokenList.get(i).getTokenType() != TokenType.ClosingParenthesis
+                       ||
+                       tokenList.get(i).getTokenType() != TokenType.Comma)
+                {
+                    // populate argument
+                    expressionTokens.add(tokenList.get(i));
+                    i++;
+                }
+                expressionNode.expressionTokens = expressionTokens;
+                if (tokenList.get(i).getTokenType() == TokenType.ClosingParenthesis)
+                {
+                    i++;
+                    break;
+                }
+                else if (tokenList.get(i).getTokenType() == TokenType.Comma)
+                {
+                    i++;
+                    continue;
+                }
+            }
+            if (tokenList.get(i).getTokenType() != TokenType.Semicolon)
+            {
+                throwParserException(rootNode,
+                                     "Semi colon expected after standalone method call.");
+            }
+            i++;
+        }
+        return i;
+	}
+
+	private int parseAssignmentStatement(List<Token> tokenList,
+                                         List<ContainingNode> nestingStatus,
+                                         int i)
+    {
+        AssignmentNode assignmentNode = new AssignmentNode();
+        nestingStatus.get(nestingStatus.size() - 1).statements.add(assignmentNode);
+        assignmentNode.assignmentTarget = tokenList.get(i - 1).getTokenValue();
+        i++;
+        assignmentNode.expression = new ExpressionNode();
+        List<Token> expressionTokens = new ArrayList<Token>();
+        while (tokenList.get(i).getTokenType() != TokenType.Semicolon)
+        {
+            expressionTokens.add(tokenList.get(i));
+            i++;
+        }
+        assignmentNode.expression.expressionTokens = expressionTokens;
+		return i;
+	}
+
+	private int parseWhileDeclaration(List<Token> tokenList,
+                                      List<ContainingNode> nestingStatus,
+                                      RootNode rootNode,
+                                      int i) throws JPLException
+    {
+        WhileNode whileNode = new WhileNode();
+        nestingStatus.get(nestingStatus.size() - 1).statements.add(whileNode);
+        nestingStatus.add(whileNode);
+        i++;
+        if (tokenList.get(i).getTokenType() != TokenType.OpeningParenthesis)
+        {
+            throwParserException(rootNode,
+                                 "Parenthesis at start of expression expected.");
+        }
+        i++;
+        whileNode.testExpression = new ExpressionNode();
+        List<Token> expressionTokens = new ArrayList<Token>();
+        while (tokenList.get(i).getTokenType() != TokenType.OpeningBrace)
+        {
+            expressionTokens.add(tokenList.get(i));
+            i++;
+        }
+        if (expressionTokens.get(expressionTokens.size() - 1).getTokenType() != TokenType.ClosingParenthesis)
+        {
+            throwParserException(rootNode,
+                                 "While test expression must have closing bracket.");
+        }
+        expressionTokens.remove(expressionTokens.size() - 1);
+        whileNode.testExpression.expressionTokens = expressionTokens;
+		return i;
+	}
+
 	private int parseDeclarationStatement(List<Token> tokenList,
                                           List<ContainingNode> nestingStatus,
                                           RootNode rootNode,
-                                          int i)
+                                          int i) throws JPLException
     {
         DeclarationNode declarationNode = new DeclarationNode();
         nestingStatus.get(nestingStatus.size() - 1).statements.add(declarationNode);
-        declarationNode.Type = JPLType.Integer;
+        declarationNode.type = JPLType.Integer;
         i++;
         if (tokenList.get(i).getTokenType() != TokenType.Identifier)
         {
             throwParserException(rootNode,
                                  "Missing variable name.");
         }
-        // this is where you got to 11/11/20
+        declarationNode.identifier = tokenList.get(i).getTokenValue();
+        i++;
+        if (tokenList.get(i).getTokenType() == TokenType.Assignment)
+        {
+            i++;
+            declarationNode.expression = new ExpressionNode();
+            List<Token> expressionTokens = new ArrayList<Token>();
+
+            while (tokenList.get(i).getTokenType() == TokenType.Semicolon)
+            {
+                expressionTokens.add(tokenList.get(i));
+                i++;
+            }
+            declarationNode.expression.expressionTokens = expressionTokens;
+        }
+        else if (tokenList.get(i).getTokenType() == TokenType.Semicolon)
+        {
+            // i++;
+        }
+        else
+        {
+            throwParserException(rootNode,
+                                 "If something is being assigned, assignment token is required. If declaring then a semi colon token is required.");
+        }
+        
 		return i;
 	}
 
