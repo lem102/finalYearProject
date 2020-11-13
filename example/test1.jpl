@@ -1,26 +1,3 @@
-define GoodFunction(int apple, int banana)
-{
-    int frederick = 2;
-    hydraulic = 3;
-
-    while(i == 3 || i == 2 && i != 3)
-    {
-        int citrus = n;
-        while(i == 1)
-        {
-            int jiaqi = 1;
-        }
-        int grandma;
-    }
-
-    int elephant;
-}
-
-define BadFunction(int dango)
-{
-
-}
-
 define UglyFunction()
 {
     if (i == 3)
@@ -35,4 +12,54 @@ define UglyFunction()
     {
         int universal;
     }
+}
+
+define anotherFunction()
+{
+    if (i == 3)
+    {
+        int international;
+    }
+    else if (i != 5)
+    {
+        int firey;
+    }
+}
+
+define yetAnotherFunction()
+{
+    if (i == 3)
+    {
+        int international;
+    }
+    else
+    {
+        int firey;
+    }
+}
+
+
+define BadFunction(int dango)
+{
+
+}
+
+define GoodFunction(int apple, int banana)
+{
+    methodCall();
+    anotherMethodCall(5);
+    int frederick = 2;
+    hydraulic = 3;
+
+    while(i == 3 || i == 2 && i != 3)
+    {
+        int citrus = n;
+        while(i == 1)
+        {
+            int jiaqi = 1;
+        }
+        int grandma;
+    }
+
+    int elephant;
 }
