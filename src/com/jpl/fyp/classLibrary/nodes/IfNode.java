@@ -29,7 +29,7 @@ public class IfNode extends ContainingNode
         }
         output += "Else:\n";
         output += "{\n";
-        // output += elseNode + "\n";
+        output += elseNode + "\n";
         output += "}\n";
         output += "}\n";
         

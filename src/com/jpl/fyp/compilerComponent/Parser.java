@@ -29,6 +29,7 @@ public class Parser
 	private void parse(List<Token> tokenList) throws JPLException
     {
         var nestingStatus = new ArrayList<ContainingNode>();
+        // TODO: in future need to have a symbol table to handle variable and function names.
         // List< symbolTable = new List<(int, string, object)>();
         var rootNode = new RootNode();
 
@@ -168,7 +169,6 @@ public class Parser
                     // do else if stuff here
                     var elseIfNode = new IfNode();
                     parentIfNode.elseNode = elseIfNode;
-                    getLastElement(nestingStatus).statements.add(elseIfNode);
                     nestingStatus.add(elseIfNode);
                     i++;
                     i = parseIfStatement(tokenList,
@@ -182,7 +182,7 @@ public class Parser
                     // do else stuff here
                     var elseNode = new ContainingNode();
                     parentIfNode.elseNode = elseNode;
-                    i++;
+                    nestingStatus.add(elseNode);
                 }
                 else
                 {
@@ -192,7 +192,6 @@ public class Parser
                                          "in the case of a straight else statement.");
                     
                 }
-                // throwParserException(rootNode, "not implemented.");
             }
             i++;
         }
@@ -245,7 +244,7 @@ public class Parser
                                                    RootNode rootNode,
                                                    int i) throws JPLException
     {
-        FunctionCallNode functionCallNode = new FunctionCallNode();
+        var functionCallNode = new FunctionCallNode();
         // TODO: this code is cursed, watch out for this later
         getLastElement(nestingStatus).statements.add(functionCallNode);
         
@@ -392,7 +391,7 @@ public class Parser
                                            RootNode rootNode,
                                            int i) throws JPLException
     {
-        DefinitionNode definitionNode = new DefinitionNode();
+        var definitionNode = new DefinitionNode();
         rootNode.definitions.add(definitionNode);
         nestingStatus.add(definitionNode);
         i++;

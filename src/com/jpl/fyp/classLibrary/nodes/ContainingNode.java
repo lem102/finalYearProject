@@ -11,4 +11,20 @@ public class ContainingNode extends StatementNode
     {
         statements = new ArrayList<StatementNode>();
     }
+
+    @Override
+	public String toString()
+    {
+        String output = "";
+        output += "Containing Node:\n";
+        output += "Statements:\n";
+        output += "{\n";
+        for (StatementNode statementNode : statements)
+        {
+            output += statementNode;
+        }
+        output += "}\n";
+        
+		return output;
+	}
 }
