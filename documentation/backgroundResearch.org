@@ -13,7 +13,93 @@
 * Background Research - due in 7/12/2020
 ** Necessary Background Material
 
-what does the examiner need to read or know
+*** What is a compiler?
+
+In short, a compiler is a computer program that converts a source program into machine code that can be executed by a CPU. It does this by taking its input, a program that is written in a human-readable programming language and performing multiple actions upon it. As a result of these actions, an executable program is produced that can be run by the computer.
+
+*** Why do we use compilers?
+
+Back in the 1950's, programmers wrote software in assembly language. This means that in order to tell the computer to do something, they would have to write instructions that would change the state of specific bits in order to do anything. This meant that even doing simple things takes a lot more lines of code than in higher level programming languages that we have today. For example, this C program;
+
+#+BEGIN_SRC c
+  #include <stdio.h>
+
+  int main()
+  {
+      printf("Hello, World.");
+  }
+#+END_SRC
+
+becomes much more complicated in assembly language:
+
+#+BEGIN_SRC asm
+  global _start
+
+  section .text
+
+  _start:
+    mov rax, 1        ; write(
+    mov rdi, 1        ;   STDOUT_FILENO,
+    mov rsi, msg      ;   "Hello, world!\n",
+    mov rdx, msglen   ;   sizeof("Hello, world!\n")
+    syscall           ; );
+
+    mov rax, 60       ; exit(
+    mov rdi, 0        ;   EXIT_SUCCESS
+    syscall           ; );
+
+  section .rodata
+    msg: db "Hello, world!", 10
+    msglen: equ $ - msg
+#+END_SRC
+
+TODO: reference this website for the code: https://jameshfisher.com/2018/03/10/linux-assembly-hello-world/
+
+This meant that programmers were a lot less productive, as they spent a lot of time doing what we now consider trivial operations, as well as having to create solutions to complex problems. As a consequence of this, the price of software exceeded that of the hardware available at the time due to how complicated and time consuming it was to make even a simple program.
+
+Happily, this all changed when John Backus and his team developed FORTRAN. FORTRAN was the first widely used high-level language, and it greatly simplified writing software. It worked by taking input in the form of a simpler language which abstracted away many of the complications caused by writing directly in assembly, and then translated that input into assembly instructions which could then be run on a compatible computer.
+
+This process of translating a high level language into assembly became known as compilation.
+
+*** structure of compilers
+
+TODO: reference the heck out of the dragon book for this section
+
+The overall structure of compilers has not changed much since the creation of FORTRAN I, and the compiler I will create also sticks to the ideas introduced by it. The structure of a compiler is made up of several stages:
+
+**** Lexical Analysis
+
+In this first stage, the source code is split into groups of characters which have meaning called lexemes. For example, this:
+
+#+BEGIN_SRC text
+  example = 1 + 3
+#+END_SRC
+
+Would be split into the following lexemes:
+
+#+BEGIN_SRC text
+  example
+  =
+  1
+  +
+  3
+#+END_SRC
+
+Each of these lexemes are then used to create a token. Each token has a value and a type. The variable example is stored in what is called a syntax table at index 1. The equals sign and the addition sign both have no value, but they are the type of an assignment operator and an addition operator respectively. Both of the numbers have the type integer and the value of 1 and 3 respectively. This leaves us with the following tokens:
+
+#+BEGIN_SRC text
+  (id, 1)
+  (assignment, =)
+  (integer, 1)
+  (addition, +)
+  (integer, 3)
+#+END_SRC
+
+**** Syntax Analysis
+
+After the source code has been successfully split into tokens, a syntax tree needs to be produced using the tokens from the previous phase. The purpose of this tree is to show how the tokens all relate to each other. In the tokens that we have from the previous phase, the assignment token would be the root token of the statement, the identifier before the assignment and the expression after the assignment would be the children of the assignment token.
+
+*** what does the examiner need to read or know
 
 To understand the source code aspect of my project, a reader would need to understand basic programming concepts such as what a statement is, how basic logic such as if statements and loop statements work, and be decently familiar with either Java or another mainly object oriented language (for example, C\#). They would also need to understand object oriented concepts, such as classes, objects and inheritance. A basic understanding of assembly would also be useful for the later parts of the compiler where we are creating machine code, but I will be documenting these quite intensely and intend to make them as simple as possible.
 
@@ -28,9 +114,6 @@ Other topics of interest that are located within this chapter are the concepts o
 ** A bit of compiled programming language history
 
 talk about history here
-
-
-
 ** Related Work
 
 similar products that exist
