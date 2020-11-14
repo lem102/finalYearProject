@@ -99,6 +99,61 @@ Each of these lexemes are then used to create a token. Each token has a value an
 
 After the source code has been successfully split into tokens, a syntax tree needs to be produced using the tokens from the previous phase. The purpose of this tree is to show how the tokens all relate to each other. In the tokens that we have from the previous phase, the assignment token would be the root token of the statement, the identifier before the assignment and the expression after the assignment would be the children of the assignment token.
 
+TODO: make image to show the tree here
+
+**** Semantic Analysis
+
+After the syntax tree has been created, there needs to be additional analysis to determine the types of the various symbols referred to in the source code, and keep this information in the syntax table. Once the types of the symbols have been determined, a process called type checking begins. This is where we check that the correct types are used in the correct way. For example, if we have a string and we attempt to divide it by an integer, we would want the compiler to throw an error as dividing a word by a number is obviously not intended.
+
+In some situations, for example if we are multiplying a floating point number by an integer, we would want the type of a symbol to be converted to another type to allow the result to be correctly stored within the syntax table. These sort of conversions are also handled by the semantic analyser.
+
+**** Intermediate Code Generator 
+
+This stage is the final stage of the "front end" of the compiler. Now that we have the syntax tree of the source code and the complete symbol table of all symbols used in the source code we can generate what is called intermediate code. Intermediate code is a sort of pseudo code that needs to have the following two features, first one being it needs to be easy to produce, and the other one being it needs to be easy to translate.
+
+A common type of intermediate code is called three address code, which is where each line of code refers to three or fewer variables. This pseudo code is essentially the source code distilled into its very basic operations. 
+
+This:
+
+#+BEGIN_SRC prog
+  example = x + y * 3
+#+END_SRC
+
+Will become something like this:
+
+#+BEGIN_SRC prog
+  t1 = y * 3
+  t2 = x + t1
+  example = t2
+#+END_SRC
+
+This code can now be easily translated into an assembly language, as each line only uses basic operations. But before we do that, there is an additional stage that we must first put this intermediate code through.
+
+**** Code Optimisation
+
+This stage we look at the intermediate representation produced in the last step and try to improve its efficiency. We can do this by combining certain lines of code, so for example:
+
+This:
+
+#+BEGIN_SRC prog
+  t1 = y * 3
+  t2 = x + t1
+  example = t2
+#+END_SRC
+
+Could become this:
+
+#+BEGIN_SRC prog
+  t1 = y * 3
+  example = x + t1
+#+END_SRC
+
+There are many other techniques that can be used to optimise intermediate representation code that can get quite complicated. Finally, we get to the last stage:
+
+**** Code Generation
+
+For the code generation stage, we need to generate code in the target language using the intermediate representation that we have produced from the previous steps. Exactly what is done here depends on the target language, if we are targeting machine code then we will need to decide what registers will hold the variables used in the program. After the variables have been sorted out, then code in the target language is generated that performs the exact same operations that were specified in each line of the intermediate code.
+
 *** what does the examiner need to read or know
 
 To understand the source code aspect of my project, a reader would need to understand basic programming concepts such as what a statement is, how basic logic such as if statements and loop statements work, and be decently familiar with either Java or another mainly object oriented language (for example, C\#). They would also need to understand object oriented concepts, such as classes, objects and inheritance. A basic understanding of assembly would also be useful for the later parts of the compiler where we are creating machine code, but I will be documenting these quite intensely and intend to make them as simple as possible.
@@ -130,4 +185,4 @@ My project differs from the tools described in the above paper quite significant
 
 ** Professional, Legal, Ethical & Social Issues
 
-???
+   ???
