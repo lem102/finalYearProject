@@ -5,9 +5,9 @@ import java.util.List;
 
 public class DefinitionNode extends ContainingNode
 {
-    private String definitionName;
+    public String definitionName;
 
-    private List<ArgumentNode> arguments;
+    public List<ArgumentNode> arguments;
 
     public DefinitionNode() 
     {
@@ -35,24 +35,4 @@ public class DefinitionNode extends ContainingNode
         output = output + "}\n";
         return output;
     }
-    
-	public String getDefinitionName()
-    {
-		return definitionName;
-	}
-    
-	public void setDefinitionName(String definitionName)
-    {
-		this.definitionName = definitionName;
-	}
-    
-	public List<ArgumentNode> getArguments()
-    {
-		return arguments;
-	}
-    
-	public void setArguments(List<ArgumentNode> arguments)
-    {
-		this.arguments = arguments;
-	}
 }
