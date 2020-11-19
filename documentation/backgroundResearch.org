@@ -57,15 +57,21 @@ TODO: reference this website for the code: https://jameshfisher.com/2018/03/10/l
 
 This meant that programmers were a lot less productive, as they spent a lot of time doing what we now consider trivial operations, as well as having to create solutions to complex problems. As a consequence of this, the price of software exceeded that of the hardware available at the time due to how complicated and time consuming it was to make even a simple program.
 
-Happily, this all changed when John Backus and his team developed FORTRAN. FORTRAN was the first widely used high-level language, and it greatly simplified writing software. It worked by taking input in the form of a simpler language which abstracted away many of the complications caused by writing directly in assembly, and then translated that input into assembly instructions which could then be run on a compatible computer.
+Happily, this was all soon to change. In the 1950, a man called John Backus joined IBM as a programmer. The first project he worked on was a program in machine code to calculate the position of a moon. Because programming in machine code was so awful, he invented a program called SpeedCoding. SpeedCoding is essentially a collection of macros that would reduce the amount of time a programmer would spend on common tasks by running chunks of code created on the fly based on a few paramaters supplied by the program. This enhanced programmer productivity, but at a cost. If a program using SpeedCoding was running, then SpeedCoding also need to be running to "interpret" the fancy SpeedCoding instructions. This consumed a large chunk of the memory of the computers they had at the time, so it was deemed not practical.
 
-This process of translating a high level language into assembly became known as compilation.
+https://mathshistory.st-andrews.ac.uk/Biographies/Backus/ 
 
-*** structure of compilers
+After his experiments with SpeedCoding, Backus was appointed as the manager of the Programming Research Department at IBM in 1954. During this time, he assembled a team and developed FORTRAN. FORTRAN was the first widely used high-level language, and it greatly simplified writing software. It worked by taking input in the form of a simpler language which abstracted away many of the complications caused by writing directly in assembly, and then translated that input into assembly instructions which could then be run on a compatible computer. This was the first practical use of a compiler.
+
+The impact of FORTRAN was massive. Kenneth Thompson, the creator of the UNIX operating system said "95 percent of the people who programmed in the early years would never have done it without FORTRAN. It was a massive step." It allowed non-programmers to be able to write code, so scientists were able to write the code for their programs without hiring a programmer to do it for them, hugely lowering the barrier to entry for computing.
+
+Of course the development of higher level languages continued beyond FORTRAN, leading to other compiled languages such as C, Java, and many, many more. These languages have iterated upon each other, gone in different directions and had different design philosophies. But all of them exist to make it easier for programmers to write code, and are continually developed to make it even easier. So we owe a great deal to FORTRAN and to compilers for making these abstractions.
+
+*** The structure of a compiler
 
 TODO: reference the heck out of the dragon book for this section
 
-The overall structure of compilers has not changed much since the creation of FORTRAN I, and the compiler I will create also sticks to the ideas introduced by it. The structure of a compiler is made up of several stages:
+The overall structure of compilers has not changed much since the creation of FORTRAN I, and the compiler I will create also mostly sticks to the ideas introduced by it. The structure of a compiler is made up of several stages:
 
 **** Lexical Analysis
 
@@ -106,6 +112,8 @@ TODO: make image to show the tree here
 After the syntax tree has been created, there needs to be additional analysis to determine the types of the various symbols referred to in the source code, and keep this information in the syntax table. Once the types of the symbols have been determined, a process called type checking begins. This is where we check that the correct types are used in the correct way. For example, if we have a string and we attempt to divide it by an integer, we would want the compiler to throw an error as dividing a word by a number is obviously not intended.
 
 In some situations, for example if we are multiplying a floating point number by an integer, we would want the type of a symbol to be converted to another type to allow the result to be correctly stored within the syntax table. These sort of conversions are also handled by the semantic analyser.
+
+In addition to the checking of types, we need to check that the usage of symbols are restricted to the correct scope. For example, if in the source code we have an if statement in which a variable called test is declared, we wouldn't want test to be accessable outside of the if statement, as test would be outside of the scope of the if statement. If source code was supplied to the compiler that attempted to refer to a variable in such a way, then we should throw an error.
 
 **** Intermediate Code Generator 
 
@@ -154,21 +162,20 @@ There are many other techniques that can be used to optimise intermediate repres
 
 For the code generation stage, we need to generate code in the target language using the intermediate representation that we have produced from the previous steps. Exactly what is done here depends on the target language, if we are targeting machine code then we will need to decide what registers will hold the variables used in the program. After the variables have been sorted out, then code in the target language is generated that performs the exact same operations that were specified in each line of the intermediate code.
 
+*** The Symbol Table
+
+Throughout the process of compilation, a data structure known as the symbol table is used to store all information about any symbols referred to in the source code. These symbols tend to be identifiers for variables or function names. Because we are going to compile the code into a different target language it is important that for all of the symbols pertaining to variables, their types and the scope of the variable are correctly stored. Then for symbols pertaining to functions we must store the required parameters of the function and the types of those parameters.
+
+All of this information is gathered during the syntax analysis phase and validated during the semantic analysis phase. The data within the syntax table is important throughout nearly all the phases of compilation.
+
 *** what does the examiner need to read or know
 
 To understand the source code aspect of my project, a reader would need to understand basic programming concepts such as what a statement is, how basic logic such as if statements and loop statements work, and be decently familiar with either Java or another mainly object oriented language (for example, C\#). They would also need to understand object oriented concepts, such as classes, objects and inheritance. A basic understanding of assembly would also be useful for the later parts of the compiler where we are creating machine code, but I will be documenting these quite intensely and intend to make them as simple as possible.
 
-For a simple definition of what a compiler is, I would reccomend the BBC Bitesize page on assemblers, compilers and interpreters.
+I would also recommend reading the first chapter of Compilers: Principles techniques and tools (AKA The Dragon Book). This chapter gives an overview of the various components of a compiler and the different transformations that the code that is being compiled needs to undergo before it can be processed by the CPU. An especially useful resource to understand these concepts is figure 1.7, which can be found on page 7. This figure shows how the code to be compiled will look through the various stages of compilation.
 
-https://www.bbc.co.uk/bitesize/guides/zgmpr82/revision/2
+Other topics of interest that are located within this chapter are the concepts of tokens, syntax trees and intermediate representation. These are what the source code of this project will be attempting to produce and then use in later parts of the compiler input's journey through the compiler.
 
-From there, I would recommend reading the first chapter of Compilers: Principles techniques and tools (AKA The Dragon Book). This chapter gives an overview of the various components of a compiler and the different transformations that the code that is being compiled needs to undergo before it can be processed by the CPU. An especially useful resource to understand these concepts is figure 1.7, which can be found on page 7. This figure shows how the code to be compiled will look through the various stages of compilation.
-
-Other topics of interest that are located within this chapter are the concepts of tokens, syntax trees and intermediate representation. These are what the source code of this project will be attempting to produce and then use in later parts of the compiler input's journey through the compiler. 
-
-** A bit of compiled programming language history
-
-talk about history here
 ** Related Work
 
 similar products that exist
