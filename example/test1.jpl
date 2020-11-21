@@ -41,7 +41,10 @@ define yetAnotherFunction()
 
 define BadFunction(int dango)
 {
-
+    while ( i == n )
+    {
+        
+    }
 }
 
 define GoodFunction(int apple, int banana)

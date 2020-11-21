@@ -1,0 +1,24 @@
+define GoodFunction(int apple, int banana)
+{
+    methodCall();
+    anotherMethodCall(5);
+    int frederick = 2;
+    hydraulic = 3;
+
+    while(i == 3 || i == 2 && i != 3)
+    {
+        int citrus = n;
+        while(i == 1)
+        {
+            int jiaqi = 1;
+        }
+        int grandma;
+    }
+
+    int elephant;
+}
+
+define BadFunction(int dango)
+{
+    
+}
