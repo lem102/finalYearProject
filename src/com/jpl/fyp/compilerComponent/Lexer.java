@@ -9,12 +9,12 @@ import com.jpl.fyp.classLibrary.TokenType;
 
 public class Lexer
 {
-    public List<Token> output;
+    public Token[] output;
     
     public Lexer(String sourceCode) throws Exception
     {
         List<String> tokens = splitSourceIntoTokens(sourceCode);
-        output = convertStringsToTokens(tokens);
+        this.output = convertStringsToTokens(tokens).toArray(new Token[0]);
     }
 
 	private List<Token> convertStringsToTokens(List<String> tokens) throws Exception

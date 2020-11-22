@@ -27,14 +27,16 @@ public class Main
         String sourceCode = Files.readString(Path.of(filePath));
 
         Lexer lexer = new Lexer(sourceCode);
-        List<Token> tokenList = lexer.output;
+        Token[] tokens = lexer.output;
 
         // printTokenList(tokenList);
 
-        Parser parser = new Parser(tokenList);
+        Parser parser = new Parser(tokens);
+        
+        System.out.println(parser.output);
 	}
 
-	private void printTokenList(List<Token> tokenList)
+	private void printTokenList(Token[] tokenList)
     {
         for (Token token : tokenList)
         {
