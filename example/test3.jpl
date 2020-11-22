@@ -2,7 +2,7 @@ define GoodFunction(int apple, int banana)
 {
     otherMethodCall(4);
     methodCall(5, 3);
-    int frederick = 2;
+    int frederick = 2+3;
     hydraulic = 3;
     cylinder = 4;
 }
