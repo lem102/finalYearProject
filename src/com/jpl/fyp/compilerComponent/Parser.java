@@ -111,11 +111,8 @@ public class Parser
             }
             else if (tokens[i].tokenType == TokenType.While)
             {
-                int endOfWhileHeader = findEndOfWhileHeader(tokens,
-                                                            i);
-                Token[] relevantTokens = Arrays.copyOfRange(tokens,
-                                                            i,
-                                                            endOfWhileHeader);
+                int endOfWhileHeader = findEndOfWhileHeader(tokens, i);
+                Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfWhileHeader);
                 var whileNode = new WhileNode(relevantTokens, rootNode);
                 nestingStatus.peek().statements.add(whileNode);
                 nestingStatus.push(whileNode);
@@ -128,32 +125,30 @@ public class Parser
                 // in the nestingstatus variable, include a reference to
                 // the node with it. then you can add statements to
                 // that reference declaration.
-                
-                var declarationNode = parseDeclarationStatement(tokens,
-                                                                rootNode,
-                                                                i);
+
+                int endOfDeclarationStatement = findEndOfDeclarationStatement(tokens, i);
+                Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfDeclarationStatement);
+
+                var declarationNode = new DeclarationNode(relevantTokens, rootNode);
                 nestingStatus.peek().statements.add(declarationNode);
 
-                i = findEndOfDeclarationStatement(tokens, i);
+                i = endOfDeclarationStatement;
             }
             else if (tokens[i].tokenType == TokenType.Identifier)
             {
-                i++;
                 // handle non-declarative assignments and standalone method calls
-                if (tokens[i].tokenType == TokenType.Assignment)
+                if (tokens[i+1].tokenType == TokenType.Assignment)
                 {
-                    var relevantTokens = Arrays.copyOfRange(tokens,
-                                                            i-1,
-                                                            findEndOfAssignmentStatement(tokens,
-                                                                                         i));
+                    int endOfAssignmentStatement = findEndOfAssignmentStatement(tokens, i);
+                    Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfAssignmentStatement);
                     var assignmentNode = new AssignmentNode(relevantTokens, rootNode);
 
                     nestingStatus.peek().statements.add(assignmentNode);
-                    i = findEndOfAssignmentStatement(tokens, i);
+                    i = endOfAssignmentStatement;
                 }
-                else if (tokens[i].tokenType == TokenType.OpeningParenthesis)
+                else if (tokens[i+1].tokenType == TokenType.OpeningParenthesis)
                 {
-                    i = parseStandaloneMethodCallStatement(tokens,
+                    i = parseStandaloneFunctionCallStatement(tokens,
                                                            nestingStatus,
                                                            rootNode,
                                                            i);
@@ -227,7 +222,7 @@ public class Parser
                     
                 }
             }
-            i++;
+            i++; // TODO: figure out how to remove this bastard. because of this line, the last token of each batch of tokens that SHOULD be parsed along with the others (e.g. a semicolon at the end of a declaration statement) is not included. This makes the code a bit shit imho.
         }
         
 		return i;
@@ -310,11 +305,12 @@ public class Parser
 		return i;
 	}
 
-	private int parseStandaloneMethodCallStatement(Token[] tokens,
-                                                   ArrayDeque<ContainingNode> nestingStatus,
-                                                   RootNode rootNode,
-                                                   int i) throws JPLException
+	private int parseStandaloneFunctionCallStatement(Token[] tokens,
+                                                     ArrayDeque<ContainingNode> nestingStatus,
+                                                     RootNode rootNode,
+                                                     int i) throws JPLException
     {
+        i++;
         var functionCallNode = new FunctionCallNode();
         // TODO: this code is cursed, watch out for this later
         // TODO: this code is REALLY cursed, do not look at this when you are sleepy.
@@ -361,47 +357,6 @@ public class Parser
             }
         }
         return i;
-	}
-
-    private DeclarationNode parseDeclarationStatement(Token[] tokens,
-                                                      RootNode rootNode,
-                                                      int i) throws JPLException
-    {
-        var declarationNode = new DeclarationNode();
-        declarationNode.type = JPLType.Integer;
-        i++;
-        if (tokens[i].tokenType != TokenType.Identifier)
-        {
-            throwParserException(rootNode,
-                                 "Missing variable name.");
-        }
-        declarationNode.identifier = tokens[i].tokenValue;
-        i++;
-        if (tokens[i].tokenType == TokenType.Assignment)
-        {
-            i++;
-            declarationNode.expression = new ExpressionNode();
-            var expressionTokens = new ArrayList<Token>();
-
-            while (tokens[i].tokenType != TokenType.Semicolon)
-            {
-                expressionTokens.add(tokens[i]);
-                i++;
-            }
-            declarationNode.expression.expressionTokens = expressionTokens;
-        }
-        else if (tokens[i].tokenType == TokenType.Semicolon)
-        {
-            // i++;
-            // TODO: review whether this should be removed, as it doesnt do shit
-        }
-        else
-        {
-            throwParserException(rootNode,
-                                 "If something is being assigned, assignment token is required. If declaring then a semi colon token is required.");
-        }
-        
-		return declarationNode;
 	}
 
 	private int parseDefinitionDeclaration(Token[] tokens,
