@@ -90,6 +90,11 @@ public class Lexer
                 tokenType = TokenType.Assignment;
                 break;
             }
+            case "+":
+            {
+                tokenType = TokenType.Plus;
+                break;
+            }
             case ";":
             {
                 tokenType = TokenType.Semicolon;

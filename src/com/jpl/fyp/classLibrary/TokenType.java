@@ -12,6 +12,7 @@ public enum TokenType
     OpeningBrace,
     ClosingBrace,
     Assignment,
+    Plus,
     Semicolon,
     Equal,
     NotEqual,
