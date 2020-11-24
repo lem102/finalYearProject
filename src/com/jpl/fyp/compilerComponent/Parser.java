@@ -128,10 +128,9 @@ public class Parser
 
                 int endOfDeclarationStatement = findEndOfDeclarationStatement(tokens, i);
                 Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfDeclarationStatement);
-
                 var declarationNode = new DeclarationNode(relevantTokens, rootNode);
-                nestingStatus.peek().statements.add(declarationNode);
 
+                nestingStatus.peek().statements.add(declarationNode);
                 i = endOfDeclarationStatement;
             }
             else if (tokens[i].tokenType == TokenType.Identifier)
@@ -148,10 +147,12 @@ public class Parser
                 }
                 else if (tokens[i+1].tokenType == TokenType.OpeningParenthesis)
                 {
-                    i = parseStandaloneFunctionCallStatement(tokens,
-                                                           nestingStatus,
-                                                           rootNode,
-                                                           i);
+                    int endOfStandaloneFunctionCallStatement = findEndOfFunctionCallStatement(tokens, i);
+                    Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfStandaloneFunctionCallStatement);
+                    var functionCallNode = new FunctionCallNode(relevantTokens, rootNode);
+
+                    nestingStatus.peek().statements.add(functionCallNode);
+                    i = endOfStandaloneFunctionCallStatement;
                 }
                 else
                 {
@@ -167,11 +168,7 @@ public class Parser
                 nestingStatus.peek().statements.add(ifNode);
                 nestingStatus.push(ifNode);
                 i++;
-                i = parseIfStatement(tokens,
-                                     nestingStatus,
-                                     rootNode,
-                                     ifNode,
-                                     i);
+                i = parseIfStatementHeader(tokens, nestingStatus, rootNode, ifNode, i);
             }
             else if (tokens[i].tokenType == TokenType.Else)
             {
@@ -200,7 +197,7 @@ public class Parser
                     parentIfNode.elseNode = elseIfNode;
                     nestingStatus.push(elseIfNode);
                     i++;
-                    i = parseIfStatement(tokens,
+                    i = parseIfStatementHeader(tokens,
                                          nestingStatus,
                                          rootNode,
                                          elseIfNode,
@@ -225,6 +222,35 @@ public class Parser
             i++; // TODO: figure out how to remove this bastard. because of this line, the last token of each batch of tokens that SHOULD be parsed along with the others (e.g. a semicolon at the end of a declaration statement) is not included. This makes the code a bit shit imho.
         }
         
+		return i;
+	}
+
+	private int findEndOfFunctionCallStatement(Token[] tokens, int i)
+    {
+        i++;
+        i++;
+        if (tokens[i].tokenType != TokenType.ClosingParenthesis)
+        {
+            while (true)
+            {
+                while (tokens[i].tokenType != TokenType.ClosingParenthesis
+                       &&
+                       tokens[i].tokenType != TokenType.Comma)
+                {
+                    i++;
+                }
+                if (tokens[i].tokenType == TokenType.ClosingParenthesis)
+                {
+                    i++;
+                    break;
+                }
+                else if (tokens[i].tokenType == TokenType.Comma)
+                {
+                    i++;
+                    continue;
+                }
+            }
+        }
 		return i;
 	}
 
@@ -275,11 +301,11 @@ public class Parser
         return parentIfNode;
 	}
 
-	private int parseIfStatement(Token[] tokens,
-                                 ArrayDeque<ContainingNode> nestingStatus,
-                                 RootNode rootNode,
-                                 IfNode ifNode,
-                                 int i) throws JPLException
+	private int parseIfStatementHeader(Token[] tokens,
+                                       ArrayDeque<ContainingNode> nestingStatus,
+                                       RootNode rootNode,
+                                       IfNode ifNode,
+                                       int i) throws JPLException
     {
         if (tokens[i].tokenType != TokenType.OpeningParenthesis)
         {
@@ -303,60 +329,6 @@ public class Parser
         }
         
 		return i;
-	}
-
-	private int parseStandaloneFunctionCallStatement(Token[] tokens,
-                                                     ArrayDeque<ContainingNode> nestingStatus,
-                                                     RootNode rootNode,
-                                                     int i) throws JPLException
-    {
-        i++;
-        var functionCallNode = new FunctionCallNode();
-        // TODO: this code is cursed, watch out for this later
-        // TODO: this code is REALLY cursed, do not look at this when you are sleepy.
-        nestingStatus.peek().statements.add(functionCallNode);
-        
-        functionCallNode.identifier = tokens[i - 1].tokenValue;
-        i++;
-
-        if (tokens[i].tokenType != TokenType.ClosingParenthesis)
-        {
-            // start reading args.
-            // each arg will take the form of an expressionNode.
-            while (true)
-            {
-                // create new argument
-                var expressionNode = new ExpressionNode();
-                functionCallNode.arguments.add(expressionNode);
-                var expressionTokens = new ArrayList<Token>();
-
-                while (tokens[i].tokenType != TokenType.ClosingParenthesis
-                       &&
-                       tokens[i].tokenType != TokenType.Comma)
-                {
-                    // populate argument
-                    expressionTokens.add(tokens[i]);
-                    i++;
-                }
-                expressionNode.expressionTokens = expressionTokens;
-                if (tokens[i].tokenType == TokenType.ClosingParenthesis)
-                {
-                    i++;
-                    break;
-                }
-                else if (tokens[i].tokenType == TokenType.Comma)
-                {
-                    i++;
-                    continue;
-                }
-            }
-            if (tokens[i].tokenType != TokenType.Semicolon)
-            {
-                throwParserException(rootNode,
-                                     "Semi colon expected after standalone method call.");
-            }
-        }
-        return i;
 	}
 
 	private int parseDefinitionDeclaration(Token[] tokens,

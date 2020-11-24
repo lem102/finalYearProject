@@ -27,7 +27,7 @@ public class DeclarationNode extends StatementNode
         if (tokens.length > 2)
         {
             this.expression = new ExpressionNode();
-            Token[] expressionTokens = Arrays.copyOfRange(tokens, tokens.length-1, tokens.length);
+            Token[] expressionTokens = Arrays.copyOfRange(tokens, 3, tokens.length);
             expression.expressionTokens = Arrays.asList(expressionTokens);
         }
 	}
