@@ -71,7 +71,7 @@ public class FunctionCallNode extends StatementNode
         }
         else if (tokens[tokens.length - 1].tokenType != TokenType.ClosingParenthesis)
         {
-            Parser.throwParserException(rootNode, "Function Call Node : last token must be an closing parenthesis.");
+            Parser.throwParserException(rootNode, "Function Call Node : last token must be a closing parenthesis.");
         }
 	}
 

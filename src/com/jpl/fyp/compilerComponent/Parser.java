@@ -251,6 +251,10 @@ public class Parser
                 }
             }
         }
+        else
+        {
+            i++;
+        }
 		return i;
 	}
 
