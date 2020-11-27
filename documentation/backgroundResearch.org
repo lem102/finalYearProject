@@ -6,11 +6,13 @@
 #+LATEX_HEADER: \emergencystretch=\maxdimen
 #+LATEX_HEADER: \hyphenpenalty=10000
 #+LATEX_HEADER: \hbadness=10000
-#+LATEX_HEADER: \frenchspacing=1
+#+LATEX_HEADER: \frenchspacing
+#+LATEX_HEADER: \usepackage{apacite}
 
 #+OPTIONS: toc:nil
 
 * Background Research - due in 7/12/2020
+
 ** Necessary Background Material
 
 *** What is a compiler?
@@ -30,7 +32,7 @@ Back in the 1950's, programmers wrote software in assembly language. This means 
   }
 #+END_SRC
 
-becomes much more complicated in assembly language:
+becomes much more complicated in assembly language \cite{assemblyHelloWorld}:
 
 #+BEGIN_SRC asm
   global _start
@@ -53,23 +55,17 @@ becomes much more complicated in assembly language:
     msglen: equ $ - msg
 #+END_SRC
 
-TODO: reference this website for the code: https://jameshfisher.com/2018/03/10/linux-assembly-hello-world/
-
 This meant that programmers were a lot less productive, as they spent a lot of time doing what we now consider trivial operations, as well as having to create solutions to complex problems. As a consequence of this, the price of software exceeded that of the hardware available at the time due to how complicated and time consuming it was to make even a simple program.
 
-Happily, this was all soon to change. In the 1950, a man called John Backus joined IBM as a programmer. The first project he worked on was a program in machine code to calculate the position of a moon. Because programming in machine code was so awful, he invented a program called SpeedCoding. SpeedCoding is essentially a collection of macros that would reduce the amount of time a programmer would spend on common tasks by running chunks of code created on the fly based on a few paramaters supplied by the program. This enhanced programmer productivity, but at a cost. If a program using SpeedCoding was running, then SpeedCoding also need to be running to "interpret" the fancy SpeedCoding instructions. This consumed a large chunk of the memory of the computers they had at the time, so it was deemed not practical.
+Happily, this was all soon to change. In the 1950s, a man called John Backus joined IBM as a programmer. The first project he worked on was a program in machine code to calculate the position of the moon. Because programming in machine code was so awful, he invented a program called SpeedCoding. SpeedCoding is essentially a collection of macros that would reduce the amount of time a programmer would spend on common tasks by running chunks of code created on the fly based on a few paramaters supplied by the program. This enhanced programmer productivity, but at a cost. If a program using SpeedCoding was running, then SpeedCoding also need to be running to "interpret" the fancy SpeedCoding instructions. This consumed a large chunk of the memory of the computers they had at the time, so it was deemed not practical.
 
-https://mathshistory.st-andrews.ac.uk/Biographies/Backus/ 
+After his experiments with SpeedCoding, Backus was appointed as the manager of the Programming Research Department at IBM in 1954. During this time, he assembled a team and developed FORTRAN. FORTRAN was the first widely used high-level language, and it greatly simplified writing software. It worked by taking input in the form of a simpler language which abstracted away many of the complications caused by writing directly in assembly, and then translated that input into assembly instructions which could then be run on a compatible computer. This was the first practical use of a compiler \cite{johnBackus}.
 
-After his experiments with SpeedCoding, Backus was appointed as the manager of the Programming Research Department at IBM in 1954. During this time, he assembled a team and developed FORTRAN. FORTRAN was the first widely used high-level language, and it greatly simplified writing software. It worked by taking input in the form of a simpler language which abstracted away many of the complications caused by writing directly in assembly, and then translated that input into assembly instructions which could then be run on a compatible computer. This was the first practical use of a compiler.
-
-The impact of FORTRAN was massive. Kenneth Thompson, the creator of the UNIX operating system said "95 percent of the people who programmed in the early years would never have done it without FORTRAN. It was a massive step." It allowed non-programmers to be able to write code, so scientists were able to write the code for their programs without hiring a programmer to do it for them, hugely lowering the barrier to entry for computing.
+The impact of FORTRAN was massive. Kenneth Thompson, the creator of the UNIX operating system said "95 percent of the people who programmed in the early years would never have done it without FORTRAN." \cite{kenThompson}. It allowed non-programmers to be able to write code, so scientists were able to write the code for their programs without hiring a programmer to do it for them, greatly lowering the barrier to entry for computing.
 
 Of course the development of higher level languages continued beyond FORTRAN, leading to other compiled languages such as C, Java, and many, many more. These languages have iterated upon each other, gone in different directions and had different design philosophies. But all of them exist to make it easier for programmers to write code, and are continually developed to make it even easier. So we owe a great deal to FORTRAN and to compilers for making these abstractions.
 
 *** The structure of a compiler
-
-TODO: reference the heck out of the dragon book for this section
 
 The overall structure of compilers has not changed much since the creation of FORTRAN I, and the compiler I will create also mostly sticks to the ideas introduced by it. The structure of a compiler is made up of several stages:
 
@@ -91,7 +87,7 @@ Would be split into the following lexemes:
   3
 #+END_SRC
 
-Each of these lexemes are then used to create a token. Each token has a value and a type. The variable example is stored in what is called a syntax table at index 1. The equals sign and the addition sign both have no value, but they are the type of an assignment operator and an addition operator respectively. Both of the numbers have the type integer and the value of 1 and 3 respectively. This leaves us with the following tokens:
+Each of these lexemes are then used to create a token. Each token has a value and a type. The variable example is stored in what is called a syntax table at index 1. The equals sign and the addition sign both have no value, but they are the type of an assignment operator and an addition operator respectively. Both of the numbers have the type integer and the value of 1 and 3 respectively. This leaves us with the following tokens.
 
 #+BEGIN_SRC text
   (id, 1)
@@ -162,34 +158,35 @@ There are many other techniques that can be used to optimise intermediate repres
 
 For the code generation stage, we need to generate code in the target language using the intermediate representation that we have produced from the previous steps. Exactly what is done here depends on the target language, if we are targeting machine code then we will need to decide what registers will hold the variables used in the program. After the variables have been sorted out, then code in the target language is generated that performs the exact same operations that were specified in each line of the intermediate code.
 
-*** The Symbol Table
+**** The Symbol Table
 
 Throughout the process of compilation, a data structure known as the symbol table is used to store all information about any symbols referred to in the source code. These symbols tend to be identifiers for variables or function names. Because we are going to compile the code into a different target language it is important that for all of the symbols pertaining to variables, their types and the scope of the variable are correctly stored. Then for symbols pertaining to functions we must store the required parameters of the function and the types of those parameters.
 
-All of this information is gathered during the syntax analysis phase and validated during the semantic analysis phase. The data within the syntax table is important throughout nearly all the phases of compilation.
+All of this information is gathered during the syntax analysis phase and validated during the semantic analysis phase. The data within the syntax table is important throughout nearly all the phases of compilation \cite{dragon}.
 
 *** what does the examiner need to read or know
 
-To understand the source code aspect of my project, a reader would need to understand basic programming concepts such as what a statement is, how basic logic such as if statements and loop statements work, and be decently familiar with either Java or another mainly object oriented language (for example, C\#). They would also need to understand object oriented concepts, such as classes, objects and inheritance. A basic understanding of assembly would also be useful for the later parts of the compiler where we are creating machine code, but I will be documenting these quite intensely and intend to make them as simple as possible.
+To understand the source code aspect of my project, a reader would need to understand basic programming concepts such as what a statement is, how basic logic such as if statements and loop statements work, and be decently familiar with either Java or another mainly object oriented language (for example, C). They would also need to understand object oriented concepts, such as classes, objects and inheritance. A basic understanding of assembly would also be useful for the later parts of the compiler where we are creating machine code, but I will be documenting these quite intensely and intend to make them as simple as possible.
 
-I would also recommend reading the first chapter of Compilers: Principles techniques and tools (AKA The Dragon Book). This chapter gives an overview of the various components of a compiler and the different transformations that the code that is being compiled needs to undergo before it can be processed by the CPU. An especially useful resource to understand these concepts is figure 1.7, which can be found on page 7. This figure shows how the code to be compiled will look through the various stages of compilation.
+I would also recommend reading the first chapter of Compilers: Principles techniques and tools (AKA The Dragon Book) \cite{dragon}. This chapter gives an overview of the various components of a compiler and the different transformations that the code that is being compiled needs to undergo before it can be processed by the CPU. An especially useful resource to understand these concepts is figure 1.7, which can be found on page 7. This figure shows how the code to be compiled will look through the various stages of compilation.
 
 Other topics of interest that are located within this chapter are the concepts of tokens, syntax trees and intermediate representation. These are what the source code of this project will be attempting to produce and then use in later parts of the compiler input's journey through the compiler.
 
 ** Related Work
 
-similar products that exist
+*** A Compiler for Teaching about Compilers
 
-https://dl.acm.org/doi/10.1145/611892.611974 very similar project from 2003.
+TODO: write a bit more about this project.
 
-This project sounds like it has a comparable spirit to mine in that it espouses similar ideas regarding how the use of compiler creation tools effect educational benefits, but the above paper discusses a compiler that is designed in order to teach a course, whereas mine is simply a resource from which you can see how a compiler could be implemented without the use of compiler creation tools.
+This paper sounds like it has a comparable spirit to this project in that it espouses similar ideas regarding how the use of compiler creation tools effect educational benefits, but the paper discusses a compiler that is designed in order to teach a course, whereas mine is simply a resource from which you can see how a compiler could be implemented without the use of compiler creation tools \cite{compilerForTeachingCompilers}.
 
-https://www.researchgate.net/publication/220807902_A_set_of_tools_to_teach_compiler_construction enhanced tools for compiler creation that are more suited to education from 2008. Based on GNU bison.
+The compiler in this course is designed to be very modular, so that a student on the course could take out a component of the compiler and replace it with their own. This also means that the student would be able to replace parts of their own work with the teachers, which could be useful if they wanted to see how that part of the compiler is supposed to function.
+
+*** A Set Of Tools To Teach Compiler Construction
 
 This paper introduces a set of tools to aid in the teaching of compilers, as the authors of the paper found that some of the tools commonly used in compiler construction were either obsolete or lacking in terms of educational features. One example of how they remedied this is by making use of a modified GNU bison, which outputs a detailed description of the various states the parser is in whilst parsing the input tokens. This information was lacking in the original bison, making it very difficult to find errors in either the input or the parser code.
 
-My project differs from the tools described in the above paper quite significantly. In the paper, they still make use of tools to create code which skips over the gory details. These tools are better for education, which is an improvement, but I want to stick to just using a programming language in my project. My intention with this is to reveal how a normal student could create a compiler with out the use of complicated tools and theories, therefore making the student totally understand the process of compilation.
+My project differs from the tools described in the above paper quite significantly. In the paper, they still make use of tools to create code which skips over the gory details. These tools are better for education, which is an improvement, but I want to stick to just using a programming language in my project. My intention with this is to reveal how a normal student could create a compiler with out the use of complicated tools and theories, therefore making the student totally understand the process of compilation \cite{aSetOfToolsToTeachCompilerConstruction}.
 
-** Professional, Legal, Ethical & Social Issues
-
-   ???
+\bibliographystyle{apacite}
+\bibliography{bibliography.bib}
