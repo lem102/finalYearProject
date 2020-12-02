@@ -16,7 +16,7 @@ public class AssignmentNode extends StatementNode
     public AssignmentNode(Token[] tokens,
                           RootNode rootNode) throws JPLException
     {
-        validateTokens(tokens, rootNode);
+        this.validateTokens(tokens, rootNode);
         this.assignmentTarget = tokens[0].tokenValue;
         // this will need changing when expression node is refactored.
         this.expression = new ExpressionNode();
@@ -31,12 +31,17 @@ public class AssignmentNode extends StatementNode
         if (tokens[0].tokenType != TokenType.Identifier)
         {
             Parser.throwParserException(rootNode,
-                                        "Assignment Node : first token is not an identifier token.");
+                                        "Assignment Node : First token is not an identifier token.");
         }
         else if (tokens[1].tokenType != TokenType.Assignment)
         {
             Parser.throwParserException(rootNode,
-                                        "Assignment Node : second token is not an assignment token.");
+                                        "Assignment Node : Second token is not an assignment token.");
+        }
+        else if (tokens[tokens.length - 1].tokenType != TokenType.Semicolon)
+        {
+            Parser.throwParserException(rootNode,
+                                        "Assignment Node : Last token should be a semicolon.");
         }
 	}
 

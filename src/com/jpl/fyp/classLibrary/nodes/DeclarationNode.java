@@ -54,21 +54,19 @@ public class DeclarationNode extends StatementNode
         }
         else if (tokens[1].tokenType != TokenType.Identifier)
         {
-            Parser.throwParserException(rootNode, "Declaration Node : Second token must be an identifier.");
+            Parser.throwParserException(rootNode,
+                                        "Declaration Node : Second token must be an identifier.");
         }
-
-        // TODO: when that infernal incrementation has been removed, reintroduce the below code:
-
-        // else if (tokens[2].tokenType != TokenType.Assignment && tokens[2].tokenType != TokenType.Semicolon)
-        // {
-        //     Parser.throwParserException(rootNode, "Declaration Node : Third token must be either an assignment symbol or a semicolon.");
-        // }
-
-        // else if (tokens[tokens.length - 1].tokenType != TokenType.Semicolon)
-        // {
-        //     System.out.println(tokens[tokens.length - 1].tokenValue);
-        //     Parser.throwParserException(rootNode, "Declaration Node : Last token must be a semicolon.");
-        // }
+        else if (tokens[2].tokenType != TokenType.Assignment && tokens[2].tokenType != TokenType.Semicolon)
+        {
+            Parser.throwParserException(rootNode,
+                                        "Declaration Node : Third token must be either an assignment symbol or a semicolon.");
+        }
+        else if (tokens[tokens.length - 1].tokenType != TokenType.Semicolon)
+        {
+            Parser.throwParserException(rootNode,
+                                        "Declaration Node : Last token must be a semicolon.");
+        }
 	}
 
 	@Override

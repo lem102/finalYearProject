@@ -108,6 +108,7 @@ public class Parser
                 {
                     break;
                 }
+                i++;
             }
             else if (tokens[i].tokenType == TokenType.While)
             {
@@ -164,11 +165,12 @@ public class Parser
             }
             else if (tokens[i].tokenType == TokenType.If)
             {
-                IfNode ifNode = new IfNode();
+                int endOfIfStatementHeader = findEndOfIfStatementHeader(tokens, i);
+                Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfIfStatementHeader);
+                IfNode ifNode = new IfNode(relevantTokens, rootNode);
                 nestingStatus.peek().statements.add(ifNode);
                 nestingStatus.push(ifNode);
-                i++;
-                i = parseIfStatementHeader(tokens, nestingStatus, rootNode, ifNode, i);
+                i = endOfIfStatementHeader;
             }
             else if (tokens[i].tokenType == TokenType.Else)
             {
@@ -186,22 +188,19 @@ public class Parser
                     throwParserException(rootNode,
                                          "else statement can only occur after an if or else if statement.");
                 }
-                i++;
                 var parentIfNode = (IfNode)previousStatementNode;
                 parentIfNode = getLastOfIfElseChain(parentIfNode);
+                i++;
 
                 if (tokens[i].tokenType == TokenType.If)
                 {
                     // do else if stuff here
-                    var elseIfNode = new IfNode();
+                    int endOfIfStatementHeader = findEndOfIfStatementHeader(tokens, i);
+                    Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfIfStatementHeader);
+                    var elseIfNode = new IfNode(relevantTokens, rootNode);
                     parentIfNode.elseNode = elseIfNode;
                     nestingStatus.push(elseIfNode);
-                    i++;
-                    i = parseIfStatementHeader(tokens,
-                                         nestingStatus,
-                                         rootNode,
-                                         elseIfNode,
-                                         i);
+                    i = endOfIfStatementHeader;
                 }
                 else if (tokens[i].tokenType == TokenType.OpeningBrace)
                 {
@@ -209,6 +208,7 @@ public class Parser
                     var elseNode = new ContainingNode();
                     parentIfNode.elseNode = elseNode;
                     nestingStatus.push(elseNode);
+                    i++;
                 }
                 else
                 {
@@ -216,13 +216,21 @@ public class Parser
                                          "else token must be followed by if " +
                                          "token incase of else if statement or opening paren " +
                                          "in the case of a straight else statement.");
-                    
                 }
             }
-            i++; // TODO: figure out how to remove this bastard. because of this line, the last token of each batch of tokens that SHOULD be parsed along with the others (e.g. a semicolon at the end of a declaration statement) is not included. This makes the code a bit shit imho.
         }
         
 		return i;
+	}
+
+	private int findEndOfIfStatementHeader(Token[] tokens, int i)
+    {
+        while (tokens[i].tokenType != TokenType.OpeningBrace)
+        {
+            i++;
+        }
+        i++;
+	 	return i;
 	}
 
 	private int findEndOfFunctionCallStatement(Token[] tokens, int i)
@@ -255,6 +263,7 @@ public class Parser
         {
             i++;
         }
+        i++;
 		return i;
 	}
 
@@ -266,6 +275,7 @@ public class Parser
         {
             i++;
         }
+        i++;
 		return i;
 	}
 
@@ -282,6 +292,7 @@ public class Parser
                 i++;
             }
         }
+        i++;
 		return i;
 	}
 
@@ -292,6 +303,7 @@ public class Parser
         {
             i++;
         }
+        i++;
 		return i;
 	}
 
@@ -303,36 +315,6 @@ public class Parser
             parentIfNode = (IfNode)parentIfNode.elseNode;
         }
         return parentIfNode;
-	}
-
-	private int parseIfStatementHeader(Token[] tokens,
-                                       ArrayDeque<ContainingNode> nestingStatus,
-                                       RootNode rootNode,
-                                       IfNode ifNode,
-                                       int i) throws JPLException
-    {
-        if (tokens[i].tokenType != TokenType.OpeningParenthesis)
-        {
-            throwParserException(rootNode,
-                                 "Opening parenthesis expected after if token.");
-        }
-        i++;
-        var expressionTokens = new ArrayList<Token>();
-        ifNode.testExpression.expressionTokens = expressionTokens;
-        
-        while (tokens[i].tokenType != TokenType.ClosingParenthesis)
-        {
-            expressionTokens.add(tokens[i]);
-            i++;
-        }
-        i++;
-        if (tokens[i].tokenType != TokenType.OpeningBrace)
-        {
-            throwParserException(rootNode,
-                                 "Opening brace expected after expression of if statement.");
-        }
-        
-		return i;
 	}
 
 	private int parseDefinitionDeclaration(Token[] tokens,

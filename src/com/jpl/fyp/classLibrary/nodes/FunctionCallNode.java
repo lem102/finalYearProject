@@ -63,15 +63,19 @@ public class FunctionCallNode extends StatementNode
     {
         if (tokens[0].tokenType != TokenType.Identifier)
         {
-            Parser.throwParserException(rootNode, "Function Call Node : first token must be an identifier.");
+            Parser.throwParserException(rootNode, "Function Call Node : First token must be an identifier.");
         }
         else if (tokens[1].tokenType != TokenType.OpeningParenthesis)
         {
-            Parser.throwParserException(rootNode, "Function Call Node : second token must be a opening parenthesis.");
+            Parser.throwParserException(rootNode, "Function Call Node : Second token must be a opening parenthesis.");
         }
-        else if (tokens[tokens.length - 1].tokenType != TokenType.ClosingParenthesis)
+        else if (tokens[tokens.length - 2].tokenType != TokenType.ClosingParenthesis)
         {
-            Parser.throwParserException(rootNode, "Function Call Node : last token must be a closing parenthesis.");
+            Parser.throwParserException(rootNode, "Function Call Node : Second to last token must be a closing parenthesis.");
+        }
+        else if (tokens[tokens.length - 1].tokenType != TokenType.Semicolon)
+        {
+            Parser.throwParserException(rootNode, "Function Call Node : Last token must be a semicolon.");
         }
 	}
 

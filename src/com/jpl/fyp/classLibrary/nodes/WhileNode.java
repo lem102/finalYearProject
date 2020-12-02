@@ -28,17 +28,22 @@ public class WhileNode extends ContainingNode
         if (tokens[0].tokenType != TokenType.While)
         {
             Parser.throwParserException(rootNode,
-                                        "While Node : first token is not while keyword.");
+                                        "While Node : First token is not while keyword.");
         }
         else if (tokens[1].tokenType != TokenType.OpeningParenthesis)
         {
             Parser.throwParserException(rootNode,
-                                        "While Node : second token is not an opening parenthesis.");
+                                        "While Node : Second token is not an opening parenthesis.");
         }
-        else if (tokens[tokens.length - 1].tokenType != TokenType.ClosingParenthesis)
+        else if (tokens[tokens.length - 2].tokenType != TokenType.ClosingParenthesis)
         {
             Parser.throwParserException(rootNode,
-                                        "While Node : second to last token is not a closing parenthesis.");
+                                        "While Node : Second to last token is not a closing parenthesis.");
+        }
+        else if (tokens[tokens.length - 1].tokenType != TokenType.OpeningBrace)
+        {
+            Parser.throwParserException(rootNode,
+                                        "While Node : Last token is not an opening brace.");
         }
 	}
 
