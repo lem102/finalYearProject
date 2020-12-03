@@ -9,7 +9,7 @@ import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 import com.jpl.fyp.compilerComponent.Parser;
 
-public class FunctionCallNode extends StatementNode
+public class FunctionCallNode implements StatementNode
 {
     public String identifier;
 

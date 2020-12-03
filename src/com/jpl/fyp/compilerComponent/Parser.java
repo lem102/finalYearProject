@@ -11,9 +11,12 @@ import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 import com.jpl.fyp.classLibrary.nodes.ArgumentNode;
 import com.jpl.fyp.classLibrary.nodes.AssignmentNode;
+import com.jpl.fyp.classLibrary.nodes.ConditionalNode;
 import com.jpl.fyp.classLibrary.nodes.ContainingNode;
 import com.jpl.fyp.classLibrary.nodes.DeclarationNode;
 import com.jpl.fyp.classLibrary.nodes.DefinitionNode;
+import com.jpl.fyp.classLibrary.nodes.ElseIfNode;
+import com.jpl.fyp.classLibrary.nodes.ElseNode;
 import com.jpl.fyp.classLibrary.nodes.ExpressionNode;
 import com.jpl.fyp.classLibrary.nodes.FunctionCallNode;
 import com.jpl.fyp.classLibrary.nodes.IfNode;
@@ -109,210 +112,173 @@ public class Parser
                     break;
                 }
                 i++;
+                continue;
             }
-            else if (tokens[i].tokenType == TokenType.While)
+            
+            int endOfStatement = findEndOfStatement(tokens, i);
+            int endOfHeader = findEndOfHeader(tokens, i);
+            StatementNode node = parseNextNode(tokens, rootNode, i, endOfStatement, endOfHeader);
+
+            if (node instanceof ElseIfNode
+                ||
+                node instanceof ElseNode)
             {
-                int endOfWhileHeader = findEndOfWhileHeader(tokens, i);
-                Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfWhileHeader);
-                var whileNode = new WhileNode(relevantTokens, rootNode);
-                nestingStatus.peek().statements.add(whileNode);
-                nestingStatus.push(whileNode);
-                i = endOfWhileHeader;
-            }
-            else if (tokens[i].tokenType == TokenType.IntegerDeclaration)
-            {
-                // this section needs to be expanded in future to handle
-                // other data types. for now we will just have integers.
-                // in the nestingstatus variable, include a reference to
-                // the node with it. then you can add statements to
-                // that reference declaration.
-
-                int endOfDeclarationStatement = findEndOfDeclarationStatement(tokens, i);
-                Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfDeclarationStatement);
-                var declarationNode = new DeclarationNode(relevantTokens, rootNode);
-
-                nestingStatus.peek().statements.add(declarationNode);
-                i = endOfDeclarationStatement;
-            }
-            else if (tokens[i].tokenType == TokenType.Identifier)
-            {
-                // handle non-declarative assignments and standalone method calls
-                if (tokens[i+1].tokenType == TokenType.Assignment)
-                {
-                    int endOfAssignmentStatement = findEndOfAssignmentStatement(tokens, i);
-                    Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfAssignmentStatement);
-                    var assignmentNode = new AssignmentNode(relevantTokens, rootNode);
-
-                    nestingStatus.peek().statements.add(assignmentNode);
-                    i = endOfAssignmentStatement;
-                }
-                else if (tokens[i+1].tokenType == TokenType.OpeningParenthesis)
-                {
-                    int endOfStandaloneFunctionCallStatement = findEndOfFunctionCallStatement(tokens, i);
-                    Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfStandaloneFunctionCallStatement);
-                    var functionCallNode = new FunctionCallNode(relevantTokens, rootNode);
-
-                    nestingStatus.peek().statements.add(functionCallNode);
-                    i = endOfStandaloneFunctionCallStatement;
-                }
-                else
-                {
-                    throwParserException(rootNode,
-                                         "Invalid token, was expecting either an opening brace token " +
-                                         "in case of a standalone method call or an assignment " +
-                                         "token in case of variable assignment.");
-                }
-            }
-            else if (tokens[i].tokenType == TokenType.If)
-            {
-                int endOfIfStatementHeader = findEndOfIfStatementHeader(tokens, i);
-                Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfIfStatementHeader);
-                IfNode ifNode = new IfNode(relevantTokens, rootNode);
-                nestingStatus.peek().statements.add(ifNode);
-                nestingStatus.push(ifNode);
-                i = endOfIfStatementHeader;
-            }
-            else if (tokens[i].tokenType == TokenType.Else)
-            {
-                // i should implement a sort of chain, starting with the initial if node.
-                // a property of the if node should be an if or an else node,
-                // which can continue to chain until an else is reached.
-
-                // if node should have a property for a following if node,
-                // this property would be populated if there is an else
-                // statement directly after the if statement.
-
-                StatementNode previousStatementNode = getLastElement(nestingStatus.peek().statements);
-                if (!(previousStatementNode instanceof IfNode))
-                {
+                StatementNode previousStatementNode = getLastElement(nestingStatus.peek().getStatements());
+		        if (!(previousStatementNode instanceof IfNode))
+		        {
                     throwParserException(rootNode,
                                          "else statement can only occur after an if or else if statement.");
-                }
-                var parentIfNode = (IfNode)previousStatementNode;
-                parentIfNode = getLastOfIfElseChain(parentIfNode);
-                i++;
-
-                if (tokens[i].tokenType == TokenType.If)
-                {
-                    // do else if stuff here
-                    int endOfIfStatementHeader = findEndOfIfStatementHeader(tokens, i);
-                    Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfIfStatementHeader);
-                    var elseIfNode = new IfNode(relevantTokens, rootNode);
-                    parentIfNode.elseNode = elseIfNode;
-                    nestingStatus.push(elseIfNode);
-                    i = endOfIfStatementHeader;
-                }
-                else if (tokens[i].tokenType == TokenType.OpeningBrace)
-                {
-                    // do else stuff here
-                    var elseNode = new ContainingNode();
-                    parentIfNode.elseNode = elseNode;
-                    nestingStatus.push(elseNode);
-                    i++;
-                }
-                else
-                {
-                    throwParserException(rootNode,
-                                         "else token must be followed by if " +
-                                         "token incase of else if statement or opening paren " +
-                                         "in the case of a straight else statement.");
-                }
+		        }
+		        var parentIfNode = (ConditionalNode)previousStatementNode;
+		        parentIfNode = getLastOfIfElseChain(parentIfNode);
+                parentIfNode.setElseNode((ContainingNode)node);
             }
-        }
-        
-		return i;
-	}
-
-	private int findEndOfIfStatementHeader(Token[] tokens, int i)
-    {
-        while (tokens[i].tokenType != TokenType.OpeningBrace)
-        {
-            i++;
-        }
-        i++;
-	 	return i;
-	}
-
-	private int findEndOfFunctionCallStatement(Token[] tokens, int i)
-    {
-        i++;
-        i++;
-        if (tokens[i].tokenType != TokenType.ClosingParenthesis)
-        {
-            while (true)
+            else
             {
-                while (tokens[i].tokenType != TokenType.ClosingParenthesis
-                       &&
-                       tokens[i].tokenType != TokenType.Comma)
-                {
-                    i++;
-                }
-                if (tokens[i].tokenType == TokenType.ClosingParenthesis)
-                {
-                    i++;
-                    break;
-                }
-                else if (tokens[i].tokenType == TokenType.Comma)
-                {
-                    i++;
-                    continue;
-                }
+                nestingStatus.peek().addStatement(node);
+            }
+
+            if (node instanceof ContainingNode)
+            {
+                nestingStatus.push((ContainingNode)node);
+                i = endOfHeader;
+            }
+            else
+            {
+                i = endOfStatement;
             }
         }
-        else
-        {
-            i++;
-        }
-        i++;
 		return i;
 	}
 
-	private int findEndOfAssignmentStatement(Token[] tokens,
-                                             int i)
+	private StatementNode parseNextNode(Token[] tokens,
+                                        RootNode rootNode,
+                                        int i,
+                                        int endOfStatement,
+                                        int endOfHeader)
+        throws JPLException
     {
-        i++;
-        while (tokens[i].tokenType != TokenType.Semicolon)
-        {
-            i++;
-        }
-        i++;
-		return i;
+		switch (tokens[i].tokenType)
+		{
+		    case IntegerDeclaration:
+		    {
+		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfStatement);
+		        return new DeclarationNode(relevantTokens, rootNode);
+		    }
+		    case Identifier:
+		    {
+		        return parseNodeBeginningWithIdentifier(tokens, rootNode, i, endOfStatement);
+		    }
+		    case While:
+		    {
+		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfHeader);
+		        return new WhileNode(relevantTokens, rootNode);
+		    }
+		    case If:
+		    {
+		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfHeader);
+		        return new IfNode(relevantTokens, rootNode);
+		    }
+		    case Else:
+		    {
+		        return parseNodeBeginningWithElse(tokens, rootNode, i, endOfHeader);
+		    }
+		    default:
+		    {
+		        throw new JPLException("unhandled token" + "\n" + rootNode);
+		    }
+		}
 	}
 
-	private int findEndOfDeclarationStatement(Token[] tokens,
-                                              int i)
+	private StatementNode parseNodeBeginningWithElse(Token[] tokens,
+                                                     RootNode rootNode,
+                                                     int i,
+                                                     int endOfHeader)
+        throws JPLException
     {
-        i++;
-        i++;
-        if (tokens[i].tokenType == TokenType.Assignment)
+        switch (tokens[i+1].tokenType)
         {
-            i++;
-            while (tokens[i].tokenType != TokenType.Semicolon)
+            case If:
+            {
+                Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfHeader);
+                return new ElseIfNode(relevantTokens, rootNode);
+            }
+            case OpeningBrace:
+            {
+                Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfHeader);
+                return new ElseNode(relevantTokens);
+            }
+            default:
+            {
+                throw new JPLException("else token must be followed by if " +
+                                       "token incase of else if statement or opening parenthesis " +
+                                       "in the case of a straight else statement." +
+                                       "\n" + rootNode);
+            }
+        }
+	}
+
+	private StatementNode parseNodeBeginningWithIdentifier(Token[] tokens,
+                                                           RootNode rootNode,
+                                                           int i,
+                                                           int endOfStatement)
+        throws JPLException
+    {
+		switch (tokens[i+1].tokenType)
+		{
+		    case Assignment:
+		    {
+		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfStatement);
+		        return new AssignmentNode(relevantTokens, rootNode);
+		    }
+		    case OpeningParenthesis:
+		    {
+		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfStatement);
+		        return new FunctionCallNode(relevantTokens, rootNode);
+		    }
+		    default:
+		    {
+		        throw new JPLException("Invalid token, was expecting either an opening brace token " +
+		                               "in case of a standalone method call or an assignment " +
+		                               "token in case of variable assignment." +
+		                               "\n" + rootNode);
+		    }
+		}
+	}
+
+    private int findEndOfStatement(Token[] tokens, int i)
+    {
+        return findNextOccuranceOfToken(tokens, i, TokenType.Semicolon);
+    }
+
+    private int findEndOfHeader(Token[] tokens, int i)
+    {
+		return findNextOccuranceOfToken(tokens, i, TokenType.OpeningBrace);
+    }
+
+    private int findNextOccuranceOfToken(Token[] tokens, int i, TokenType tokenType)
+    {
+        try
+        {
+            while (tokens[i].tokenType != tokenType)
             {
                 i++;
             }
-        }
-        i++;
-		return i;
-	}
-
-	private int findEndOfWhileHeader(Token[] tokens,
-                                     int i)
-    {
-        while (tokens[i].tokenType != TokenType.OpeningBrace)
-        {
             i++;
+            return i;
         }
-        i++;
-		return i;
-	}
+        catch (Throwable e)
+        {
+            return 0;
+        }
+    }
 
-	private IfNode getLastOfIfElseChain(IfNode parentIfNode)
+	private ConditionalNode getLastOfIfElseChain(ConditionalNode parentIfNode)
     {
-        while (parentIfNode.elseNode != null)
+        while (parentIfNode.getElseNode() != null)
         {
             // TODO: Add a check here to check for rouge else nodes.
-            parentIfNode = (IfNode)parentIfNode.elseNode;
+            parentIfNode = (IfNode)parentIfNode.getElseNode();
         }
         return parentIfNode;
 	}
@@ -423,6 +389,10 @@ public class Parser
 
     private <T> T getLastElement(List<T> arrayList)
     {
+        for (T t : arrayList)
+        {
+            System.out.println(t);
+        }
         return arrayList.get(getLastElementIndex(arrayList));
     }
 }

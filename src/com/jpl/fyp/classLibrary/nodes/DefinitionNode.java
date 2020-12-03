@@ -3,11 +3,13 @@ package com.jpl.fyp.classLibrary.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefinitionNode extends ContainingNode
+public class DefinitionNode implements ContainingNode
 {
     public String definitionName;
 
     public List<ArgumentNode> arguments;
+
+	private List<StatementNode> statements;
 
     public DefinitionNode() 
     {
@@ -35,4 +37,16 @@ public class DefinitionNode extends ContainingNode
         output = output + "}\n";
         return output;
     }
+
+    @Override
+	public List<StatementNode> getStatements()
+    {
+		return this.statements;
+	}
+
+	@Override
+	public void addStatement(StatementNode statement)
+    {
+        this.statements.add(statement);
+	}
 }

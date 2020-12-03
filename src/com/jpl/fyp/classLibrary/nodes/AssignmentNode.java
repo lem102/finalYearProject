@@ -7,7 +7,7 @@ import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 import com.jpl.fyp.compilerComponent.Parser;
 
-public class AssignmentNode extends StatementNode
+public class AssignmentNode implements StatementNode
 {
     public String assignmentTarget;
 

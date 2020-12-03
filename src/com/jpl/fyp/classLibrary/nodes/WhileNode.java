@@ -2,15 +2,17 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 import com.jpl.fyp.compilerComponent.Parser;
 
-public class WhileNode extends ContainingNode
+public class WhileNode implements ContainingNode
 {
     public ExpressionNode testExpression;
+	private List<StatementNode> statements;
 
     public WhileNode(Token[] tokens, RootNode rootNode) throws JPLException
     {
@@ -66,4 +68,16 @@ public class WhileNode extends ContainingNode
 
         return output;
     }
+
+    @Override
+	public List<StatementNode> getStatements()
+    {
+		return this.statements;
+	}
+
+	@Override
+	public void addStatement(StatementNode statement)
+    {
+        this.statements.add(statement);
+	}
 }

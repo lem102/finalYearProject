@@ -1,6 +1,6 @@
 package com.jpl.fyp.classLibrary.nodes;
 
-public class StatementNode
+public interface StatementNode
 {
     
 }

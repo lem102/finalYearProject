@@ -1,25 +1,30 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 import com.jpl.fyp.compilerComponent.Parser;
 
-public class IfNode extends ContainingNode
+public class IfNode implements ConditionalNode
 {
     public ExpressionNode testExpression;
 
-    public ContainingNode elseNode;
+    private ContainingNode elseNode;
+
+	private List<StatementNode> statements;
 
     public IfNode(Token[] tokens, RootNode rootNode)
         throws JPLException
     {
         validateTokens(tokens,rootNode);
+        this.statements = new ArrayList<StatementNode>();
 
         this.testExpression = new ExpressionNode();
-        Token[] expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length - 1);
+        Token[] expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length - 2);
         this.testExpression.expressionTokens = Arrays.asList(expressionTokens);
     }
 
@@ -34,9 +39,13 @@ public class IfNode extends ContainingNode
         {
             Parser.throwParserException(rootNode, "If Statement : Second token must be an opening parenthesis.");
         }
-        else if (tokens[tokens.length-1].tokenType != TokenType.ClosingParenthesis)
+        else if (tokens[tokens.length-2].tokenType != TokenType.ClosingParenthesis)
         {
-            Parser.throwParserException(rootNode, "If Statement : Second token must be an opening parenthesis.");
+            Parser.throwParserException(rootNode, "If Statement : Second to last token must be a closing parenthesis.");
+        }
+        else if (tokens[tokens.length-1].tokenType != TokenType.OpeningBrace)
+        {
+            Parser.throwParserException(rootNode, "If Statement : Last token must be an opening brace.");
         }
 	}
 
@@ -63,5 +72,29 @@ public class IfNode extends ContainingNode
         output += "}\n";
         
 		return output;
+	}
+
+	@Override
+	public List<StatementNode> getStatements()
+    {
+		return this.statements;
+	}
+
+	@Override
+	public void addStatement(StatementNode statement)
+    {
+        this.statements.add(statement);
+	}
+
+	@Override
+	public ContainingNode getElseNode()
+    {
+		return this.elseNode;
+	}
+
+	@Override
+	public void setElseNode(ContainingNode elseNode)
+    {
+		this.elseNode = elseNode;
 	}
 }
