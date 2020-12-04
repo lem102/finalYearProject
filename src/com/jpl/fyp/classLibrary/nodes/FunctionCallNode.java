@@ -15,10 +15,10 @@ public class FunctionCallNode implements StatementNode
 
     public ExpressionNode[] arguments;
 
-    public FunctionCallNode(Token[] tokens, RootNode rootNode)
+    public FunctionCallNode(Token[] tokens)
         throws JPLException
     {
-        this.validateTokens(tokens, rootNode);
+        this.validateTokens(tokens);
         this.identifier = tokens[0].tokenValue;
         Token[] argumentTokens = Arrays.copyOfRange(tokens, 2, tokens.length - 1);
         this.arguments = parseArgumentTokens(argumentTokens);
@@ -59,23 +59,23 @@ public class FunctionCallNode implements StatementNode
         return output;
 	}
 
-	private void validateTokens(Token[] tokens, RootNode rootNode) throws JPLException
+	private void validateTokens(Token[] tokens) throws JPLException
     {
         if (tokens[0].tokenType != TokenType.Identifier)
         {
-            Parser.throwParserException(rootNode, "Function Call Node : First token must be an identifier.");
+            throw new JPLException("Function Call Node : First token must be an identifier.");
         }
         else if (tokens[1].tokenType != TokenType.OpeningParenthesis)
         {
-            Parser.throwParserException(rootNode, "Function Call Node : Second token must be a opening parenthesis.");
+            throw new JPLException("Function Call Node : Second token must be a opening parenthesis.");
         }
         else if (tokens[tokens.length - 2].tokenType != TokenType.ClosingParenthesis)
         {
-            Parser.throwParserException(rootNode, "Function Call Node : Second to last token must be a closing parenthesis.");
+            throw new JPLException("Function Call Node : Second to last token must be a closing parenthesis.");
         }
         else if (tokens[tokens.length - 1].tokenType != TokenType.Semicolon)
         {
-            Parser.throwParserException(rootNode, "Function Call Node : Last token must be a semicolon.");
+            throw new JPLException("Function Call Node : Last token must be a semicolon.");
         }
 	}
 

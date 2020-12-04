@@ -16,10 +16,10 @@ public class DeclarationNode implements StatementNode
 
     public ExpressionNode expression;
 
-    public DeclarationNode(Token[] tokens, RootNode rootNode)
+    public DeclarationNode(Token[] tokens)
         throws JPLException
     {
-        this.validateTokens(tokens, rootNode);
+        this.validateTokens(tokens);
         this.type = this.tokenToType(tokens[0]);
         this.identifier = tokens[1].tokenValue;
 
@@ -44,28 +44,24 @@ public class DeclarationNode implements StatementNode
         }
 	}
 
-	private void validateTokens(Token[] tokens, RootNode rootNode)
+	private void validateTokens(Token[] tokens)
         throws JPLException
     {
         if (tokens[0].tokenType != TokenType.IntegerDeclaration)
         {
-            Parser.throwParserException(rootNode,
-                                        "Declaration Node : First token must be a declaration token. Currently there are only integer declarations available.");
+            throw new JPLException("Declaration Node : First token must be a declaration token. Currently there are only integer declarations available.");
         }
         else if (tokens[1].tokenType != TokenType.Identifier)
         {
-            Parser.throwParserException(rootNode,
-                                        "Declaration Node : Second token must be an identifier.");
+            throw new JPLException("Declaration Node : Second token must be an identifier.");
         }
         else if (tokens[2].tokenType != TokenType.Assignment && tokens[2].tokenType != TokenType.Semicolon)
         {
-            Parser.throwParserException(rootNode,
-                                        "Declaration Node : Third token must be either an assignment symbol or a semicolon.");
+            throw new JPLException("Declaration Node : Third token must be either an assignment symbol or a semicolon.");
         }
         else if (tokens[tokens.length - 1].tokenType != TokenType.Semicolon)
         {
-            Parser.throwParserException(rootNode,
-                                        "Declaration Node : Last token must be a semicolon.");
+            throw new JPLException("Declaration Node : Last token must be a semicolon.");
         }
 	}
 

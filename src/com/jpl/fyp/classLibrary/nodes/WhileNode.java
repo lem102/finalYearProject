@@ -7,16 +7,15 @@ import java.util.List;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
-import com.jpl.fyp.compilerComponent.Parser;
 
 public class WhileNode implements ContainingNode
 {
     public ExpressionNode testExpression;
 	private List<StatementNode> statements;
 
-    public WhileNode(Token[] tokens, RootNode rootNode) throws JPLException
+    public WhileNode(Token[] tokens) throws JPLException
     {
-        validateTokens(tokens, rootNode);
+        validateTokens(tokens);
         Token[] expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length - 1);
         // needs to be changed when expressionNode is refactored :)
         this.testExpression = new ExpressionNode();
@@ -24,28 +23,23 @@ public class WhileNode implements ContainingNode
         this.statements = new ArrayList<StatementNode>();
     }
 
-	private void validateTokens(Token[] tokens,
-                                RootNode rootNode) throws JPLException
+	private void validateTokens(Token[] tokens) throws JPLException
     {
         if (tokens[0].tokenType != TokenType.While)
         {
-            Parser.throwParserException(rootNode,
-                                        "While Node : First token is not while keyword.");
+            throw new JPLException("While Node : First token is not while keyword.");
         }
         else if (tokens[1].tokenType != TokenType.OpeningParenthesis)
         {
-            Parser.throwParserException(rootNode,
-                                        "While Node : Second token is not an opening parenthesis.");
+            throw new JPLException("While Node : Second token is not an opening parenthesis.");
         }
         else if (tokens[tokens.length - 2].tokenType != TokenType.ClosingParenthesis)
         {
-            Parser.throwParserException(rootNode,
-                                        "While Node : Second to last token is not a closing parenthesis.");
+            throw new JPLException("While Node : Second to last token is not a closing parenthesis.");
         }
         else if (tokens[tokens.length - 1].tokenType != TokenType.OpeningBrace)
         {
-            Parser.throwParserException(rootNode,
-                                        "While Node : Last token is not an opening brace.");
+            throw new JPLException("While Node : Last token is not an opening brace.");
         }
 	}
 

@@ -13,10 +13,9 @@ public class AssignmentNode implements StatementNode
 
     public ExpressionNode expression;
 
-    public AssignmentNode(Token[] tokens,
-                          RootNode rootNode) throws JPLException
+    public AssignmentNode(Token[] tokens) throws JPLException
     {
-        this.validateTokens(tokens, rootNode);
+        this.validateTokens(tokens);
         this.assignmentTarget = tokens[0].tokenValue;
         // this will need changing when expression node is refactored.
         this.expression = new ExpressionNode();
@@ -25,23 +24,19 @@ public class AssignmentNode implements StatementNode
                                                                             tokens.length));
     }
 
-    private void validateTokens(Token[] tokens,
-                                RootNode rootNode) throws JPLException
+    private void validateTokens(Token[] tokens) throws JPLException
     {
         if (tokens[0].tokenType != TokenType.Identifier)
         {
-            Parser.throwParserException(rootNode,
-                                        "Assignment Node : First token is not an identifier token.");
+            throw new JPLException("Assignment Node : First token is not an identifier token.");
         }
         else if (tokens[1].tokenType != TokenType.Assignment)
         {
-            Parser.throwParserException(rootNode,
-                                        "Assignment Node : Second token is not an assignment token.");
+            throw new JPLException("Assignment Node : Second token is not an assignment token.");
         }
         else if (tokens[tokens.length - 1].tokenType != TokenType.Semicolon)
         {
-            Parser.throwParserException(rootNode,
-                                        "Assignment Node : Last token should be a semicolon.");
+            throw new JPLException("Assignment Node : Last token should be a semicolon.");
         }
 	}
 

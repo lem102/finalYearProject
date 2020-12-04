@@ -1,7 +1,6 @@
 package com.jpl.fyp.compilerComponent;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,7 +16,6 @@ import com.jpl.fyp.classLibrary.nodes.DeclarationNode;
 import com.jpl.fyp.classLibrary.nodes.DefinitionNode;
 import com.jpl.fyp.classLibrary.nodes.ElseIfNode;
 import com.jpl.fyp.classLibrary.nodes.ElseNode;
-import com.jpl.fyp.classLibrary.nodes.ExpressionNode;
 import com.jpl.fyp.classLibrary.nodes.FunctionCallNode;
 import com.jpl.fyp.classLibrary.nodes.IfNode;
 import com.jpl.fyp.classLibrary.nodes.RootNode;
@@ -57,19 +55,11 @@ public class Parser
             }
             else
             {
-                throwParserException(rootNode,
-                                     "all code must be contained within definitions.");
+                throw new JPLException("all code must be contained within definitions.");
             }
         }
 
         return rootNode;
-	}
-
-	public static void throwParserException(RootNode rootNode,
-                                            String message) throws JPLException
-    {
-        System.out.println(rootNode);
-        throw new JPLException(message);
 	}
 
 	private int parseDefinition(Token[] tokens,
@@ -79,8 +69,7 @@ public class Parser
     {
         if (containsDefinitionNode(nestingStatus))
         {
-            throwParserException(rootNode,
-                                 "cannot define function inside of function.");
+            throw new JPLException("cannot define function inside of function.");
         }
         else
         {
@@ -126,8 +115,7 @@ public class Parser
                 StatementNode previousStatementNode = getLastElement(nestingStatus.peek().getStatements());
 		        if (!(previousStatementNode instanceof IfNode))
 		        {
-                    throwParserException(rootNode,
-                                         "else statement can only occur after an if or else if statement.");
+                    throw new JPLException("else statement can only occur after an if or else if statement.");
 		        }
 		        var parentIfNode = (ConditionalNode)previousStatementNode;
 		        parentIfNode = getLastOfIfElseChain(parentIfNode);
@@ -163,25 +151,25 @@ public class Parser
 		    case IntegerDeclaration:
 		    {
 		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfStatement);
-		        return new DeclarationNode(relevantTokens, rootNode);
+		        return new DeclarationNode(relevantTokens);
 		    }
 		    case Identifier:
 		    {
-		        return parseNodeBeginningWithIdentifier(tokens, rootNode, i, endOfStatement);
+		        return parseNodeBeginningWithIdentifier(tokens, i, endOfStatement);
 		    }
 		    case While:
 		    {
 		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfHeader);
-		        return new WhileNode(relevantTokens, rootNode);
+		        return new WhileNode(relevantTokens);
 		    }
 		    case If:
 		    {
 		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfHeader);
-		        return new IfNode(relevantTokens, rootNode);
+		        return new IfNode(relevantTokens);
 		    }
 		    case Else:
 		    {
-		        return parseNodeBeginningWithElse(tokens, rootNode, i, endOfHeader);
+		        return parseNodeBeginningWithElse(tokens, i, endOfHeader);
 		    }
 		    default:
 		    {
@@ -191,7 +179,6 @@ public class Parser
 	}
 
 	private StatementNode parseNodeBeginningWithElse(Token[] tokens,
-                                                     RootNode rootNode,
                                                      int i,
                                                      int endOfHeader)
         throws JPLException
@@ -201,7 +188,7 @@ public class Parser
             case If:
             {
                 Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfHeader);
-                return new ElseIfNode(relevantTokens, rootNode);
+                return new ElseIfNode(relevantTokens);
             }
             case OpeningBrace:
             {
@@ -212,14 +199,12 @@ public class Parser
             {
                 throw new JPLException("else token must be followed by if " +
                                        "token incase of else if statement or opening parenthesis " +
-                                       "in the case of a straight else statement." +
-                                       "\n" + rootNode);
+                                       "in the case of a straight else statement.");
             }
         }
 	}
 
 	private StatementNode parseNodeBeginningWithIdentifier(Token[] tokens,
-                                                           RootNode rootNode,
                                                            int i,
                                                            int endOfStatement)
         throws JPLException
@@ -229,19 +214,18 @@ public class Parser
 		    case Assignment:
 		    {
 		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfStatement);
-		        return new AssignmentNode(relevantTokens, rootNode);
+		        return new AssignmentNode(relevantTokens);
 		    }
 		    case OpeningParenthesis:
 		    {
 		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfStatement);
-		        return new FunctionCallNode(relevantTokens, rootNode);
+		        return new FunctionCallNode(relevantTokens);
 		    }
 		    default:
 		    {
 		        throw new JPLException("Invalid token, was expecting either an opening brace token " +
 		                               "in case of a standalone method call or an assignment " +
-		                               "token in case of variable assignment." +
-		                               "\n" + rootNode);
+		                               "token in case of variable assignment.");
 		    }
 		}
 	}
@@ -294,15 +278,13 @@ public class Parser
         i++;
         if (tokens[i].tokenType != TokenType.Identifier)
         {
-            throwParserException(rootNode,
-                                 "Definition must have a name.");
+            throw new JPLException("Definition must have a name.");
         }
         definitionNode.definitionName = tokens[i].tokenValue;
         i++;
         if (tokens[i].tokenType != TokenType.OpeningParenthesis)
         {
-            throwParserException(rootNode,
-                                 "Definition must have an opening parenthesis after name.");
+            throw new JPLException("Definition must have an opening parenthesis after name.");
         }
         i++;
         if (tokens[i].tokenType == TokenType.ClosingParenthesis)
@@ -318,8 +300,7 @@ public class Parser
         }
         if (tokens[i].tokenType != TokenType.OpeningBrace)
         {
-            throwParserException(rootNode,
-                                 "Opening brace required after function arguments.");
+            throw new JPLException("Opening brace required after function arguments.");
         }
         i++;
 		return i;
@@ -338,15 +319,13 @@ public class Parser
             // this if needs to include all other declaration tokens if/when they are added.
             if (tokens[i].tokenType != TokenType.IntegerDeclaration)
             {
-                throwParserException(rootNode,
-                                     "arguments must have a type.");
+                throw new JPLException("arguments must have a type.");
             }
             argumentNode.type = JPLType.Integer;
             i++;
             if (tokens[i].tokenType != TokenType.Identifier)
             {
-                throwParserException(rootNode,
-                                     "arguments must have a identifier after their type.");
+                throw new JPLException("arguments must have a identifier after their type.");
             }
 
             argumentNode.identifier = tokens[i].tokenValue;
@@ -363,8 +342,7 @@ public class Parser
             }
             else
             {
-                throwParserException(rootNode,
-                                     "Invalid extra token after argument.");
+                throw new JPLException("Invalid extra token after argument.");
             }
         }
 		return i;

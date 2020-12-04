@@ -17,10 +17,10 @@ public class IfNode implements ConditionalNode
 
 	private List<StatementNode> statements;
 
-    public IfNode(Token[] tokens, RootNode rootNode)
+    public IfNode(Token[] tokens)
         throws JPLException
     {
-        validateTokens(tokens,rootNode);
+        validateTokens(tokens);
         this.statements = new ArrayList<StatementNode>();
 
         this.testExpression = new ExpressionNode();
@@ -28,24 +28,24 @@ public class IfNode implements ConditionalNode
         this.testExpression.expressionTokens = Arrays.asList(expressionTokens);
     }
 
-	private void validateTokens(Token[] tokens, RootNode rootNode)
+	private void validateTokens(Token[] tokens)
         throws JPLException
     {
         if (tokens[0].tokenType != TokenType.If)
         {
-            Parser.throwParserException(rootNode, "If Statement : First token must be an if identifier.");
+            throw new JPLException("If Statement : First token must be an if identifier.");
         }
         else if (tokens[1].tokenType != TokenType.OpeningParenthesis)
         {
-            Parser.throwParserException(rootNode, "If Statement : Second token must be an opening parenthesis.");
+            throw new JPLException("If Statement : Second token must be an opening parenthesis.");
         }
         else if (tokens[tokens.length-2].tokenType != TokenType.ClosingParenthesis)
         {
-            Parser.throwParserException(rootNode, "If Statement : Second to last token must be a closing parenthesis.");
+            throw new JPLException("If Statement : Second to last token must be a closing parenthesis.");
         }
         else if (tokens[tokens.length-1].tokenType != TokenType.OpeningBrace)
         {
-            Parser.throwParserException(rootNode, "If Statement : Last token must be an opening brace.");
+            throw new JPLException("If Statement : Last token must be an opening brace.");
         }
 	}
 

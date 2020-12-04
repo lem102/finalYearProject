@@ -8,10 +8,10 @@ import com.jpl.fyp.classLibrary.TokenType;
 
 public class ElseIfNode extends IfNode
 {
-	public ElseIfNode(Token[] tokens, RootNode rootNode)
+	public ElseIfNode(Token[] tokens)
         throws JPLException
     {
-        super(prepareTokens(tokens), rootNode);
+        super(prepareTokens(tokens));
 	}
 
 	private static Token[] prepareTokens(Token[] tokens) throws JPLException
