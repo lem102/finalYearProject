@@ -1,0 +1,7 @@
+define UglyFunction()
+{
+    while (1 == 2)
+    {
+        
+    }
+}
