@@ -65,7 +65,8 @@ public class Parser
 	private int parseDefinition(Token[] tokens,
                                 ArrayDeque<ContainingNode> nestingStatus,
                                 RootNode rootNode,
-                                int i) throws JPLException
+                                int i)
+        throws JPLException
     {
         if (containsDefinitionNode(nestingStatus))
         {
@@ -73,23 +74,16 @@ public class Parser
         }
         else
         {
-            i = parseDefinitionDeclaration(tokens,
-                                           nestingStatus,
-                                           rootNode,
-                                           i);
-
-            i = parseStatements(tokens,
-                                nestingStatus,
-                                rootNode,
-                                i);
+            i = parseDefinitionHeader(tokens, nestingStatus, rootNode, i);
+            i = parseStatements(tokens, nestingStatus, i);
         }
 		return i;
 	}
 
 	private int parseStatements(Token[] tokens,
                                 ArrayDeque<ContainingNode> nestingStatus,
-                                RootNode rootNode,
-                                int i) throws JPLException
+                                int i)
+        throws JPLException
     {
         while (true)
         {
@@ -104,9 +98,9 @@ public class Parser
                 continue;
             }
             
-            int endOfStatement = findEndOfStatement(tokens, i);
-            int endOfHeader = findEndOfHeader(tokens, i);
-            StatementNode node = parseNextNode(tokens, rootNode, i, endOfStatement, endOfHeader);
+            int endOfStatement = elementsUntilPastEndOfStatement(tokens, i);
+            int endOfHeader = elementsUntilPastEndOfHeader(tokens, i);
+            StatementNode node = parseNextStatementOrHeader(tokens, i, endOfStatement, endOfHeader);
 
             if (node instanceof ElseIfNode
                 ||
@@ -139,8 +133,7 @@ public class Parser
 		return i;
 	}
 
-	private StatementNode parseNextNode(Token[] tokens,
-                                        RootNode rootNode,
+	private StatementNode parseNextStatementOrHeader(Token[] tokens,
                                         int i,
                                         int endOfStatement,
                                         int endOfHeader)
@@ -155,7 +148,7 @@ public class Parser
 		    }
 		    case Identifier:
 		    {
-		        return parseNodeBeginningWithIdentifier(tokens, i, endOfStatement);
+		        return parseStatementBeginningWithIdentifier(tokens, i, endOfStatement);
 		    }
 		    case While:
 		    {
@@ -169,16 +162,16 @@ public class Parser
 		    }
 		    case Else:
 		    {
-		        return parseNodeBeginningWithElse(tokens, i, endOfHeader);
+		        return parseStatementBeginningWithElse(tokens, i, endOfHeader);
 		    }
 		    default:
 		    {
-		        throw new JPLException("unhandled token" + "\n" + rootNode);
+		        throw new JPLException("unhandled token");
 		    }
 		}
 	}
 
-	private StatementNode parseNodeBeginningWithElse(Token[] tokens,
+	private StatementNode parseStatementBeginningWithElse(Token[] tokens,
                                                      int i,
                                                      int endOfHeader)
         throws JPLException
@@ -204,7 +197,7 @@ public class Parser
         }
 	}
 
-	private StatementNode parseNodeBeginningWithIdentifier(Token[] tokens,
+	private StatementNode parseStatementBeginningWithIdentifier(Token[] tokens,
                                                            int i,
                                                            int endOfStatement)
         throws JPLException
@@ -230,26 +223,35 @@ public class Parser
 		}
 	}
 
-    private int findEndOfStatement(Token[] tokens, int i)
+    private int elementsUntilPastEndOfStatement(Token[] tokens,
+                                                int startIndex)
     {
-        return findNextOccuranceOfToken(tokens, i, TokenType.Semicolon);
+        return elementsUntilPastNextOccuranceOfToken(tokens,
+                                                     startIndex,
+                                                     TokenType.Semicolon);
     }
 
-    private int findEndOfHeader(Token[] tokens, int i)
+    private int elementsUntilPastEndOfHeader(Token[] tokens,
+                                             int startIndex)
     {
-		return findNextOccuranceOfToken(tokens, i, TokenType.OpeningBrace);
+		return elementsUntilPastNextOccuranceOfToken(tokens,
+                                                     startIndex,
+                                                     TokenType.OpeningBrace);
     }
 
-    private int findNextOccuranceOfToken(Token[] tokens, int i, TokenType tokenType)
+    private int elementsUntilPastNextOccuranceOfToken(Token[] tokens,
+                                                      int startIndex,
+                                                      TokenType tokenType)
     {
         try
         {
-            while (tokens[i].tokenType != tokenType)
+            while (tokens[startIndex].tokenType != tokenType)
             {
-                i++;
+                startIndex++;
+                // you are thinking about refactoring this method.
             }
-            i++;
-            return i;
+            startIndex++;
+            return startIndex;
         }
         catch (Throwable e)
         {
@@ -267,10 +269,11 @@ public class Parser
         return parentIfNode;
 	}
 
-	private int parseDefinitionDeclaration(Token[] tokens,
-                                           ArrayDeque<ContainingNode> nestingStatus,
-                                           RootNode rootNode,
-                                           int i) throws JPLException
+	private int parseDefinitionHeader(Token[] tokens,
+                                      ArrayDeque<ContainingNode> nestingStatus,
+                                      RootNode rootNode,
+                                      int i)
+        throws JPLException
     {
         var definitionNode = new DefinitionNode();
         rootNode.definitions.add(definitionNode);
@@ -367,10 +370,6 @@ public class Parser
 
     private <T> T getLastElement(List<T> arrayList)
     {
-        for (T t : arrayList)
-        {
-            System.out.println(t);
-        }
         return arrayList.get(getLastElementIndex(arrayList));
     }
 }
