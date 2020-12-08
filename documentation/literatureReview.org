@@ -11,9 +11,17 @@
 
 #+OPTIONS: toc:nil
 
-* Background Research - due in 7/12/2020
+* Literature Review
 
 ** Necessary Background Material
+
+*** Required Knowledge
+
+To understand the source code aspect of my project, a reader would need to understand basic programming concepts such as what a statement is, how basic logic such as if statements and loop statements work, and be decently familiar with either Java or another mainly object oriented language (for example, C). They would also need to understand object oriented concepts, such as classes, objects and inheritance. A basic understanding of assembly would also be useful for the later parts of the compiler where we are creating machine code, but I will be documenting these quite intensely and intend to make them as simple as possible.
+
+I would also recommend reading the first chapter of Compilers: Principles techniques and tools (AKA The Dragon Book) \cite{dragon}. This chapter gives an overview of the various components of a compiler and the different transformations that the code that is being compiled needs to undergo before it can be processed by the CPU. An especially useful resource to understand these concepts is figure 1.7, which can be found on page 7. This figure shows how the code to be compiled will look through the various stages of compilation.
+
+Other topics of interest that are located within this chapter are the concepts of tokens, syntax trees and intermediate representation. These are what the source code of this project will be attempting to produce and then use in later parts of the compiler input's journey through the compiler.
 
 *** What is a compiler?
 
@@ -57,7 +65,7 @@ becomes much more complicated in assembly language \cite{assemblyHelloWorld}:
 
 This meant that programmers were a lot less productive, as they spent a lot of time doing what we now consider trivial operations, as well as having to create solutions to complex problems. As a consequence of this, the price of software exceeded that of the hardware available at the time due to how complicated and time consuming it was to make even a simple program.
 
-Happily, this was all soon to change. In the 1950s, a man called John Backus joined IBM as a programmer. The first project he worked on was a program in machine code to calculate the position of the moon. Because programming in machine code was so awful, he invented a program called SpeedCoding. SpeedCoding is essentially a collection of macros that would reduce the amount of time a programmer would spend on common tasks by running chunks of code created on the fly based on a few paramaters supplied by the program. This enhanced programmer productivity, but at a cost. If a program using SpeedCoding was running, then SpeedCoding also need to be running to "interpret" the fancy SpeedCoding instructions. This consumed a large chunk of the memory of the computers they had at the time, so it was deemed not practical.
+Happily, this was all soon to change. In the 1950s, a man called John Backus joined IBM as a programmer. The first project he worked on was a program in machine code to calculate the position of the moon. Because programming in machine code was so awful, he invented a program called SpeedCoding. SpeedCoding is essentially a collection of macros that would reduce the amount of time a programmer would spend on common tasks by running chunks of code created on the fly based on a few parameters supplied by the program. This enhanced programmer productivity, but at a cost. If a program using SpeedCoding was running, then SpeedCoding also need to be running to "interpret" the fancy SpeedCoding instructions. This consumed a large chunk of the memory of the computers they had at the time, so it was deemed not practical.
 
 After his experiments with SpeedCoding, Backus was appointed as the manager of the Programming Research Department at IBM in 1954. During this time, he assembled a team and developed FORTRAN. FORTRAN was the first widely used high-level language, and it greatly simplified writing software. It worked by taking input in the form of a simpler language which abstracted away many of the complications caused by writing directly in assembly, and then translated that input into assembly instructions which could then be run on a compatible computer. This was the first practical use of a compiler \cite{johnBackus}.
 
@@ -100,8 +108,6 @@ Each of these lexemes are then used to create a token. Each token has a value an
 **** Syntax Analysis
 
 After the source code has been successfully split into tokens, a syntax tree needs to be produced using the tokens from the previous phase. The purpose of this tree is to show how the tokens all relate to each other. In the tokens that we have from the previous phase, the assignment token would be the root token of the statement, the identifier before the assignment and the expression after the assignment would be the children of the assignment token.
-
-TODO: make image to show the tree here
 
 **** Semantic Analysis
 
@@ -164,29 +170,23 @@ Throughout the process of compilation, a data structure known as the symbol tabl
 
 All of this information is gathered during the syntax analysis phase and validated during the semantic analysis phase. The data within the syntax table is important throughout nearly all the phases of compilation \cite{dragon}.
 
-*** what does the examiner need to read or know
-
-To understand the source code aspect of my project, a reader would need to understand basic programming concepts such as what a statement is, how basic logic such as if statements and loop statements work, and be decently familiar with either Java or another mainly object oriented language (for example, C). They would also need to understand object oriented concepts, such as classes, objects and inheritance. A basic understanding of assembly would also be useful for the later parts of the compiler where we are creating machine code, but I will be documenting these quite intensely and intend to make them as simple as possible.
-
-I would also recommend reading the first chapter of Compilers: Principles techniques and tools (AKA The Dragon Book) \cite{dragon}. This chapter gives an overview of the various components of a compiler and the different transformations that the code that is being compiled needs to undergo before it can be processed by the CPU. An especially useful resource to understand these concepts is figure 1.7, which can be found on page 7. This figure shows how the code to be compiled will look through the various stages of compilation.
-
-Other topics of interest that are located within this chapter are the concepts of tokens, syntax trees and intermediate representation. These are what the source code of this project will be attempting to produce and then use in later parts of the compiler input's journey through the compiler.
-
 ** Related Work
 
 *** A Compiler for Teaching about Compilers
-
-TODO: write a bit more about this project.
 
 This paper sounds like it has a comparable spirit to this project in that it espouses similar ideas regarding how the use of compiler creation tools effect educational benefits, but the paper discusses a compiler that is designed in order to teach a course, whereas mine is simply a resource from which you can see how a compiler could be implemented without the use of compiler creation tools \cite{compilerForTeachingCompilers}.
 
 The compiler in this course is designed to be very modular, so that a student on the course could take out a component of the compiler and replace it with their own. This also means that the student would be able to replace parts of their own work with the teachers, which could be useful if they wanted to see how that part of the compiler is supposed to function.
 
+This project and my project are similar in that they both involve creating a compiler that needs to be modular and simple to understand so that students can learn the basic concetps of how compilers work from reading the provided source code. This means that both projects will need to have clean, readable code.
+
+The projects differ in their purpose, however. My project is simply a supplement to an existing course, or perhaps just an example to showcase the inputs and outputs of different steps of compilation. The project described in the paper is meant to be at the centre of a university module, and is designed to be extremely modular to the point that students can remove some component and replace it with their own. Although my compiler will try to be modular in order to encourage experimentation, it is not the primary focus of my project, which is to demonstrate that a compiler can be built without needing lots of theoretical knowledge.
+
 *** A Set Of Tools To Teach Compiler Construction
 
 This paper introduces a set of tools to aid in the teaching of compilers, as the authors of the paper found that some of the tools commonly used in compiler construction were either obsolete or lacking in terms of educational features. One example of how they remedied this is by making use of a modified GNU bison, which outputs a detailed description of the various states the parser is in whilst parsing the input tokens. This information was lacking in the original bison, making it very difficult to find errors in either the input or the parser code.
 
-My project differs from the tools described in the above paper quite significantly. In the paper, they still make use of tools to create code which skips over the gory details. These tools are better for education, which is an improvement, but I want to stick to just using a programming language in my project. My intention with this is to reveal how a normal student could create a compiler with out the use of complicated tools and theories, therefore making the student totally understand the process of compilation \cite{aSetOfToolsToTeachCompilerConstruction}.
+My project differs from the tools described in the above paper quite significantly. In the paper, they still make use of tools to create code which skips over the gory details. These tools are better for education, which is an improvement, but I want to stick to just using a single programming language (Java) in my project. My intention with this is to reveal how a normal student could create a compiler with out the use of complicated tools and theories, therefore making the student totally understand the process of compilation \cite{aSetOfToolsToTeachCompilerConstruction}.
 
 \bibliographystyle{apacite}
 \bibliography{bibliography.bib}
