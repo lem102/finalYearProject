@@ -1,7 +1,5 @@
 package com.jpl.fyp.classLibrary.nodes;
 
-import java.util.ArrayDeque;
-
 import com.jpl.fyp.classLibrary.JPLException;
 
 public class StatementNode implements Node
@@ -13,9 +11,17 @@ public class StatementNode implements Node
 	}
 
 	@Override
-	public ArrayDeque<ContainingNode> updateNestingStatus(ArrayDeque<ContainingNode> nestingStatus) throws JPLException
+	public RootNode addToRootNode(RootNode rootNode) throws JPLException
     {
-        nestingStatus.peek().addStatement(this);
-		return nestingStatus;
+        if (rootNode.getNestingStatus().isEmpty())
+        {
+            // System.out.println("ouch");
+            something not right, output 275 lines long instead of 205
+        }
+        else
+        {
+            rootNode.getNestingStatus().peek().addStatement(this);
+        }
+		return rootNode;
 	}
 }

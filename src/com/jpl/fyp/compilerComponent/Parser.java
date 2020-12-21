@@ -1,24 +1,12 @@
 package com.jpl.fyp.compilerComponent;
 
-import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
-import com.jpl.fyp.classLibrary.nodes.AssignmentNode;
-import com.jpl.fyp.classLibrary.nodes.ConditionalNode;
-import com.jpl.fyp.classLibrary.nodes.ContainingNode;
-import com.jpl.fyp.classLibrary.nodes.DeclarationNode;
-import com.jpl.fyp.classLibrary.nodes.DefinitionNode;
-import com.jpl.fyp.classLibrary.nodes.ElseIfNode;
-import com.jpl.fyp.classLibrary.nodes.ElseNode;
-import com.jpl.fyp.classLibrary.nodes.FunctionCallNode;
-import com.jpl.fyp.classLibrary.nodes.IfNode;
-import com.jpl.fyp.classLibrary.nodes.RootNode;
-import com.jpl.fyp.classLibrary.nodes.StatementNode;
-import com.jpl.fyp.classLibrary.nodes.WhileNode;
+import com.jpl.fyp.classLibrary.nodes.*;
 
 public class Parser
 {
@@ -31,7 +19,6 @@ public class Parser
 
 	private RootNode parse(Token[] tokens) throws JPLException
     {
-        var nestingStatus = new ArrayDeque<ContainingNode>();
         // TODO: in future need to have a symbol table to handle variable and function names.
         // List< symbolTable = new List<(int, string, object)>();
         var rootNode = new RootNode();
@@ -42,7 +29,7 @@ public class Parser
         {
             if (tokens[tokenIndex].tokenType == TokenType.ClosingBrace)
             {
-                nestingStatus.pop();
+                rootNode.getNestingStatus().pop();
                 tokenIndex++;
                 continue;
             }
@@ -51,38 +38,8 @@ public class Parser
             int endOfHeader = elementsUntilPastEndOfHeader(tokens, tokenIndex);
             StatementNode node = parseNextStatementOrHeader(tokens, tokenIndex, endOfStatement, endOfHeader);
 
-            if (!(node instanceof DefinitionNode)
-                &&
-                !(containsDefinitionNode(nestingStatus)))
-            {
-                throw new JPLException("all code must be contained within definitions.");
-            }
+            rootNode.addNode(node);
 
-            // this if statement could be put in a method in the node that overrides where necessary.
-            if (node instanceof DefinitionNode)
-            {
-                if (containsDefinitionNode(nestingStatus))
-                {
-                    throw new JPLException("cannot define function inside of function.");
-                }
-                rootNode.getDefinitions().add((DefinitionNode)node);
-            }
-            // next look here
-            else
-            {
-                node.updateNestingStatus(nestingStatus);
-            }
-
-            if (node instanceof ContainingNode)
-            {
-                nestingStatus.push((ContainingNode)node);
-            }
-            //
-
-            System.out.println(RootNode.test());
-
-            // refactor code so that nestingstatus is a field of rootnode.
-                
             tokenIndex = node.moveIndexToNextStatement(endOfStatement, endOfHeader);
         }
         return rootNode;
@@ -218,28 +175,6 @@ public class Parser
             return 0;
         }
     }
-
-	private ConditionalNode getLastOfIfElseChain(ConditionalNode parentIfNode)
-    {
-        while (parentIfNode.getElseNode() != null)
-        {
-            // TODO: Add a check here to check for rouge else nodes.
-            parentIfNode = (IfNode)parentIfNode.getElseNode();
-        }
-        return parentIfNode;
-	}
-
-	private boolean containsDefinitionNode(ArrayDeque<ContainingNode> nestingStatus)
-    {
-        for (ContainingNode containingNode : nestingStatus)
-        {
-        	if (containingNode instanceof DefinitionNode)
-            {
-                return true;
-            }
-        }
-		return false;
-	}
 
     private <T> int getLastElementIndex(List<T> arrayList)
     {

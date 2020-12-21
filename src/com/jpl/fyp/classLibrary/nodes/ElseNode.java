@@ -47,9 +47,9 @@ public class ElseNode extends ContainingNode
 	}
 
     @Override
-    public ArrayDeque<ContainingNode> updateNestingStatus(ArrayDeque<ContainingNode> nestingStatus) throws JPLException
+    public RootNode addToRootNode(RootNode rootNode) throws JPLException
     {
-        StatementNode previousStatementNode = nestingStatus.peek().getStatements().get(nestingStatus.peek().getStatements().size() - 1);
+        StatementNode previousStatementNode = rootNode.getNestingStatus().peek().getStatements().get(rootNode.getNestingStatus().peek().getStatements().size() - 1);
         if (!(previousStatementNode instanceof IfNode))
         {
             throw new JPLException("else statement can only occur after an if or else if statement.");
@@ -57,6 +57,7 @@ public class ElseNode extends ContainingNode
         var parentIfNode = (ConditionalNode)previousStatementNode;
         parentIfNode = getLastOfIfElseChain(parentIfNode);
         parentIfNode.setElseNode(this);
-        return nestingStatus;
+        rootNode = super.addToRootNode(rootNode);
+        return rootNode;
     }
 }

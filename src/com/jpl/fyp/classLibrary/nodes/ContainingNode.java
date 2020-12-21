@@ -31,14 +31,14 @@ public class ContainingNode extends StatementNode
 		return endOfHeader;
 	}
 
-    // @Override
-    // public ArrayDeque<ContainingNode> updateNestingStatus(ArrayDeque<ContainingNode> nestingStatus)
-	// 	throws JPLException
-    // {
-    //     super.updateNestingStatus(nestingStatus);
-    //     nestingStatus.push(this);
-    //     return nestingStatus;
-    // }
+    @Override
+    public RootNode addToRootNode(RootNode rootNode)
+		throws JPLException
+    {
+        rootNode = super.addToRootNode(rootNode);
+        rootNode.getNestingStatus().push(this);
+        return rootNode;
+    }
 
     protected ConditionalNode getLastOfIfElseChain(ConditionalNode parentIfNode)
     {
