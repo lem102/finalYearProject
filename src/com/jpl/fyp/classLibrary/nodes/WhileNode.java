@@ -8,7 +8,7 @@ import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 
-public class WhileNode implements ContainingNode
+public class WhileNode extends ContainingNode
 {
     public ExpressionNode testExpression;
 	private List<StatementNode> statements;
@@ -62,16 +62,4 @@ public class WhileNode implements ContainingNode
 
         return output;
     }
-
-    @Override
-	public List<StatementNode> getStatements()
-    {
-		return this.statements;
-	}
-
-	@Override
-	public void addStatement(StatementNode statement)
-    {
-        this.statements.add(statement);
-	}
 }

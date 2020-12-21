@@ -1,5 +1,6 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
 
 import com.jpl.fyp.classLibrary.JPLException;
@@ -25,4 +26,18 @@ public class ElseIfNode extends IfNode
 
         return preparedTokens;
 	}
+
+    @Override
+    public ArrayDeque<ContainingNode> updateNestingStatus(ArrayDeque<ContainingNode> nestingStatus) throws JPLException
+    {
+        StatementNode previousStatementNode = nestingStatus.peek().getStatements().get(nestingStatus.peek().getStatements().size() - 1);
+        if (!(previousStatementNode instanceof IfNode))
+        {
+            throw new JPLException("else statement can only occur after an if or else if statement.");
+        }
+        var parentIfNode = (ConditionalNode)previousStatementNode;
+        parentIfNode = getLastOfIfElseChain(parentIfNode);
+        parentIfNode.setElseNode(this);
+        return nestingStatus;
+    }
 }

@@ -6,9 +6,8 @@ import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.JPLType;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
-import com.jpl.fyp.compilerComponent.Parser;
 
-public class DeclarationNode implements StatementNode
+public class DeclarationNode extends StatementNode
 {
     public JPLType type;
 

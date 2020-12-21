@@ -59,7 +59,7 @@ define GoodFunction(int apple, int banana)
         int citrus = n;
         while(i == 1)
         {
-            int jiaqi = 1;
+           int jiaqi = 1;
         }
         int grandma;
     }

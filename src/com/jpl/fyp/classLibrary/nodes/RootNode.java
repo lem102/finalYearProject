@@ -1,15 +1,20 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 public class RootNode
 {
-    public List<DefinitionNode> definitions;
+    private List<DefinitionNode> definitions;
+
+    private Deque<ContainingNode> nestingStatus;
 
     public RootNode()
     {
-        definitions = new ArrayList<DefinitionNode>();
+        this.definitions = new ArrayList<DefinitionNode>();
+        this.nestingStatus = new ArrayDeque<ContainingNode>();
     }
 
     @Override
@@ -23,5 +28,20 @@ public class RootNode
         }
         
         return output;
+    }
+
+	public List<DefinitionNode> getDefinitions()
+    {
+		return definitions;
+	}
+
+	public void setDefinitions(List<DefinitionNode> definitions)
+    {
+		this.definitions = definitions;
+	}
+
+    public static String test()
+    {
+        return "test";
     }
 }

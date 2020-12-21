@@ -1,8 +1,16 @@
 package com.jpl.fyp.classLibrary.nodes;
 
-public interface ConditionalNode extends ContainingNode
+public class ConditionalNode extends ContainingNode
 {
-    ContainingNode getElseNode();
+    private ContainingNode elseNode;
+    
+	public ContainingNode getElseNode()
+    {
+		return this.elseNode;
+	}
 
-    void setElseNode(ContainingNode elseNode);
+	public void setElseNode(ContainingNode elseNode)
+    {
+		this.elseNode = elseNode;
+	}
 }

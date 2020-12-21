@@ -14,19 +14,23 @@ public class ArgumentNode
         return String.format("Type: %s, Identifier: %s\n", type, identifier);
     }
 
-	public JPLType getType() {
+	public JPLType getType()
+    {
 		return type;
 	}
 
-	public void setType(JPLType type) {
+	public void setType(JPLType type)
+    {
 		this.type = type;
 	}
 
-	public String getIdentifier() {
+	public String getIdentifier()
+    {
 		return identifier;
 	}
 
-	public void setIdentifier(String identifier) {
+	public void setIdentifier(String identifier)
+    {
 		this.identifier = identifier;
 	}
 }

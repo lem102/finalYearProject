@@ -1,27 +1,19 @@
 package com.jpl.fyp.classLibrary.nodes;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
-import com.jpl.fyp.compilerComponent.Parser;
 
-public class IfNode implements ConditionalNode
+public class IfNode extends ConditionalNode
 {
     public ExpressionNode testExpression;
-
-    private ContainingNode elseNode;
-
-	private List<StatementNode> statements;
 
     public IfNode(Token[] tokens)
         throws JPLException
     {
-        validateTokens(tokens);
-        this.statements = new ArrayList<StatementNode>();
+        this.validateTokens(tokens);
 
         this.testExpression = new ExpressionNode();
         Token[] expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length - 2);
@@ -61,40 +53,16 @@ public class IfNode implements ConditionalNode
 
         output += "Statements:\n";
         output += "{\n";
-        for (StatementNode statementNode : statements)
+        for (StatementNode statementNode : super.getStatements())
         {
             output += statementNode;
         }
         output += "Else:\n";
         output += "{\n";
-        output += elseNode + "\n";
+        output += super.getElseNode() + "\n";
         output += "}\n";
         output += "}\n";
         
 		return output;
-	}
-
-	@Override
-	public List<StatementNode> getStatements()
-    {
-		return this.statements;
-	}
-
-	@Override
-	public void addStatement(StatementNode statement)
-    {
-        this.statements.add(statement);
-	}
-
-	@Override
-	public ContainingNode getElseNode()
-    {
-		return this.elseNode;
-	}
-
-	@Override
-	public void setElseNode(ContainingNode elseNode)
-    {
-		this.elseNode = elseNode;
 	}
 }

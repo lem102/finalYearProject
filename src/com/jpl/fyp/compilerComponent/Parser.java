@@ -5,10 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
-import com.jpl.fyp.classLibrary.JPLType;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
-import com.jpl.fyp.classLibrary.nodes.ArgumentNode;
 import com.jpl.fyp.classLibrary.nodes.AssignmentNode;
 import com.jpl.fyp.classLibrary.nodes.ConditionalNode;
 import com.jpl.fyp.classLibrary.nodes.ContainingNode;
@@ -35,13 +33,6 @@ public class Parser
     {
         var nestingStatus = new ArrayDeque<ContainingNode>();
         // TODO: in future need to have a symbol table to handle variable and function names.
-
-        // TODO: i should have an arraylist of integers that is changed to
-        // reflect the current nesting level of the parse. when a variable
-        // is declared, that array is cloned and then stored with the declaration
-        // node or in a separate variable. cant decide yet. i think storing
-        // within the declaration node is a better idea.
-        
         // List< symbolTable = new List<(int, string, object)>();
         var rootNode = new RootNode();
 
@@ -67,43 +58,33 @@ public class Parser
                 throw new JPLException("all code must be contained within definitions.");
             }
 
+            // this if statement could be put in a method in the node that overrides where necessary.
             if (node instanceof DefinitionNode)
             {
                 if (containsDefinitionNode(nestingStatus))
                 {
                     throw new JPLException("cannot define function inside of function.");
                 }
-                rootNode.definitions.add((DefinitionNode)node);
+                rootNode.getDefinitions().add((DefinitionNode)node);
             }
-            else if (node instanceof ElseIfNode
-                     ||
-                     node instanceof ElseNode)
-            {
-                StatementNode previousStatementNode = getLastElement(nestingStatus.peek().getStatements());
-                if (!(previousStatementNode instanceof IfNode))
-                {
-                    throw new JPLException("else statement can only occur after an if or else if statement.");
-                }
-                var parentIfNode = (ConditionalNode)previousStatementNode;
-                parentIfNode = getLastOfIfElseChain(parentIfNode);
-                parentIfNode.setElseNode((ContainingNode)node);
-            }
+            // next look here
             else
             {
-                nestingStatus.peek().addStatement(node);
+                node.updateNestingStatus(nestingStatus);
             }
-            
+
             if (node instanceof ContainingNode)
             {
                 nestingStatus.push((ContainingNode)node);
-                tokenIndex = endOfHeader;
             }
-            else
-            {
-                tokenIndex = endOfStatement;
-            }
-        }
+            //
 
+            System.out.println(RootNode.test());
+
+            // refactor code so that nestingstatus is a field of rootnode.
+                
+            tokenIndex = node.moveIndexToNextStatement(endOfStatement, endOfHeader);
+        }
         return rootNode;
 	}
 

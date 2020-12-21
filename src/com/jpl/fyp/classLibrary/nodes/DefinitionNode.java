@@ -2,28 +2,23 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.JPLType;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 
-public class DefinitionNode implements ContainingNode
+public class DefinitionNode extends ContainingNode
 {
     public String definitionName;
 
     public ArgumentNode[] arguments;
-
-	private List<StatementNode> statements;
 
     public DefinitionNode(Token[] tokens) throws JPLException 
     {
         this.validateTokens(tokens);
         this.definitionName = tokens[1].tokenValue;
         this.arguments = parseArguments(Arrays.copyOfRange(tokens, 3, tokens.length - 2));
-        
-        this.statements = new ArrayList<StatementNode>();
     }
 
     private ArgumentNode[] parseArguments(Token[] tokens) throws JPLException
@@ -128,7 +123,7 @@ public class DefinitionNode implements ContainingNode
 
         output = output + ")\n{\n";
 
-        for (StatementNode statement : statements)
+        for (StatementNode statement : super.getStatements())
         {
             output = output + statement;
         }
@@ -136,16 +131,4 @@ public class DefinitionNode implements ContainingNode
         output = output + "}\n";
         return output;
     }
-
-    @Override
-	public List<StatementNode> getStatements()
-    {
-		return this.statements;
-	}
-
-	@Override
-	public void addStatement(StatementNode statement)
-    {
-        this.statements.add(statement);
-	}
 }

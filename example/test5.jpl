@@ -1,7 +1,11 @@
 define UglyFunction()
 {
-    while (1 == 2)
+    define UglyFunction()
     {
-        
     }
+}
+
+
+define illegalFunction()
+{
 }

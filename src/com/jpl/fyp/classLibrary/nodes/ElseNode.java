@@ -1,21 +1,17 @@
 package com.jpl.fyp.classLibrary.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
 
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 
-public class ElseNode implements ContainingNode
+public class ElseNode extends ContainingNode
 {
-    private List<StatementNode> statements;
-
     public ElseNode(Token[] tokens) throws JPLException
     {
+        super();
         this.validateTokens(tokens);
-        
-        this.statements = new ArrayList<StatementNode>();
     }
 
     private void validateTokens(Token[] tokens) throws JPLException
@@ -41,7 +37,7 @@ public class ElseNode implements ContainingNode
         output += "Else Node:\n";
         output += "Statements:\n";
         output += "{\n";
-        for (StatementNode statementNode : statements)
+        for (StatementNode statementNode : super.getStatements())
         {
             output += statementNode;
         }
@@ -50,15 +46,17 @@ public class ElseNode implements ContainingNode
 		return output;
 	}
 
-	@Override
-	public List<StatementNode> getStatements()
+    @Override
+    public ArrayDeque<ContainingNode> updateNestingStatus(ArrayDeque<ContainingNode> nestingStatus) throws JPLException
     {
-		return this.statements;
-	}
-
-	@Override
-	public void addStatement(StatementNode statement)
-    {
-        this.statements.add(statement);
-	}
+        StatementNode previousStatementNode = nestingStatus.peek().getStatements().get(nestingStatus.peek().getStatements().size() - 1);
+        if (!(previousStatementNode instanceof IfNode))
+        {
+            throw new JPLException("else statement can only occur after an if or else if statement.");
+        }
+        var parentIfNode = (ConditionalNode)previousStatementNode;
+        parentIfNode = getLastOfIfElseChain(parentIfNode);
+        parentIfNode.setElseNode(this);
+        return nestingStatus;
+    }
 }
