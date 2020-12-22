@@ -21,4 +21,7 @@ public enum TokenType
     Comma,
     If,
     Else,
+    Minus,
+    Multiply,
+    Divide,
 }
