@@ -1,12 +1,20 @@
 package com.jpl.fyp.compilerComponent;
 
 import java.util.Arrays;
-import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
-import com.jpl.fyp.classLibrary.nodes.*;
+import com.jpl.fyp.classLibrary.nodes.AssignmentNode;
+import com.jpl.fyp.classLibrary.nodes.DeclarationNode;
+import com.jpl.fyp.classLibrary.nodes.DefinitionNode;
+import com.jpl.fyp.classLibrary.nodes.ElseIfNode;
+import com.jpl.fyp.classLibrary.nodes.ElseNode;
+import com.jpl.fyp.classLibrary.nodes.FunctionCallNode;
+import com.jpl.fyp.classLibrary.nodes.IfNode;
+import com.jpl.fyp.classLibrary.nodes.RootNode;
+import com.jpl.fyp.classLibrary.nodes.StatementNode;
+import com.jpl.fyp.classLibrary.nodes.WhileNode;
 
 public class Parser
 {
@@ -174,15 +182,5 @@ public class Parser
         {
             return 0;
         }
-    }
-
-    private <T> int getLastElementIndex(List<T> arrayList)
-    {
-        return arrayList.size() - 1;
-    }
-
-    private <T> T getLastElement(List<T> arrayList)
-    {
-        return arrayList.get(getLastElementIndex(arrayList));
     }
 }

@@ -16,11 +16,8 @@ public class AssignmentNode extends StatementNode
     {
         this.validateTokens(tokens);
         this.assignmentTarget = tokens[0].tokenValue;
-        // this will need changing when expression node is refactored.
-        this.expression = new ExpressionNode();
-        this.expression.expressionTokens = Arrays.asList(Arrays.copyOfRange(tokens,
-                                                                            2,
-                                                                            tokens.length));
+        var expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length);
+        this.expression = new ExpressionNode(expressionTokens);
     }
 
     private void validateTokens(Token[] tokens) throws JPLException

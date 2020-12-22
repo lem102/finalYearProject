@@ -18,8 +18,7 @@ public class WhileNode extends ContainingNode
         validateTokens(tokens);
         Token[] expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length - 1);
         // needs to be changed when expressionNode is refactored :)
-        this.testExpression = new ExpressionNode();
-        testExpression.expressionTokens = Arrays.asList(expressionTokens);
+        this.testExpression = new ExpressionNode(expressionTokens);
         this.statements = new ArrayList<StatementNode>();
     }
 

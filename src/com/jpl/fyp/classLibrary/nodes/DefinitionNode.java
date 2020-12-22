@@ -132,29 +132,4 @@ public class DefinitionNode extends ContainingNode
         output = output + "}\n";
         return output;
     }
-
-    @Override
-    public RootNode addToRootNode(RootNode rootNode) throws JPLException
-    {
-        if (containsDefinitionNode(rootNode.getNestingStatus()))
-        {
-            throw new JPLException("cannot define function inside of function.");
-        }
-        rootNode.getDefinitions().add(this);
-        rootNode = super.addToRootNode(rootNode);
-		return rootNode;
-    }
-
-    private boolean containsDefinitionNode(ArrayDeque<ContainingNode> nestingStatus)
-    {
-        for (ContainingNode containingNode : nestingStatus)
-        {
-        	if (containingNode instanceof DefinitionNode)
-            {
-                return true;
-            }
-        }
-		return false;
-	}
-
 }

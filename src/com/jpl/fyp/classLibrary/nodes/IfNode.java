@@ -15,9 +15,8 @@ public class IfNode extends ConditionalNode
     {
         this.validateTokens(tokens);
 
-        this.testExpression = new ExpressionNode();
         Token[] expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length - 2);
-        this.testExpression.expressionTokens = Arrays.asList(expressionTokens);
+        this.testExpression = new ExpressionNode(expressionTokens);
     }
 
 	private void validateTokens(Token[] tokens)

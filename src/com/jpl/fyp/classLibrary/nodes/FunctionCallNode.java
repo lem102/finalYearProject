@@ -31,9 +31,8 @@ public class FunctionCallNode extends StatementNode
         for (Token[] tokenArray : splitArgumentTokens)
         {
             // this will need to be refactored when expressionNode is refactored.
-            var node = new ExpressionNode();
+            var node = new ExpressionNode(tokenArray);
             output.add(node);
-            node.expressionTokens = Arrays.asList(tokenArray);
         }
 
         return output.toArray(new ExpressionNode[output.size()]);

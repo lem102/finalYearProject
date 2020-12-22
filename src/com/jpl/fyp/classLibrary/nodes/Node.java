@@ -6,5 +6,5 @@ public interface Node
 {
     int moveIndexToNextStatement(int endOfStatement, int endOfHeader);
 
-    RootNode addToRootNode(RootNode rootNode) throws JPLException;
+    // RootNode addToRootNode(RootNode rootNode) throws JPLException;
 }

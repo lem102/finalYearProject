@@ -1,29 +1,54 @@
 package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import com.jpl.fyp.classLibrary.ExpressionElement;
 import com.jpl.fyp.classLibrary.Token;
 
 public class ExpressionNode
 {
-    public List<Token> expressionTokens;
+    public ExpressionElement rootExpressionElement;
 
-    public ExpressionNode()
+    public ExpressionNode(Token[] tokens)
     {
-        expressionTokens = new ArrayList<Token>();
+        ExpressionElement[] expressionTokens = convertToExpressionElements(tokens);
+        this.rootExpressionElement = parse(expressionTokens);
     }
 
-    @Override
-    public String toString()
+    private ExpressionElement[] convertToExpressionElements(Token[] tokens)
     {
-        String output = "";
+        // Focus on implementing this sucker
+        var output = new ArrayList<ExpressionElement>();
+        var tokenIndex = 0;
 
-        for (Token token : expressionTokens)
+
+        ExpressionElement element = new ExpressionElement();
+        
+        switch (tokens[tokenIndex].tokenType)
         {
-            output += token + "\n";
+            case Integer:
+            {
+                
+                break;
+            }
+            default:
+            {
+                break;
+            }
         }
         
-        return output;
+        
+		return output.toArray(new ExpressionElement[output.size()]);
+	}
+
+	private ExpressionElement parse(ExpressionElement[] expressionTokens)
+    {
+		return null;
+	}
+
+	@Override
+    public String toString()
+    {
+        return rootExpressionElement.toString();
     }
 }

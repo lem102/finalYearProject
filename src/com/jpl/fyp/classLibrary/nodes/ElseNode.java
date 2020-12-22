@@ -45,19 +45,4 @@ public class ElseNode extends ContainingNode
         
 		return output;
 	}
-
-    @Override
-    public RootNode addToRootNode(RootNode rootNode) throws JPLException
-    {
-        StatementNode previousStatementNode = rootNode.getNestingStatus().peek().getStatements().get(rootNode.getNestingStatus().peek().getStatements().size() - 1);
-        if (!(previousStatementNode instanceof IfNode))
-        {
-            throw new JPLException("else statement can only occur after an if or else if statement.");
-        }
-        var parentIfNode = (ConditionalNode)previousStatementNode;
-        parentIfNode = getLastOfIfElseChain(parentIfNode);
-        parentIfNode.setElseNode(this);
-        rootNode = super.addToRootNode(rootNode);
-        return rootNode;
-    }
 }

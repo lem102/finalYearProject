@@ -22,12 +22,10 @@ public class DeclarationNode extends StatementNode
         this.type = this.tokenToType(tokens[0]);
         this.identifier = tokens[1].tokenValue;
 
-        // TODO: needs to be changed when expression node is refactored
         if (tokens.length > 2)
         {
-            this.expression = new ExpressionNode();
             Token[] expressionTokens = Arrays.copyOfRange(tokens, 3, tokens.length);
-            expression.expressionTokens = Arrays.asList(expressionTokens);
+            this.expression = new ExpressionNode(expressionTokens);
         }
 	}
 
