@@ -16,7 +16,7 @@ public class AssignmentNode extends StatementNode
     {
         this.validateTokens(tokens);
         this.assignmentTarget = tokens[0].tokenValue;
-        var expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length);
+        var expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length-1);
         this.expression = new ExpressionNode(expressionTokens);
     }
 

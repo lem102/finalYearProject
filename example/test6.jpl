@@ -1,0 +1,4 @@
+define UglyFunction()
+{
+    test = a + 2;
+}

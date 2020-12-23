@@ -23,7 +23,7 @@ public class FunctionCallNode extends StatementNode
         this.arguments = parseArgumentTokens(argumentTokens);
     }
 
-    private ExpressionNode[] parseArgumentTokens(Token[] tokens)
+    private ExpressionNode[] parseArgumentTokens(Token[] tokens) throws JPLException
     {
         var output = new ArrayList<ExpressionNode>();
         List<Token[]> splitArgumentTokens = splitTokensByArgument(tokens);
