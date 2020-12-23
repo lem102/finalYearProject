@@ -12,7 +12,7 @@ public enum TokenType
     OpeningBrace,
     ClosingBrace,
     Assignment,
-    Plus,
+    Add,
     Semicolon,
     Equal,
     NotEqual,
@@ -25,7 +25,7 @@ public enum TokenType
     Comma,
     If,
     Else,
-    Minus,
+    Subtract,
     Multiply,
     Divide,
 }

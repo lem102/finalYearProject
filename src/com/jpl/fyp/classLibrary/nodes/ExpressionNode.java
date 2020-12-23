@@ -10,39 +10,69 @@ public class ExpressionNode extends ExpressionElementNode
 {
     public ExpressionElementNode rootExpressionElementNode;
 
-    public ExpressionNode(Token[] tokens) throws JPLException
+    public ExpressionNode(Token[] elements) throws JPLException
     {
-        ExpressionElementNode[] expressionTokens = convertToExpressionElementNodes(tokens);
-        validateExpressionTokens(expressionTokens);
-        rootExpressionElementNode = parse(expressionTokens);
+        ExpressionElementNode[] expressionElements = convertToExpressionElementNodes(elements);
+        validateExpressionElements(expressionElements);
+        rootExpressionElementNode = parse(expressionElements);
     }
 
-    private void validateExpressionTokens(ExpressionElementNode[] expressionTokens)
+    private void validateExpressionElements(ExpressionElementNode[] expressionElements)
         throws JPLException
     {
-        for (ExpressionElementNode expressionElementNode : expressionTokens)
+        for (ExpressionElementNode expressionElementNode : expressionElements)
         {
             System.out.println(expressionElementNode);
         }
         
-        if (expressionTokens.length % 2 != 1)
+        if (expressionElements.length % 2 != 1)
         {
-            throw new JPLException("Expression Node : Invalid number of expression tokens.");
+            throw new JPLException("Expression Node : Invalid number of expression elements.");
         }
 
-        ensureNumberOfComparisonsUnderTwo(expressionTokens);
+        ensureNumberOfComparisonsUnderTwo(expressionElements);
 	}
 
-	private void ensureNumberOfComparisonsUnderTwo(ExpressionElementNode[] expressionTokens)
+    private ExpressionElementNode parse(ExpressionElementNode[] expressionElements) throws JPLException
+    {
+        // should have a binary operator node type,
+        // this class can have left and right children which can be expressionElementNodes
+        // how can we handle single nodes?
+
+        if (containsComparison(expressionElements))
+        {
+            int comparisonLocation = findComparisonLocation(expressionElements);
+        }
+
+        throw new JPLException("not implemented lol");
+        
+		// return null;
+	}
+
+	private boolean containsComparison(ExpressionElementNode[] expressionElements)
+    {
+        return findComparisonLocation(expressionElements) != -1;
+	}
+
+	private int findComparisonLocation(ExpressionElementNode[] expressionElements)
+    {
+        for (int i = 0; i < expressionElements.length; i++)
+        {
+            if (expressionElements[i] instanceof BinaryComparisonNode) { return i; }
+        }
+        return -1;
+	}
+
+	private void ensureNumberOfComparisonsUnderTwo(ExpressionElementNode[] expressionElements)
         throws JPLException
     {
-        int comparisonTokensFound = 0;
-        for (ExpressionElementNode token : expressionTokens)
+        int comparisonElementsFound = 0;
+        for (ExpressionElementNode token : expressionElements)
         {
-            if (tokenIsComparison(token)) { comparisonTokensFound++; }
-            if (comparisonTokensFound > 2)
+            if (tokenIsComparison(token)) { comparisonElementsFound++; }
+            if (comparisonElementsFound > 2)
             {
-                throw new JPLException("Expression Node : Too many comparison tokens, maximum 1.");
+                throw new JPLException("Expression Node : Too many comparison elements, maximum 1.");
             }
         }
 	}
@@ -52,65 +82,65 @@ public class ExpressionNode extends ExpressionElementNode
 		return token instanceof ExpressionComparisonNode;
 	}
 
-	private ExpressionElementNode[] convertToExpressionElementNodes(Token[] tokens) throws JPLException
+	private ExpressionElementNode[] convertToExpressionElementNodes(Token[] elements) throws JPLException
     {
         var output = new ArrayList<ExpressionElementNode>();
 
-        for (int tokenIndex = 0; tokenIndex < tokens.length; tokenIndex++)
+        for (int tokenIndex = 0; tokenIndex < elements.length; tokenIndex++)
         {
-            ExpressionElementNode element = createElement(tokens, tokenIndex);
+            ExpressionElementNode element = createElement(elements, tokenIndex);
             output.add(element);
         }
         
 		return output.toArray(new ExpressionElementNode[output.size()]);
 	}
 
-	private ExpressionElementNode createElement(Token[] tokens, int tokenIndex)
+	private ExpressionElementNode createElement(Token[] elements, int tokenIndex)
 			throws JPLException
     {
-		switch (tokens[tokenIndex].tokenType)
+		switch (elements[tokenIndex].tokenType)
 		{
-		    case OpeningParenthesis: { return createExpressionNode(tokens, tokenIndex); }
-		    case Integer: { return new IntegerNode(tokens[tokenIndex]); }
-		    case Plus: { return new PlusNode(); }
-		    case Minus: { return new MinusNode(); }
-		    case Multiply: { return new MultiplyNode(); }
-		    case Divide: { return new DivideNode(); }
-		    case Identifier: { return new VariableNode(tokens[tokenIndex]); }
-            case Equal: { return new EqualNode(); }
-            case NotEqual: { return new NotEqualNode(); }
-            case GreaterThan: { return new GreaterThanNode(); }
-            case LessThan: { return new LessThanNode(); }
-            case GreaterThanOrEqualTo: { return new GreaterThanOrEqualToNode(); }
-            case LessThanOrEqualTo: { return new LessThanOrEqualToNode(); }
-		    default: { throw new JPLException("Expression Node : Invalid token for expression. "); }
+		    case OpeningParenthesis:   { return createExpressionNode(elements, tokenIndex); }
+		    case Integer:              { return new IntegerNode(elements[tokenIndex]); }
+		    case Add:                  { return new BinaryOperatorNode(JPLBinaryOperator.Add); }
+		    case Subtract:             { return new BinaryOperatorNode(JPLBinaryOperator.Subtract); }
+		    case Multiply:             { return new BinaryOperatorNode(JPLBinaryOperator.Multiply); }
+		    case Divide:               { return new BinaryOperatorNode(JPLBinaryOperator.Divide); }
+		    case Identifier:           { return new VariableNode(elements[tokenIndex]); }
+            case Equal:                { return new BinaryComparisonNode(JPLBinaryComparison.Equal); }
+            case NotEqual:             { return new BinaryComparisonNode(JPLBinaryComparison.NotEqual); }
+            case GreaterThan:          { return new BinaryComparisonNode(JPLBinaryComparison.GreaterThan); }
+            case LessThan:             { return new BinaryComparisonNode(JPLBinaryComparison.LessThan); }
+            case GreaterThanOrEqualTo: { return new BinaryComparisonNode(JPLBinaryComparison.GreaterThanOrEqualTo); }
+            case LessThanOrEqualTo:    { return new BinaryComparisonNode(JPLBinaryComparison.LessThanOrEqualTo); }
+		    default:                   { throw new JPLException("Expression Node : Invalid token for expression. "); }
 		}
 	}
 
-    private ExpressionElementNode createExpressionNode(Token[] tokens, int tokenIndex)
+    private ExpressionElementNode createExpressionNode(Token[] elements, int tokenIndex)
         throws JPLException
     {
-        Token[] bracketedExpression = Arrays.copyOfRange(tokens, tokenIndex, tokens.length);
+        Token[] bracketedExpression = Arrays.copyOfRange(elements, tokenIndex, elements.length);
         int relevantTokenUpperLimit = findClosingParenthesis(bracketedExpression);
-        Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, relevantTokenUpperLimit);
-        return new ExpressionNode(relevantTokens).rootExpressionElementNode;
+        Token[] relevantElements = Arrays.copyOfRange(elements, tokenIndex, relevantTokenUpperLimit);
+        return new ExpressionNode(relevantElements).rootExpressionElementNode;
 	}
 
-	private int findClosingParenthesis(Token[] tokens)
+	private int findClosingParenthesis(Token[] elements)
     {
         var tokenIndex = 0;
         var openingParenthesisPassed = 1;
 
         while (true)
         {
-            if (tokenIndex >= tokens.length
+            if (tokenIndex >= elements.length
                 ||
                 openingParenthesisPassed <= 0)
             {
                 break;
             }
 
-            switch (tokens[tokenIndex].tokenType)
+            switch (elements[tokenIndex].tokenType)
             {
                 case OpeningParenthesis:
                 {
@@ -131,19 +161,6 @@ public class ExpressionNode extends ExpressionElementNode
             tokenIndex++;
         }
 		return tokenIndex;
-	}
-
-	private ExpressionElementNode parse(ExpressionElementNode[] expressionTokens) throws JPLException
-    {
-        // should have a binary operator node type,
-        // this class can have left and right children which can be expressionElementNodes
-        // how can we handle single nodes?
-
-        
-        
-        throw new JPLException("not implemented lol");
-        
-		// return null;
 	}
 
 	@Override

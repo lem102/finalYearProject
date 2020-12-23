@@ -92,12 +92,12 @@ public class Lexer
             }
             case "+":
             {
-                tokenType = TokenType.Plus;
+                tokenType = TokenType.Add;
                 break;
             }
             case "-":
             {
-                tokenType = TokenType.Minus;
+                tokenType = TokenType.Subtract;
                 break;
             }
             case "*":
