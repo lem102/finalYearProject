@@ -2,7 +2,6 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
-import com.jpl.fyp.classLibrary.TokenType;
 
 public class BinaryElementNode extends ExpressionElementNode
 {
@@ -10,19 +9,34 @@ public class BinaryElementNode extends ExpressionElementNode
 
     private ExpressionElementNode rightSide;
 
-    public BinaryElementNode(TokenType tokenType, Token[] rightSide, Token[] leftSide) throws JPLException
+    public BinaryElementNode(Token token, Token[] rightSide, Token[] leftSide) throws JPLException
     {
-        super(tokenType);
-        this.leftSide = ExpressionNode.parse(leftSide);
-        this.rightSide = ExpressionNode.parse(rightSide);
+        super(token);
+        this.leftSide = ExpressionParser.parse(leftSide);
+        this.rightSide = ExpressionParser.parse(rightSide);
     }
 
-    // private ExpressionElementNode parse(Token[] tokens) throws JPLException
-    // {
-        
-        
-    //     throw new JPLException("not implemented lol");
+	public ExpressionElementNode getLeftSide() {
+		return leftSide;
+	}
 
-    //     // return null;
-    // }
+	public ExpressionElementNode getRightSide() {
+		return rightSide;
+	}
+
+    @Override
+    public String toString() {
+        return "Binary Element Node:\n" +
+            "Type : " + getToken().tokenType + "\n" +
+            "{\n" +
+            "Left Side:\n" +
+            "{\n" +
+            leftSide.toString() + "\n" +
+            "}\n" +
+            "Right Side:\n" +
+            "{\n" +
+            rightSide.toString() + "\n" +
+            "}\n" +
+            "}\n";
+    }
 }

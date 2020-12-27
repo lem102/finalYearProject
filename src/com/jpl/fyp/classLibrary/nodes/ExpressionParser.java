@@ -8,7 +8,6 @@ import com.jpl.fyp.classLibrary.TokenType;
 
 public class ExpressionParser
 {
-
     public static ExpressionElementNode parse(Token[] tokens) throws JPLException
     {
         // should have a binary operator node type,
@@ -26,38 +25,40 @@ public class ExpressionParser
         }
         else
         {
-            if (containsComparison(tokens))
-            {
-                rootElementIndex = findFirstOccuranceOfComparisonLocation(tokens);
-            }
-            else if (containsType(tokens, TokenType.Divide))
-            {
-                rootElementIndex = findFirstOccuranceOfTypeLocation(tokens, TokenType.Divide);
-            }
-            else if (containsType(tokens, TokenType.Multiply))
-            {
-                rootElementIndex = findFirstOccuranceOfTypeLocation(tokens, TokenType.Multiply);
-            }
-            else if (containsType(tokens, TokenType.Add))
-            {
-                rootElementIndex = findFirstOccuranceOfTypeLocation(tokens, TokenType.Add);
-            }
-            else if (containsType(tokens, TokenType.Subtract))
-            {
-                rootElementIndex = findFirstOccuranceOfTypeLocation(tokens, TokenType.Subtract);
-            }
-            else
-            {
-                throw new JPLException("Expression Parser : panic");
-            }
+            rootElementIndex = findRootElementIndex(tokens);
             Token[] leftSide = Arrays.copyOfRange(tokens, 0, rootElementIndex);
             Token[] rightSide = Arrays.copyOfRange(tokens, rootElementIndex+1, tokens.length);
             output = createElement(tokens, rootElementIndex, leftSide, rightSide);
         }
 
-
-
         return output;
+	}
+
+	private static int findRootElementIndex(Token[] tokens) throws JPLException {
+		if (containsComparison(tokens))
+		{
+		    return findFirstOccuranceOfComparisonLocation(tokens);
+		}
+		else if (containsType(tokens, TokenType.Divide))
+		{
+		    return findFirstOccuranceOfTypeLocation(tokens, TokenType.Divide);
+		}
+		else if (containsType(tokens, TokenType.Multiply))
+		{
+		    return findFirstOccuranceOfTypeLocation(tokens, TokenType.Multiply);
+		}
+		else if (containsType(tokens, TokenType.Add))
+		{
+		    return findFirstOccuranceOfTypeLocation(tokens, TokenType.Add);
+		}
+		else if (containsType(tokens, TokenType.Subtract))
+		{
+		    return findFirstOccuranceOfTypeLocation(tokens, TokenType.Subtract);
+		}
+		else
+		{
+		    throw new JPLException("Expression Parser : panic");
+		}
 	}
 
 	private static boolean containsType(Token[] tokens, TokenType divide)
@@ -79,8 +80,8 @@ public class ExpressionParser
 	private static ExpressionElementNode createElement(Token[] tokens, int tokenIndex, Token[] leftSide, Token[] rightSide)
         throws JPLException
     {
-        var tokenType = tokens[tokenIndex].tokenType;
-		switch (tokenType)
+        var token = tokens[tokenIndex];
+		switch (token.tokenType)
 		{
 		    case Add:
 		    case Subtract:
@@ -93,10 +94,13 @@ public class ExpressionParser
             case GreaterThanOrEqualTo:
             case LessThanOrEqualTo:
             {
-                return new BinaryElementNode(tokenType, rightSide, leftSide);
+                return new BinaryElementNode(token, rightSide, leftSide);
             }
-		    case Integer:              { return new IntegerNode(TokenType.Integer, tokens[tokenIndex]); }
-            case Identifier:           { return new VariableNode(TokenType.Identifier, tokens[tokenIndex]); }
+		    case Integer:
+            case Identifier:
+            {
+                return new ValueElementNode(token);
+            }
                 // case OpeningParenthesis:   { return createExpressionNode(elements, tokenIndex); }
 		    default:                   { throw new JPLException("Expression Node : Invalid token for expression. "); }
 		}

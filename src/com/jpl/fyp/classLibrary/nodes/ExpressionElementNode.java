@@ -1,19 +1,19 @@
 package com.jpl.fyp.classLibrary.nodes;
 
-import com.jpl.fyp.classLibrary.TokenType;
+import com.jpl.fyp.classLibrary.Token;
 
 public class ExpressionElementNode
 {
-    private TokenType type;
+    private Token token;
 
-    public ExpressionElementNode(TokenType tokenType)
+    public ExpressionElementNode(Token token)
     {
-        this.type = tokenType;
+        this.token = token;
     }
 
-	public TokenType getType()
+	public Token getToken()
     {
-		return type;
+		return token;
 	}
 }
 

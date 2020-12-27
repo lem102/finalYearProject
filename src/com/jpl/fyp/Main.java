@@ -3,7 +3,6 @@ package com.jpl.fyp;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.InvalidParameterException;
-import java.util.List;
 
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.compilerComponent.Lexer;
@@ -29,16 +28,16 @@ public class Main
         Lexer lexer = new Lexer(sourceCode);
         Token[] tokens = lexer.output;
 
-        // printTokenList(tokenList);
+        // printTokenList(tokens);
 
         Parser parser = new Parser(tokens);
         
         System.out.println(parser.output);
 	}
 
-	private void printTokenList(Token[] tokenList)
+	private void printTokenList(Token[] tokens)
     {
-        for (Token token : tokenList)
+        for (Token token : tokens)
         {
             System.out.println(token);
         }

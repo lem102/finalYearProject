@@ -13,20 +13,20 @@ public class Lexer
     
     public Lexer(String sourceCode) throws Exception
     {
-        List<String> tokens = splitSourceIntoTokens(sourceCode);
-        this.output = convertStringsToTokens(tokens).toArray(new Token[0]);
+        String[] splitSourceCode = splitSourceIntoTokens(sourceCode);
+        this.output = convertStringsToTokens(splitSourceCode);
     }
 
-	private List<Token> convertStringsToTokens(List<String> tokens) throws Exception
+	private Token[] convertStringsToTokens(String[] splitSourceCode) throws Exception
     {
-        ArrayList<Token> tokenList = new ArrayList<Token>();
+        var tokenList = new ArrayList<Token>();
         
-        for (String tokenString : tokens)
+        for (String tokenString : splitSourceCode)
         {
             tokenList.add(createToken(tokenString));
         }
 
-		return tokenList;
+		return tokenList.toArray(new Token[tokenList.size()]);
 	}
 
 	private Token createToken(String tokenString) throws Exception
@@ -180,9 +180,9 @@ public class Lexer
 		return true;
 	}
 
-	private List<String> splitSourceIntoTokens(String sourceCode)
+	private String[] splitSourceIntoTokens(String sourceCode)
     {
-        List<String> tokens = new ArrayList<String>();
+        var tokens = new ArrayList<String>();
         sourceCode = sourceCode.replaceAll("\\s+", " ");
 
         String currentToken = "";
@@ -213,7 +213,7 @@ public class Lexer
             }
         }
         
-		return tokens;
+		return tokens.toArray(new String[tokens.size()]);
 	}
 
 	private String handleSymbolOrPunctuation(List<String> tokens,
@@ -284,19 +284,7 @@ public class Lexer
 
 	private boolean isCharSymbolOrPunctuation(char currentChar)
     {
-        if (Character.getType(currentChar) == 24
-            ||
-            Character.getType(currentChar) == 25
-            ||
-            Character.getType(currentChar) == 21
-            ||
-            Character.getType(currentChar) == 22)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-	}
+        int characterType = Character.getType(currentChar);
+        return characterType >= 20 && characterType <= 25;
+    }
 }
