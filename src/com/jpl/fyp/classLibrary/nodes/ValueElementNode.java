@@ -10,6 +10,6 @@ public class ValueElementNode extends ExpressionElementNode {
 
 	@Override
 	public String toString() {
-		return "Value Element Node: " + getToken().tokenType + ", " + getToken().tokenValue;
+		return "Value Element Node: " + getToken().tokenType + ", " + getToken().tokenValue + "\n";
 	}
 }

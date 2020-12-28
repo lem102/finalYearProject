@@ -2,7 +2,6 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
@@ -11,15 +10,13 @@ import com.jpl.fyp.classLibrary.TokenType;
 public class WhileNode extends ContainingNode
 {
     public ExpressionNode testExpression;
-	private List<StatementNode> statements;
 
     public WhileNode(Token[] tokens) throws JPLException
     {
         validateTokens(tokens);
         Token[] expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length - 2);
-        // needs to be changed when expressionNode is refactored :)
         this.testExpression = new ExpressionNode(expressionTokens);
-        this.statements = new ArrayList<StatementNode>();
+        super.setStatements(new ArrayList<StatementNode>());
     }
 
 	private void validateTokens(Token[] tokens) throws JPLException
@@ -53,7 +50,7 @@ public class WhileNode extends ContainingNode
         output += ")\n";
 
         output += "{\n";
-        for (StatementNode statementNode : statements)
+        for (StatementNode statementNode : super.getStatements())
         {
             output += statementNode;
         }

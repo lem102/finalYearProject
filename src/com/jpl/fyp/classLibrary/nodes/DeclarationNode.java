@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.JPLType;
+import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 
@@ -11,32 +12,28 @@ public class DeclarationNode extends StatementNode
 {
     public JPLType type;
 
-    public String identifier;
+    public String name;
 
     public ExpressionNode expression;
 
-    public DeclarationNode(Token[] tokens)
-        throws JPLException
-    {
+    public DeclarationNode(Token[] tokens) throws JPLException {
         this.validateTokens(tokens);
         this.type = this.tokenToType(tokens[0]);
-        this.identifier = tokens[1].tokenValue;
+        this.name = tokens[1].tokenValue;
 
         if (tokens.length > 3)
         {
             Token[] expressionTokens = Arrays.copyOfRange(tokens, 3, tokens.length-1);
             this.expression = new ExpressionNode(expressionTokens);
         }
+
+        setSymbolTableEntry(new SymbolTableEntry(type, name));
 	}
 
-	private JPLType tokenToType(Token token) throws JPLException
-    {
-        if (token.tokenType == TokenType.IntegerDeclaration)
-        {
+	private JPLType tokenToType(Token token) throws JPLException {
+        if (token.tokenType == TokenType.IntegerDeclaration) {
             return JPLType.Integer;
-        }
-        else
-        {
+        } else {
             throw new JPLException("Declaration Node : Invalid type.");
         }
 	}
@@ -50,7 +47,7 @@ public class DeclarationNode extends StatementNode
         }
         else if (tokens[1].tokenType != TokenType.Identifier)
         {
-            throw new JPLException("Declaration Node : Second token must be an identifier.");
+            throw new JPLException("Declaration Node : Second token must be an name.");
         }
         else if (tokens[2].tokenType != TokenType.Assignment && tokens[2].tokenType != TokenType.Semicolon)
         {
@@ -68,7 +65,7 @@ public class DeclarationNode extends StatementNode
         String output = "";
         output += "Declaration:\n";
         output += "Type: " + type + "\n";
-        output += "Identifier: " + identifier + "\n";
+        output += "Name: " + name + "\n";
         output += "Expression:\n";
         output += expression + "\n";
         

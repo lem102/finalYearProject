@@ -1,11 +1,11 @@
 package com.jpl.fyp.classLibrary.nodes;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.JPLType;
+import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 
@@ -20,6 +20,7 @@ public class DefinitionNode extends ContainingNode
         this.validateTokens(tokens);
         this.definitionName = tokens[1].tokenValue;
         this.arguments = parseArguments(Arrays.copyOfRange(tokens, 3, tokens.length - 2));
+        setSymbolTableEntry(new SymbolTableEntry(JPLType.Integer, definitionName));
     }
 
     private ArgumentNode[] parseArguments(Token[] tokens) throws JPLException

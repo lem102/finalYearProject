@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
+import com.jpl.fyp.classLibrary.SymbolTableEntry;
 
 public class RootNode
 {
@@ -18,7 +19,6 @@ public class RootNode
         this.nestingStatus = new ArrayDeque<ContainingNode>();
     }
 
-    
 	public void addNode(StatementNode node) throws JPLException
     {
         throwExceptionIfStatementOutsideOfDefinition(node);
@@ -41,6 +41,14 @@ public class RootNode
         if (node instanceof ContainingNode)
         {
             enterNewContainingNode(node);
+        }
+	}
+
+    public void updateSymbolTable(StatementNode node) {
+        SymbolTableEntry nodeSymbolTableEntry = node.getSymbolTableEntry();
+        if (nodeSymbolTableEntry != null)
+        {
+            getCurrentContainingNode().addSymbolToTable(nodeSymbolTableEntry);
         }
 	}
 
@@ -157,8 +165,7 @@ public class RootNode
         return arrayList.size() - 1;
     }
 
-    private <T> T getLastElement(List<T> arrayList)
-    {
+    private <T> T getLastElement(List<T> arrayList) {
         return arrayList.get(getLastElementIndex(arrayList));
     }
 }

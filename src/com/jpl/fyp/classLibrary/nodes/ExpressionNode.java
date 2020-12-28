@@ -20,9 +20,7 @@ public class ExpressionNode
         // TODO: need to get some validation for an expression node.
 	}
 
-	private void ensureNumberOfComparisonsUnderTwo(Token[] tokens)
-        throws JPLException
-    {
+	private void ensureNumberOfComparisonsUnderTwo(Token[] tokens) throws JPLException {
         int comparisonElementsFound = 0;
         for (Token token : tokens)
         {

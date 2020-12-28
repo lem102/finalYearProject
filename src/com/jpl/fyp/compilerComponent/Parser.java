@@ -15,7 +15,6 @@ public class Parser
     }
 
 	private RootNode parse(Token[] tokens) throws JPLException {
-        // TODO: before we can do the symbol table, we need to figure out how the result of a function can be assigned to a variable.
         // TODO: in future need to have a symbol table to handle variable and function names.
         var rootNode = new RootNode();
         int tokenIndex = 0;
@@ -31,6 +30,7 @@ public class Parser
             
             StatementNode node = parseNextStatementOrHeader(tokens, tokenIndex);
             rootNode.addNode(node);
+            rootNode.updateSymbolTable(node);
             
             int endOfStatement = elementsUntilPastEndOfStatement(tokens, tokenIndex);
             int endOfHeader = elementsUntilPastEndOfHeader(tokens, tokenIndex);
