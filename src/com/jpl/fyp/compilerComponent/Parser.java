@@ -14,12 +14,10 @@ public class Parser
         this.output = parse(tokens);
     }
 
-	private RootNode parse(Token[] tokens) throws JPLException
-    {
+	private RootNode parse(Token[] tokens) throws JPLException {
+        // TODO: before we can do the symbol table, we need to figure out how the result of a function can be assigned to a variable.
         // TODO: in future need to have a symbol table to handle variable and function names.
-        // List< symbolTable = new List<(int, string, object)>();
         var rootNode = new RootNode();
-
         int tokenIndex = 0;
         
         while(tokenIndex <= tokens.length - 1)
@@ -31,52 +29,49 @@ public class Parser
                 continue;
             }
             
+            StatementNode node = parseNextStatementOrHeader(tokens, tokenIndex);
+            rootNode.addNode(node);
+            
             int endOfStatement = elementsUntilPastEndOfStatement(tokens, tokenIndex);
             int endOfHeader = elementsUntilPastEndOfHeader(tokens, tokenIndex);
-            StatementNode node = parseNextStatementOrHeader(tokens, tokenIndex, endOfStatement, endOfHeader);
-
-            rootNode.addNode(node);
-
             tokenIndex = node.moveIndexToNextStatement(endOfStatement, endOfHeader);
         }
         return rootNode;
 	}
 
-	private StatementNode parseNextStatementOrHeader(Token[] tokens,
-                                                     int i,
-                                                     int endOfStatement,
-                                                     int endOfHeader)
-        throws JPLException
-    {
-		switch (tokens[i].tokenType)
+	private StatementNode parseNextStatementOrHeader(Token[] tokens, int tokenIndex) throws JPLException {
+        int endOfStatement = elementsUntilPastEndOfStatement(tokens, tokenIndex);
+        int endOfHeader = elementsUntilPastEndOfHeader(tokens, tokenIndex);
+        
+		switch (tokens[tokenIndex].tokenType)
 		{
             case Define:
             {
-                Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfHeader);
+                Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfHeader);
                 return new DefinitionNode(relevantTokens);
             } 
 		    case IntegerDeclaration:
 		    {
-		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfStatement);
+		        Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfStatement);
 		        return new DeclarationNode(relevantTokens);
 		    }
 		    case Identifier:
 		    {
-		        return parseStatementBeginningWithIdentifier(tokens, i, endOfStatement);
+		        return parseStatementBeginningWithIdentifier(tokens, tokenIndex, endOfStatement);
 		    }
 		    case While:
 		    {
-		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfHeader);
+		        Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfHeader);
 		        return new WhileNode(relevantTokens);
 		    }
 		    case If:
 		    {
-		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfHeader);
+		        Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfHeader);
 		        return new IfNode(relevantTokens);
 		    }
 		    case Else:
 		    {
-		        return parseStatementBeginningWithElse(tokens, i, endOfHeader);
+		        return parseStatementBeginningWithElse(tokens, tokenIndex, endOfHeader);
 		    }
 		    default:
 		    {

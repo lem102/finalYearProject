@@ -1,8 +1,5 @@
 package com.jpl.fyp.classLibrary.nodes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
@@ -23,7 +20,7 @@ public class ExpressionNode
     {
         if (tokens.length % 2 != 1)
         {
-            throw new JPLException("Expression Node : Invalid number of expression elements.");
+            // throw new JPLException("Expression Node : Invalid number of expression elements.");
         }
 
         ensureNumberOfComparisonsUnderTwo(tokens);

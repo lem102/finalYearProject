@@ -12,6 +12,7 @@ public class BinaryElementNode extends ExpressionElementNode
     public BinaryElementNode(Token token, Token[] rightSide, Token[] leftSide) throws JPLException
     {
         super(token);
+
         this.leftSide = ExpressionParser.parse(leftSide);
         this.rightSide = ExpressionParser.parse(rightSide);
     }
