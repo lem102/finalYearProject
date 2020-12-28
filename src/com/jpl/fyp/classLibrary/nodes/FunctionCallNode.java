@@ -21,18 +21,17 @@ public class FunctionCallNode extends StatementNode {
     }
 
     private ExpressionNode[] parseArgumentTokens(Token[] tokens) throws JPLException {
+        if (tokens.length == 0)
+        {
+            return new ExpressionNode[0];
+        }
+        
         var output = new ArrayList<ExpressionNode>();
 
         for (Token[] tokenArray : splitTokensByArgument(tokens))
         {
             output.add(new ExpressionNode(tokenArray));
         }
-
-        System.out.println("parse arg tokens");
-        for (Token token : tokens) {
-            System.out.println(token);
-        }
-
 
         return output.toArray(new ExpressionNode[output.size()]);
 	}
@@ -47,21 +46,11 @@ public class FunctionCallNode extends StatementNode {
                 argumentStartIndex = tokenIndex + 1;
             }
         }
-
         output.add(Arrays.copyOfRange(tokens, argumentStartIndex, tokens.length));
-        
         return output.toArray(new Token[output.size()][]);
 	}
 
-	private void validateTokens(Token[] tokens) throws JPLException
-    {
-        System.out.println("test");
-        for (Token temp : tokens) {
-            System.out.println(temp);
-        }
-
-
-        
+	private void validateTokens(Token[] tokens) throws JPLException {
         if (tokens[0].tokenType != TokenType.Identifier) {
             throw new JPLException("Function Call Node : First token must be an identifier.");
         }

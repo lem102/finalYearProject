@@ -16,7 +16,7 @@ public class WhileNode extends ContainingNode
     public WhileNode(Token[] tokens) throws JPLException
     {
         validateTokens(tokens);
-        Token[] expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length - 1);
+        Token[] expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length - 2);
         // needs to be changed when expressionNode is refactored :)
         this.testExpression = new ExpressionNode(expressionTokens);
         this.statements = new ArrayList<StatementNode>();

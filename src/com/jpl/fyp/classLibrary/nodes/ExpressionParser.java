@@ -13,6 +13,7 @@ public class ExpressionParser
 	private static ExpressionElementNode createElement(Token[] tokens, int tokenIndex)
         throws JPLException
     {
+
         Token[] leftSide = Arrays.copyOfRange(tokens, 0, tokenIndex);
         Token[] rightSide = Arrays.copyOfRange(tokens, tokenIndex+1, tokens.length);
         Token token = tokens[tokenIndex];
@@ -29,6 +30,8 @@ public class ExpressionParser
             case LessThan:
             case GreaterThanOrEqualTo:
             case LessThanOrEqualTo:
+            case And:
+            case Or:
             {
                 return new BinaryElementNode(token, rightSide, leftSide);
             }
@@ -56,7 +59,15 @@ public class ExpressionParser
 
 
 	private static int findRootElementIndex(Token[] tokens) throws JPLException {
-        if (containsComparison(tokens))
+        if (containsType(tokens, TokenType.And))
+        {
+            return findFirstOccuranceOfTypeLocation(tokens, TokenType.And);
+        }
+        else if (containsType(tokens, TokenType.Or))
+        {
+            return findFirstOccuranceOfTypeLocation(tokens, TokenType.Or);
+        }
+        else if (containsComparison(tokens))
 		{
 		    return findFirstOccuranceOfComparisonLocation(tokens);
 		}

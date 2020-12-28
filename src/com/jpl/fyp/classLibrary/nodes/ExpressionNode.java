@@ -10,7 +10,6 @@ public class ExpressionNode
 
     public ExpressionNode(Token[] tokens) throws JPLException
     {
-        // creation of expression element nodes should occur during the parse method.
         validateTokens(tokens);
         rootExpressionElementNode = ExpressionParser.parse(tokens);
     }
@@ -18,12 +17,7 @@ public class ExpressionNode
     private void validateTokens(Token[] tokens)
         throws JPLException
     {
-        if (tokens.length % 2 != 1)
-        {
-            // throw new JPLException("Expression Node : Invalid number of expression elements.");
-        }
-
-        ensureNumberOfComparisonsUnderTwo(tokens);
+        // TODO: need to get some validation for an expression node.
 	}
 
 	private void ensureNumberOfComparisonsUnderTwo(Token[] tokens)

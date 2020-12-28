@@ -22,9 +22,9 @@ public class DeclarationNode extends StatementNode
         this.type = this.tokenToType(tokens[0]);
         this.identifier = tokens[1].tokenValue;
 
-        if (tokens.length > 2)
+        if (tokens.length > 3)
         {
-            Token[] expressionTokens = Arrays.copyOfRange(tokens, 3, tokens.length);
+            Token[] expressionTokens = Arrays.copyOfRange(tokens, 3, tokens.length-1);
             this.expression = new ExpressionNode(expressionTokens);
         }
 	}
