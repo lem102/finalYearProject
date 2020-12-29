@@ -43,25 +43,16 @@ public class IfNode extends ConditionalNode
 	@Override
 	public String toString()
     {
-        String output = "";
-        output += "If Statement:\n";
-        output += "(\n";        
-        output += "Expression:\n";
-        output += testExpression;
-        output += ")\n";
-
-        output += "Statements:\n";
-        output += "{\n";
-        for (StatementNode statementNode : super.getStatements())
-        {
-            output += statementNode;
-        }
-        output += "Else:\n";
-        output += "{\n";
-        output += super.getElseNode() + "\n";
-        output += "}\n";
-        output += "}\n";
-        
-		return output;
+        return "If Statement:\n"
+            + "(\n"
+            + "Expression:\n"
+            + testExpression + "\n"
+            + ")\n"
+            + super.toString() + "\n"
+            + "Else:\n"
+            + "{\n"
+            + super.getElseNode() + "\n"
+            + "}\n"
+            + "}\n";
 	}
 }

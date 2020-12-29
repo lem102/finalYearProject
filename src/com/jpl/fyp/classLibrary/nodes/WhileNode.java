@@ -49,12 +49,7 @@ public class WhileNode extends ContainingNode
         output += testExpression;
         output += ")\n";
 
-        output += "{\n";
-        for (StatementNode statementNode : super.getStatements())
-        {
-            output += statementNode;
-        }
-        output += "}\n";
+        output += super.toString();
 
         return output;
     }

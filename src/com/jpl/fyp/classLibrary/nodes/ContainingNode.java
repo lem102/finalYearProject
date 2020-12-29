@@ -11,25 +11,21 @@ public class ContainingNode extends StatementNode
     private List<StatementNode> statements;
     private SymbolTable symbolTable;
 
-    public ContainingNode()
-    {
+    public ContainingNode() {
         this.statements = new ArrayList<StatementNode>();
         this.symbolTable = new SymbolTable();
     }
 
-	public List<StatementNode> getStatements()
-    {
+	public List<StatementNode> getStatements() {
         return this.statements;
     }
 
-	public void addStatement(StatementNode statement)
-    {
+	public void addStatement(StatementNode statement) {
         this.statements.add(statement);
 	}
 
 	@Override
-	public int moveIndexToNextStatement(int endOfStatement, int endOfHeader)
-    {
+	public int moveIndexToNextStatement(int endOfStatement, int endOfHeader) {
 		return endOfHeader;
 	}
 
@@ -39,6 +35,20 @@ public class ContainingNode extends StatementNode
 
 	public void addSymbolToTable(SymbolTableEntry symbolTableEntry) {
         symbolTable.addSymbol(symbolTableEntry);
-        System.out.println(symbolTable);
 	}
+
+    @Override
+    public String toString()
+    {
+        String statementsString = "";
+        for (StatementNode statementNode : statements) {
+            statementsString += statementNode + "\n";
+        }
+        
+        return symbolTable.toString() + "\n"
+            + "Statements:\n"
+            + "{\n"
+            + statementsString
+            + "}\n";
+    }
 }

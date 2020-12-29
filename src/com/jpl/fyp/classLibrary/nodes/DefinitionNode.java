@@ -116,21 +116,18 @@ public class DefinitionNode extends ContainingNode
 	@Override
     public String toString()
     {
-        String output = String.format("function: %s\n(\n", definitionName);
-
+        String argumentsString = "";
         for (ArgumentNode argument : arguments)
         {
-            output = output + argument;
+            argumentsString += argument;
         }
-
-        output = output + ")\n{\n";
-
-        for (StatementNode statement : super.getStatements())
-        {
-            output = output + statement;
-        }
-
-        output = output + "}\n";
-        return output;
+        
+        return "Function Definition: " + definitionName + "\n"
+            + "(\n"
+            + argumentsString
+            + ")\n"
+            + "{\n"
+            + super.toString() + "\n"
+            + "}\n";
     }
 }

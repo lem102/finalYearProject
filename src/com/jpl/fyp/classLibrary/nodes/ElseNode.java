@@ -33,16 +33,10 @@ public class ElseNode extends ContainingNode
 	@Override
 	public String toString()
     {
-        String output = "";
-        output += "Else Node:\n";
-        output += "Statements:\n";
-        output += "{\n";
-        for (StatementNode statementNode : super.getStatements())
-        {
-            output += statementNode;
-        }
-        output += "}\n";
-        
-		return output;
+        return "Else Node:\n"
+            + "Statements:\n"
+            + "{\n"
+            + super.toString()
+            + "}\n";
 	}
 }
