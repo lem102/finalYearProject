@@ -11,10 +11,8 @@ public class Parser
         var rootNode = new RootNode();
         int tokenIndex = 0;
         
-        while(tokenIndex <= tokens.length - 1)
-        {
-            if (tokens[tokenIndex].tokenType == TokenType.ClosingBrace)
-            {
+        while(tokenIndex <= tokens.length - 1) {
+            if (tokens[tokenIndex].tokenType == TokenType.ClosingBrace) {
                 rootNode.getNestingStatus().pop();
                 tokenIndex++;
                 continue;
@@ -22,8 +20,7 @@ public class Parser
             
             StatementNode node = parseNextStatementOrHeader(tokens, tokenIndex);
             rootNode.addNode(node);
-            rootNode.updateSymbolTable(node);
-            
+
             int endOfStatement = elementsUntilPastEndOfStatement(tokens, tokenIndex);
             int endOfHeader = elementsUntilPastEndOfHeader(tokens, tokenIndex);
             tokenIndex = node.moveIndexToNextStatement(endOfStatement, endOfHeader);

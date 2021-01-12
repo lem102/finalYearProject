@@ -1,22 +1,19 @@
 package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
 
-public class RootNode
+public class RootNode extends ContainingNode
 {
-    private List<DefinitionNode> definitions;
-
     private ArrayDeque<ContainingNode> nestingStatus;
 
     public RootNode()
     {
-        this.definitions = new ArrayList<DefinitionNode>();
         this.nestingStatus = new ArrayDeque<ContainingNode>();
+        this.nestingStatus.add(this);
     }
 
 	public void addNode(StatementNode node) throws JPLException
@@ -38,6 +35,8 @@ public class RootNode
             addGenericStatementNodeToCurrentContainingStatement(node);
         }
 
+        updateSymbolTable(node);
+
         if (node instanceof ContainingNode)
         {
             enterNewContainingNode(node);
@@ -46,8 +45,7 @@ public class RootNode
 
     public void updateSymbolTable(StatementNode node) {
         SymbolTableEntry nodeSymbolTableEntry = node.getSymbolTableEntry();
-        if (nodeSymbolTableEntry != null)
-        {
+        if (nodeSymbolTableEntry != null) {
             getCurrentContainingNode().addSymbolToTable(nodeSymbolTableEntry);
         }
 	}
@@ -55,31 +53,16 @@ public class RootNode
 
     private ContainingNode getCurrentContainingNode()
     {
+        
         return nestingStatus.peek();
     }
 
     @Override
     public String toString()
     {
-        String output = "";
-        
-        for (DefinitionNode definitionNode : definitions)
-        {
-            output += definitionNode;
-        }
-        
-        return output;
+        return "Root Node:\n"
+            + super.toString() + "\n";
     }
-
-	public List<DefinitionNode> getDefinitions()
-    {
-		return definitions;
-	}
-
-	public void setDefinitions(List<DefinitionNode> definitions)
-    {
-		this.definitions = definitions;
-	}
 
     public ArrayDeque<ContainingNode> getNestingStatus()
     {
@@ -124,7 +107,7 @@ public class RootNode
 		{
 		    throw new JPLException("cannot define function inside of function.");
 		}
-		definitions.add((DefinitionNode)node);
+		super.addStatement(node);
 	}
 
 	private void throwExceptionIfStatementOutsideOfDefinition(StatementNode node)
