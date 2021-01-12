@@ -7,15 +7,7 @@ import com.jpl.fyp.classLibrary.nodes.*;
 
 public class Parser
 {
-    public RootNode output;
-
-    public Parser(Token[] tokens) throws JPLException
-    {
-        this.output = parse(tokens);
-    }
-
-	private RootNode parse(Token[] tokens) throws JPLException {
-        // TODO: in future need to have a symbol table to handle variable and function names.
+    public static RootNode parse(Token[] tokens) throws JPLException {
         var rootNode = new RootNode();
         int tokenIndex = 0;
         
@@ -39,7 +31,7 @@ public class Parser
         return rootNode;
 	}
 
-	private StatementNode parseNextStatementOrHeader(Token[] tokens, int tokenIndex) throws JPLException {
+	private static StatementNode parseNextStatementOrHeader(Token[] tokens, int tokenIndex) throws JPLException {
         int endOfStatement = elementsUntilPastEndOfStatement(tokens, tokenIndex);
         int endOfHeader = elementsUntilPastEndOfHeader(tokens, tokenIndex);
         
@@ -80,7 +72,7 @@ public class Parser
 		}
 	}
 
-	private StatementNode parseStatementBeginningWithElse(Token[] tokens,
+	private static StatementNode parseStatementBeginningWithElse(Token[] tokens,
                                                           int i,
                                                           int endOfHeader)
         throws JPLException
@@ -106,7 +98,7 @@ public class Parser
         }
 	}
 
-	private StatementNode parseStatementBeginningWithIdentifier(Token[] tokens,
+	private static StatementNode parseStatementBeginningWithIdentifier(Token[] tokens,
                                                                 int i,
                                                                 int endOfStatement)
         throws JPLException
@@ -132,7 +124,7 @@ public class Parser
 		}
 	}
 
-    private int elementsUntilPastEndOfStatement(Token[] tokens,
+    private static int elementsUntilPastEndOfStatement(Token[] tokens,
                                                 int startIndex)
     {
         return elementsUntilPastNextOccuranceOfToken(tokens,
@@ -140,7 +132,7 @@ public class Parser
                                                      TokenType.Semicolon);
     }
 
-    private int elementsUntilPastEndOfHeader(Token[] tokens,
+    private static int elementsUntilPastEndOfHeader(Token[] tokens,
                                              int startIndex)
     {
 		return elementsUntilPastNextOccuranceOfToken(tokens,
@@ -148,7 +140,7 @@ public class Parser
                                                      TokenType.OpeningBrace);
     }
 
-    private int elementsUntilPastNextOccuranceOfToken(Token[] tokens,
+    private static int elementsUntilPastNextOccuranceOfToken(Token[] tokens,
                                                       int startIndex,
                                                       TokenType tokenType)
     {

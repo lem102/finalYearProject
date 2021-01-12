@@ -5,8 +5,8 @@ import java.nio.file.Path;
 import java.security.InvalidParameterException;
 
 import com.jpl.fyp.classLibrary.Token;
-import com.jpl.fyp.compilerComponent.Lexer;
-import com.jpl.fyp.compilerComponent.Parser;
+import com.jpl.fyp.classLibrary.nodes.RootNode;
+import com.jpl.fyp.compilerComponent.*;
 
 public class Main
 {
@@ -24,15 +24,10 @@ public class Main
     private void start(String filePath) throws Exception
     {
         String sourceCode = Files.readString(Path.of(filePath));
-
-        Lexer lexer = new Lexer(sourceCode);
-        Token[] tokens = lexer.output;
-
-        // printTokenList(tokens);
-
-        Parser parser = new Parser(tokens);
-        
-        System.out.println(parser.output);
+        Token[] tokens = Lexer.convertSourceCodeToTokens(sourceCode);
+        RootNode syntaxTree = Parser.parse(tokens);
+        System.out.println(syntaxTree);
+        // var intermediateCode = new IntermediateCodeGenerator();
 	}
 
 	private void printTokenList(Token[] tokens)

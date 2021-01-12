@@ -4,20 +4,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 
 public class Lexer
 {
-    public Token[] output;
-    
-    public Lexer(String sourceCode) throws Exception
+    public static Token[] convertSourceCodeToTokens(String sourceCode) throws JPLException
     {
         String[] splitSourceCode = splitSourceIntoTokens(sourceCode);
-        this.output = convertStringsToTokens(splitSourceCode);
+        return convertStringsToTokens(splitSourceCode);
     }
 
-	private Token[] convertStringsToTokens(String[] splitSourceCode) throws Exception
+	private static Token[] convertStringsToTokens(String[] splitSourceCode) throws JPLException
     {
         var tokenList = new ArrayList<Token>();
         
@@ -29,7 +28,7 @@ public class Lexer
 		return tokenList.toArray(new Token[tokenList.size()]);
 	}
 
-	private Token createToken(String tokenString) throws Exception
+	private static Token createToken(String tokenString) throws JPLException
     {
         TokenType tokenType;
 
@@ -147,7 +146,7 @@ public class Lexer
                 }
                 else
                 {
-                    throw new Exception("Unrecognised token: " + tokenString);
+                    throw new JPLException("Unrecognised token: " + tokenString);
                 }
                 break;
             }
@@ -156,31 +155,26 @@ public class Lexer
 		return new Token(tokenType, tokenString);
 	}
 
-	private boolean isStringAlpha(String string)
+	private static boolean isStringAlpha(String string)
     {
         return string.matches("[a-zA-Z]+");
 	}
 
-	private boolean isStringNumeric(String string)
+	private static boolean isStringNumeric(String string)
     {
-        if (string == null)
-        {
+        if (string == null) {
             return false;
         }
 
-        try
-        {
+        try {
             Integer.parseInt(string);
-        }
-        catch (NumberFormatException exception)
-        {
+        } catch (NumberFormatException exception) {
             return false;
         }
-
 		return true;
 	}
 
-	private String[] splitSourceIntoTokens(String sourceCode)
+	private static String[] splitSourceIntoTokens(String sourceCode)
     {
         var tokens = new ArrayList<String>();
         sourceCode = sourceCode.replaceAll("\\s+", " ");
@@ -216,7 +210,7 @@ public class Lexer
 		return tokens.toArray(new String[tokens.size()]);
 	}
 
-	private String handleSymbolOrPunctuation(List<String> tokens,
+	private static String handleSymbolOrPunctuation(List<String> tokens,
                                              String currentToken,
                                              Character currentChar,
                                              Character previousChar)
@@ -257,7 +251,7 @@ public class Lexer
 		return currentToken;
 	}
 
-	private List<String> handleSymbol(Character currentChar,
+	private static List<String> handleSymbol(Character currentChar,
                                       ArrayList<Character> combineChars,
                                       List<String> tokens,
                                       Character previousChar)
@@ -282,7 +276,7 @@ public class Lexer
 		return tokens;
 	}
 
-	private boolean isCharSymbolOrPunctuation(char currentChar)
+	private static boolean isCharSymbolOrPunctuation(char currentChar)
     {
         int characterType = Character.getType(currentChar);
         return characterType >= 20 && characterType <= 25;
