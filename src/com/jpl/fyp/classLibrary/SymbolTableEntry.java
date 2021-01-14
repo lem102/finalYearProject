@@ -19,4 +19,8 @@ public class SymbolTableEntry {
     {
         return "|" + id + "|" + type + "|" + name + "|\n";
     }
+
+    public String getName() {
+        return this.name;
+    }
 }

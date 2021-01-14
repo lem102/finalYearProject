@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.jpl.fyp.classLibrary.JPLException;
+import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 
@@ -39,8 +40,12 @@ public class WhileNode extends ContainingNode
         }
 	}
 
+    @Override
+    public void validate(SymbolTableEntry[] entries) {
+        this.testExpression.validate(entries);
+    }
+    
 	@Override
-
     public String toString() {
         return "While Loop:\n"
             + "(\n"

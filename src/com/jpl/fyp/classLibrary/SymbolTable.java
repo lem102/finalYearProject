@@ -6,8 +6,7 @@ import java.util.List;
 public class SymbolTable {
     private List<SymbolTableEntry> symbols;
 
-    public SymbolTable()
-    {
+    public SymbolTable() {
         symbols = new ArrayList<SymbolTableEntry>();
     }
 
@@ -22,14 +21,18 @@ public class SymbolTable {
 	}
 
     @Override
-    public String toString()
-    {
-        String output = "Symbol Table :\n";
-
-        for (SymbolTableEntry symbolTableEntry : symbols) {
-            output += symbolTableEntry;
+    public String toString() {
+        String output = "";
+        if (this.symbols.size() > 0) {
+            output += "Symbol Table:\n";
+            for (SymbolTableEntry symbolTableEntry : symbols) {
+                output += symbolTableEntry;
+            }
         }
-
         return output;
     }
+
+	public List<SymbolTableEntry> getSymbols() {
+		return symbols;
+	}
 }

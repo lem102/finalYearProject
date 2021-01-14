@@ -3,6 +3,7 @@ package com.jpl.fyp.classLibrary.nodes;
 import java.util.Arrays;
 
 import com.jpl.fyp.classLibrary.JPLException;
+import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 
@@ -46,5 +47,22 @@ public class AssignmentNode extends StatementNode
         output += expression;
         output += ")\n";
         return output;
+    }
+
+    @Override
+    public void validate(SymbolTableEntry[] entries) throws JPLException {
+        this.expression.validate(entries);
+
+        var symbolPresent = false;
+        for (SymbolTableEntry entry : entries) {
+            if (entry.getName() == this.assignmentTarget) {
+                symbolPresent = true;
+            }
+        }
+
+        if (!symbolPresent) {
+            System.out.println(this.assignmentTarget);
+            throw new JPLException("Assignment Node (Validation) : undeclared identifier used.");
+        }
     }
 }

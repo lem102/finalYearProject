@@ -57,13 +57,6 @@ public class RootNode extends ContainingNode
         return nestingStatus.peek();
     }
 
-    @Override
-    public String toString()
-    {
-        return "Root Node:\n"
-            + super.toString() + "\n";
-    }
-
     public ArrayDeque<ContainingNode> getNestingStatus()
     {
 		return nestingStatus;
@@ -151,4 +144,15 @@ public class RootNode extends ContainingNode
     private <T> T getLastElement(List<T> arrayList) {
         return arrayList.get(getLastElementIndex(arrayList));
     }
+
+    @Override
+    public String toString() {
+        return "Root Node:\n"
+            + super.toString() + "\n";
+    }
+
+	public void beginValidation() throws JPLException {
+        SymbolTableEntry[] entries = {};
+        this.validate(entries);
+	}
 }

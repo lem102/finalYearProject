@@ -1,5 +1,6 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
 
 public class ExpressionElementNode
@@ -14,6 +15,10 @@ public class ExpressionElementNode
 	public Token getToken()
     {
 		return token;
+	}
+
+	public void validate(SymbolTableEntry[] entries) {
+        
 	}
 }
 

@@ -146,7 +146,6 @@ public class Parser
             while (tokens[startIndex].tokenType != tokenType)
             {
                 startIndex++;
-                // you are thinking about refactoring this method.
             }
             startIndex++;
             return startIndex;
