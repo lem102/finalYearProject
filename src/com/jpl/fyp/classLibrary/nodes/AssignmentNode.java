@@ -38,31 +38,34 @@ public class AssignmentNode extends StatementNode
 	}
 
 	@Override
-    public String toString()
-    {
-        var output = "Assignment Node:\n";
-        output += "AssignmentTarget: " + assignmentTarget + "\n";
-        output += "Expression:\n";
-        output += "(\n";
-        output += expression;
-        output += ")\n";
-        return output;
+    public String toString() {
+        return  "Assignment Node:\n"
+            + "AssignmentTarget: " + assignmentTarget + "\n"
+            + "Expression:\n"
+            + "(\n"
+            + expression
+            + ")\n";
     }
 
     @Override
     public void validate(SymbolTableEntry[] entries) throws JPLException {
+        maybeThrowAssignmentTargetUndeclaredException(entries);
         this.expression.validate(entries);
+    }
 
-        var symbolPresent = false;
+	private void maybeThrowAssignmentTargetUndeclaredException(SymbolTableEntry[] entries) throws JPLException {
+        if (!isAssignmentDeclared(entries)) {
+            throw new JPLException("Assignment Node (Validation) : undeclared identifier used.");
+        }
+	}
+
+	private boolean isAssignmentDeclared(SymbolTableEntry[] entries) {
+		var symbolPresent = false;
         for (SymbolTableEntry entry : entries) {
             if (entry.getName() == this.assignmentTarget) {
                 symbolPresent = true;
             }
         }
-
-        if (!symbolPresent) {
-            System.out.println(this.assignmentTarget);
-            throw new JPLException("Assignment Node (Validation) : undeclared identifier used.");
-        }
-    }
+		return symbolPresent;
+	}
 }
