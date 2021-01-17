@@ -1,6 +1,7 @@
 package com.jpl.fyp.classLibrary.nodes;
 
 import com.jpl.fyp.classLibrary.JPLException;
+import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
 
 public class BinaryElementNode extends ExpressionElementNode
@@ -9,10 +10,10 @@ public class BinaryElementNode extends ExpressionElementNode
 
     private ExpressionElementNode rightSide;
 
-    public BinaryElementNode(Token token, Token[] rightSide, Token[] leftSide) throws JPLException
-    {
+    public BinaryElementNode(Token token,
+                             Token[] rightSide,
+                             Token[] leftSide) throws JPLException {
         super(token);
-
         this.leftSide = ExpressionParser.parse(leftSide);
         this.rightSide = ExpressionParser.parse(rightSide);
     }
@@ -24,6 +25,12 @@ public class BinaryElementNode extends ExpressionElementNode
 	public ExpressionElementNode getRightSide() {
 		return rightSide;
 	}
+
+    @Override
+    public void validate(SymbolTableEntry[] entries) throws JPLException {
+        this.leftSide.validate(entries);
+        this.rightSide.validate(entries);
+    }
 
     @Override
     public String toString() {

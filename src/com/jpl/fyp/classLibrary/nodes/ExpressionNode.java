@@ -59,7 +59,7 @@ public class ExpressionNode
         return rootExpressionElementNode.toString();
     }
 
-    public void validate(SymbolTableEntry[] entries) {
+    public void validate(SymbolTableEntry[] entries) throws JPLException {
         this.rootExpressionElementNode.validate(entries);
     }
 }

@@ -6,6 +6,7 @@ import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
+import com.jpl.fyp.compilerComponent.Validator;
 
 public class AssignmentNode extends StatementNode
 {
@@ -49,23 +50,7 @@ public class AssignmentNode extends StatementNode
 
     @Override
     public void validate(SymbolTableEntry[] entries) throws JPLException {
-        maybeThrowAssignmentTargetUndeclaredException(entries);
+        Validator.validateIdentifierIsDeclared(entries, this.assignmentTarget);
         this.expression.validate(entries);
     }
-
-	private void maybeThrowAssignmentTargetUndeclaredException(SymbolTableEntry[] entries) throws JPLException {
-        if (!isAssignmentDeclared(entries)) {
-            throw new JPLException("Assignment Node (Validation) : undeclared identifier used.");
-        }
-	}
-
-	private boolean isAssignmentDeclared(SymbolTableEntry[] entries) {
-		var symbolPresent = false;
-        for (SymbolTableEntry entry : entries) {
-            if (entry.getName() == this.assignmentTarget) {
-                symbolPresent = true;
-            }
-        }
-		return symbolPresent;
-	}
 }

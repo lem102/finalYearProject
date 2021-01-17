@@ -1,5 +1,6 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
 
@@ -17,7 +18,7 @@ public class ExpressionElementNode
 		return token;
 	}
 
-	public void validate(SymbolTableEntry[] entries) {
+	public void validate(SymbolTableEntry[] entries) throws JPLException {
         
 	}
 }

@@ -41,7 +41,7 @@ public class WhileNode extends ContainingNode
 	}
 
     @Override
-    public void validate(SymbolTableEntry[] entries) {
+    public void validate(SymbolTableEntry[] entries) throws JPLException {
         this.testExpression.validate(entries);
     }
     

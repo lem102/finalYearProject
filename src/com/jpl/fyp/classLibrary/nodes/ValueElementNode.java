@@ -1,7 +1,10 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
+import com.jpl.fyp.classLibrary.TokenType;
+import com.jpl.fyp.compilerComponent.Validator;
 
 public class ValueElementNode extends ExpressionElementNode {
     public ValueElementNode(Token token)
@@ -11,11 +14,13 @@ public class ValueElementNode extends ExpressionElementNode {
 
 	@Override
 	public String toString() {
-		return "Value Element Node: " + getToken().tokenType + ", " + getToken().tokenValue + "\n";
+		return "Value Element Node: " + this.getToken().tokenType + ", " + this.getToken().tokenValue + "\n";
 	}
 
     @Override
-    public void validate(SymbolTableEntry[] entries) {
-        
+    public void validate(SymbolTableEntry[] entries) throws JPLException {
+        if (this.getToken().tokenType == TokenType.Identifier) {
+            Validator.validateIdentifierIsDeclared(entries, getToken().tokenValue);
+        }
     }
 }

@@ -13,7 +13,7 @@ public class DefinitionNode extends ContainingNode {
         this.validateTokens(tokens);
         this.definitionName = tokens[1].tokenValue;
         this.arguments = parseArguments(Arrays.copyOfRange(tokens, 3, tokens.length - 2));
-        setSymbolTableEntry(new SymbolTableEntry(JPLType.Integer, definitionName));
+        setSymbolTableEntry(new SymbolTableEntry(JPLType.Integer, this.definitionName, this.arguments));
     }
 
     private ArgumentNode[] parseArguments(Token[] tokens) throws JPLException {

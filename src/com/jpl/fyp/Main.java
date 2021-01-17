@@ -21,7 +21,7 @@ public class Main {
         String sourceCode = Files.readString(Path.of(filePath));
         Token[] tokens = Lexer.convertSourceCodeToTokens(sourceCode);
         RootNode syntaxTree = Parser.parse(tokens);
-        System.out.println(syntaxTree);
+        // System.out.println(syntaxTree);
         Validator.validate(syntaxTree);
         // IntermediateCodeInstruction[] intermediateCode = IntermediateCodeGenerator.generateIntermediateCode(syntaxTree);
 	}

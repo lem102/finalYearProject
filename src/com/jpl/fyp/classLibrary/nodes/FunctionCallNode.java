@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
+import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
+import com.jpl.fyp.compilerComponent.Validator;
 
 public class FunctionCallNode extends StatementNode {
     public String identifier;
@@ -79,4 +81,13 @@ public class FunctionCallNode extends StatementNode {
 
         return output;
     }
+
+    @Override
+	public void validate(SymbolTableEntry[] entries) throws JPLException {
+        // write this next boyo
+        Validator.validateIdentifierIsDeclared(entries, this.identifier);
+        for (ExpressionNode argument : this.arguments) {
+            argument.validate(entries);
+        }
+	}
 }
