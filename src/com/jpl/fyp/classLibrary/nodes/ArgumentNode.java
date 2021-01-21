@@ -5,7 +5,6 @@ import com.jpl.fyp.classLibrary.JPLType;
 public class ArgumentNode
 {
     private JPLType type;
-        
     private String identifier;
 
     @Override

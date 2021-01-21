@@ -46,4 +46,20 @@ public class Validator {
         }
 		return symbolPresent;
 	}
+
+	public static void validateNumberOfArguments(SymbolTableEntry[] entries, String identifier, ExpressionNode[] parametersOfFunctionCall) throws JPLException {
+        SymbolTableEntry symbol = findSymbolTableEntry(entries, identifier);
+        if (symbol.getArguments().length != parametersOfFunctionCall.length) {
+            throw new JPLException("Validation: incorrect number of arguments.");
+        }
+	}
+
+	private static SymbolTableEntry findSymbolTableEntry(SymbolTableEntry[] entries, String identifier) throws JPLException {
+		for (SymbolTableEntry entry : entries) {
+            if (identifier.equals(entry.getName())) {
+                return entry;
+            }
+        }
+        throw new JPLException("Validation: symbol not found in symbol table.");
+	}
 }

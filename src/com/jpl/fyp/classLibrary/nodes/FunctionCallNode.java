@@ -86,6 +86,7 @@ public class FunctionCallNode extends StatementNode {
 	public void validate(SymbolTableEntry[] entries) throws JPLException {
         // write this next boyo
         Validator.validateIdentifierIsDeclared(entries, this.identifier);
+        Validator.validateNumberOfArguments(entries, this.identifier, this.arguments);
         for (ExpressionNode argument : this.arguments) {
             argument.validate(entries);
         }

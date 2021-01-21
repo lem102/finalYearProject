@@ -31,4 +31,8 @@ public class SymbolTableEntry {
     public String getName() {
         return this.name;
     }
+
+    public ArgumentNode[] getArguments() {
+        return this.arguments;
+    }
 }
