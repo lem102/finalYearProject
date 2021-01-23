@@ -4,31 +4,64 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.InvalidParameterException;
 
+import com.jpl.fyp.classLibrary.DiagnosticSettings;
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.nodes.RootNode;
 import com.jpl.fyp.compilerComponent.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        if (args.length != 1) {
-            throw new InvalidParameterException("A source file must be provided.");
+        if (args.length == 0) {
+            // TODO: should print help message, showing flags
         }
-        Main main = new Main();
-        main.start(args[0]);
+        else {
+            String sourceCode = Files.readString(Path.of(args[0]));
+            DiagnosticSettings diagnosticSettings = Main.getDiagnosticSettings(args);
+            Main.start(sourceCode, diagnosticSettings);
+        }
     }
 
-    private void start(String filePath) throws Exception {
-        String sourceCode = Files.readString(Path.of(filePath));
-        Token[] tokens = Lexer.convertSourceCodeToTokens(sourceCode);
-        RootNode syntaxTree = Parser.parse(tokens);
-        // System.out.println(syntaxTree);
-        Validator.validate(syntaxTree);
-        // IntermediateCodeInstruction[] intermediateCode = IntermediateCodeGenerator.generateIntermediateCode(syntaxTree);
+	private static DiagnosticSettings getDiagnosticSettings(String[] args) {
+        var argument = "";
+        if (args.length > 1) {
+            argument = args[1];
+        }
+        else {
+            argument = "";
+        }
+        return new DiagnosticSettings(argument);
 	}
 
-	private void printTokenList(Token[] tokens) {
+	private static void start(String sourceCode, DiagnosticSettings diagnosticSettings) throws Exception {
+        Token[] tokens = Lexer.convertSourceCodeToTokens(sourceCode);
+        RootNode syntaxTree = Parser.parse(tokens);
+        Validator.validate(syntaxTree);
+        IntermediateCodeInstruction[] intermediateCode = IntermediateCodeGenerator.generateIntermediateCode(syntaxTree);
+        maybePrintDiagnosticInformation(diagnosticSettings, tokens, syntaxTree, intermediateCode);
+	}
+
+	private static void maybePrintDiagnosticInformation(DiagnosticSettings diagnosticSettings, Token[] tokens, RootNode syntaxTree, IntermediateCodeInstruction[] intermediateCode) {
+        if (diagnosticSettings.isPrintLexerOutput()) {
+            printTokenList(tokens);
+        }
+        if (diagnosticSettings.isPrintParserOutput()) {
+            System.out.println(syntaxTree);
+        }
+        if (diagnosticSettings.isPrintIntermediateRepresentationGeneratorOutput()) {
+            printInstructionList(intermediateCode);
+        }
+	}
+
+	private static void printTokenList(Token[] tokens) {
         for (Token token : tokens) {
             System.out.println(token);
+        }
+	}
+
+    private static void printInstructionList(IntermediateCodeInstruction[] instructions) {
+        for (IntermediateCodeInstruction instruction : instructions) {
+            System.out.println(instruction);
         }
 	}
 }

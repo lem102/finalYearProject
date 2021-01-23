@@ -1,4 +1,4 @@
-package com.jpl.fyp;
+package com.jpl.fyp.classLibrary;
 
 public class IntermediateCodeInstruction {
     // class is based off the quadruple concept from dragon book page 366
