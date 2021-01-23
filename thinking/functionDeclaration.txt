@@ -1,0 +1,7 @@
+define UglyFunction() {
+    x = 1;
+}
+
+UglyFunction:
+    beginFunction 
+    x = 1
