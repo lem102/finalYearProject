@@ -14,6 +14,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         if (args.length == 0) {
             // TODO: should print help message, showing flags
+            System.out.println("print help");
         }
         else {
             String sourceCode = Files.readString(Path.of(args[0]));
