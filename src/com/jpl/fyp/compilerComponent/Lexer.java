@@ -1,8 +1,6 @@
 package com.jpl.fyp.compilerComponent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
@@ -10,142 +8,153 @@ import com.jpl.fyp.classLibrary.TokenType;
 
 public class Lexer
 {
-    public static Token[] convertSourceCodeToTokens(String sourceCode) throws JPLException
-    {
+    public static Token[] convertSourceCodeToTokens(String sourceCode) throws JPLException {
         String[] splitSourceCode = splitSourceIntoTokens(sourceCode);
         return convertStringsToTokens(splitSourceCode);
     }
 
-	private static Token[] convertStringsToTokens(String[] splitSourceCode) throws JPLException
+	private static String[] splitSourceIntoTokens(String sourceCode) {
+        sourceCode = sourceCode.replaceAll("\\s+", " ");
+        var tokens = new ArrayList<String>();
+        var currentToken = "";
+        
+        for (int i = 0; i < sourceCode.length(); i++) {
+            Character currentChar = sourceCode.charAt(i);
+
+            if ((Character.isWhitespace(currentChar) || isCharSymbolOrPunctuation(currentChar)) && currentToken != "") {
+                tokens.add(currentToken);
+                currentToken = "";
+            }
+            
+            if (Character.isLetterOrDigit(currentChar)) {
+                currentToken += currentChar;
+            } else if (isCharSymbolOrPunctuation(currentChar)) {
+                Character previousChar = sourceCode.charAt(i-1);
+                if (isCombinationRequired(previousChar, currentChar)) {
+                    tokens.set(tokens.size() - 1, previousChar.toString() + currentChar.toString());                    
+                } else {
+                    tokens.add(currentChar.toString());
+                }
+            }
+        }
+        
+		return tokens.toArray(new String[tokens.size()]);
+	}
+
+	private static boolean isCharSymbolOrPunctuation(char currentChar)
     {
+        int characterType = Character.getType(currentChar);
+        return characterType >= 20 && characterType <= 25;
+    }
+
+	private static boolean isCombinationRequired(Character previousCharacter, Character currentCharacter) {
+        return (currentCharacter == '=' && (previousCharacter == '=' || previousCharacter == '!'))
+            || (currentCharacter == '|' && previousCharacter == '|')
+            || (currentCharacter == '&' && previousCharacter == '&');
+	}
+
+	private static Token[] convertStringsToTokens(String[] splitSourceCode) throws JPLException {
         var tokenList = new ArrayList<Token>();
         
-        for (String tokenString : splitSourceCode)
-        {
+        for (String tokenString : splitSourceCode) {
             tokenList.add(createToken(tokenString));
         }
 
 		return tokenList.toArray(new Token[tokenList.size()]);
 	}
 
-	private static Token createToken(String tokenString) throws JPLException
-    {
+	private static Token createToken(String tokenString) throws JPLException {
         TokenType tokenType;
 
-        switch (tokenString)
-        {
-            case "while":
-            {
+        switch (tokenString) {
+            case "while": {
                 tokenType = TokenType.While;
                 break;
             }
-            case "define":
-            {
+            case "define": {
                 tokenType = TokenType.Define;
                 break;
             }
-            case "if":
-            {
+            case "if": {
                 tokenType = TokenType.If;
                 break;
             }
-            case "else":
-            {
+            case "else": {
                 tokenType = TokenType.Else;
                 break;
             }
-            case "int":
-            {
+            case "int": {
                 tokenType = TokenType.IntegerDeclaration;
                 break;
             }
-            case "(":
-            {
+            case "(": {
                 tokenType = TokenType.OpeningParenthesis;
                 break;
             }
-            case ")":
-            {
+            case ")": {
                 tokenType = TokenType.ClosingParenthesis;
                 break;
             }
-            case ",":
-            {
+            case ",": {
                 tokenType = TokenType.Comma;
                 break;
             }
-            case "{":
-            {
+            case "{": {
                 tokenType = TokenType.OpeningBrace;
                 break;
             }
-            case "}":
-            {
+            case "}": {
                 tokenType = TokenType.ClosingBrace;
                 break;
             }
-            case "=":
-            {
+            case "=": {
                 tokenType = TokenType.Assignment;
                 break;
             }
-            case "+":
-            {
+            case "+": {
                 tokenType = TokenType.Add;
                 break;
             }
-            case "-":
-            {
+            case "-": {
                 tokenType = TokenType.Subtract;
                 break;
             }
-            case "*":
-            {
+            case "*": {
                 tokenType = TokenType.Multiply;
                 break;
             }
-            case "/":
-            {
+            case "/": {
                 tokenType = TokenType.Divide;
                 break;
             }
-            case ";":
-            {
+            case ";": {
                 tokenType = TokenType.Semicolon;
                 break;
             }
-            case "==":
-            {
+            case "==": {
                 tokenType = TokenType.Equal;
                 break;
             }
-            case "||":
-            {
+            case "||": {
                 tokenType = TokenType.Or;
                 break;
             }
-            case "&&":
-            {
+            case "&&": {
                 tokenType = TokenType.And;
                 break;
             }
-            case "!=":
-            {
+            case "!=": {
                 tokenType = TokenType.NotEqual;
                 break;
             }
-            default:
-            {
-                if (isStringNumeric(tokenString))
-                {
+            default: {
+                if (isStringNumeric(tokenString)) {
                     tokenType = TokenType.Integer;
                 }
-                else if (isStringAlpha(tokenString))
-                {
+                else if (isStringAlpha(tokenString)) {
                     tokenType = TokenType.Identifier;
                 }
-                else
-                {
+                else {
                     throw new JPLException("Unrecognised token: " + tokenString);
                 }
                 break;
@@ -155,13 +164,11 @@ public class Lexer
 		return new Token(tokenType, tokenString);
 	}
 
-	private static boolean isStringAlpha(String string)
-    {
+	private static boolean isStringAlpha(String string) {
         return string.matches("[a-zA-Z]+");
 	}
 
-	private static boolean isStringNumeric(String string)
-    {
+	private static boolean isStringNumeric(String string) {
         if (string == null) {
             return false;
         }
@@ -173,112 +180,4 @@ public class Lexer
         }
 		return true;
 	}
-
-	private static String[] splitSourceIntoTokens(String sourceCode)
-    {
-        var tokens = new ArrayList<String>();
-        sourceCode = sourceCode.replaceAll("\\s+", " ");
-
-        String currentToken = "";
-
-        for (int i = 0; i < sourceCode.length(); i++)
-        {
-            Character currentChar = sourceCode.charAt(i);
-
-            if (Character.isLetterOrDigit(currentChar))
-            {
-                currentToken += currentChar;
-            }
-            else if (isCharSymbolOrPunctuation(currentChar))
-            {
-                Character previousChar = sourceCode.charAt(i-1);
-                currentToken = handleSymbolOrPunctuation(tokens,
-                                                         currentToken,
-                                                         currentChar,
-                                                         previousChar);
-            }
-            else if (Character.isWhitespace(currentChar))
-            {
-                if (currentToken != "")
-                {
-                    tokens.add(currentToken);
-                    currentToken = "";
-                }
-            }
-        }
-        
-		return tokens.toArray(new String[tokens.size()]);
-	}
-
-	private static String handleSymbolOrPunctuation(List<String> tokens,
-                                             String currentToken,
-                                             Character currentChar,
-                                             Character previousChar)
-    {
-        if (currentToken != "")
-        {
-            tokens.add(currentToken);
-            currentToken = "";
-        }
-
-        if (currentChar == '=')
-        {
-            tokens = handleSymbol('=',
-                                  new ArrayList<Character>(Arrays.asList('=', '!')),
-                                  tokens,
-                                  previousChar);
-        }
-        else if (currentChar == '|')
-        {
-            tokens = handleSymbol('|',
-                                  new ArrayList<Character>(Arrays.asList('|')),
-                                  tokens,
-                                  previousChar);
-        }
-        else if (currentChar == '&')
-        {
-            tokens = handleSymbol('&',
-                                  new ArrayList<Character>(Arrays.asList('&')),
-                                  tokens,
-                                  previousChar);
-        }
-        else
-        {
-            tokens.add(currentChar.toString());
-        }
-
-        
-		return currentToken;
-	}
-
-	private static List<String> handleSymbol(Character currentChar,
-                                      ArrayList<Character> combineChars,
-                                      List<String> tokens,
-                                      Character previousChar)
-    {
-        boolean changed = false;
-        
-        for (Character character : combineChars)
-        {
-            if (previousChar == character)
-            {
-                tokens.remove(tokens.size() - 1);
-                tokens.add(character.toString() + currentChar.toString());
-                changed = true;
-            }
-        }
-
-        if (!changed)
-        {
-            tokens.add(currentChar.toString());
-        }
-        
-		return tokens;
-	}
-
-	private static boolean isCharSymbolOrPunctuation(char currentChar)
-    {
-        int characterType = Character.getType(currentChar);
-        return characterType >= 20 && characterType <= 25;
-    }
 }

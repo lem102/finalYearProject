@@ -2,13 +2,15 @@ package com.jpl.fyp;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.InvalidParameterException;
 
 import com.jpl.fyp.classLibrary.DiagnosticSettings;
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.nodes.RootNode;
-import com.jpl.fyp.compilerComponent.*;
+import com.jpl.fyp.compilerComponent.IntermediateCodeGenerator;
+import com.jpl.fyp.compilerComponent.Lexer;
+import com.jpl.fyp.compilerComponent.Parser;
+import com.jpl.fyp.compilerComponent.Validator;
 
 public class Main {
     public static void main(String[] args) throws Exception {
