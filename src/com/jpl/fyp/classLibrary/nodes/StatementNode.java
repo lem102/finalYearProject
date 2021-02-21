@@ -1,5 +1,6 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
 
@@ -24,5 +25,11 @@ public class StatementNode implements Node
 	@Override
 	public void validate(SymbolTableEntry[] entries) throws JPLException {
         
+	}
+
+	@Override
+	public IntermediateCodeInstruction[] generateItermediateCode(IntermediateCodeInstruction[] instructions) {
+        System.out.println("JACOB WARNING: IR code has not been written for this node.");
+        return instructions;
 	}
 }
