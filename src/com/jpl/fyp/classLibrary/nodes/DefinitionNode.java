@@ -2,6 +2,7 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import com.jpl.fyp.classLibrary.*;
 
@@ -98,7 +99,31 @@ public class DefinitionNode extends ContainingNode {
 
     @Override
     public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() {
-        // label (function name)
-        // statements in function
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        instructions.add(this.generateLabelInstruction());
+        instructions.add(this.generateBeginFunctionInstruction());
+        instructions.addAll(this.generateIntermediateCodeOfStatements());
+        instructions.add(generateEndFunctionInstruction());
+        return instructions;
     }
+
+	private IntermediateCodeInstruction generateEndFunctionInstruction() {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.EndFunction);
+	}
+
+	private ArrayList<IntermediateCodeInstruction> generateIntermediateCodeOfStatements() {
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        for (StatementNode statement : this.getStatements()) {
+            instructions.addAll(statement.generateIntermediateCode());
+        }
+		return instructions;
+	}
+
+	private IntermediateCodeInstruction generateBeginFunctionInstruction() {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.BeginFunction);
+	}
+
+	private IntermediateCodeInstruction generateLabelInstruction() {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Label, this.definitionName);
+	}
 }
