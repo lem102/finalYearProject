@@ -1,5 +1,7 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import java.util.ArrayList;
+
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
@@ -28,8 +30,9 @@ public class StatementNode implements Node
 	}
 
 	@Override
-	public IntermediateCodeInstruction[] generateItermediateCode(IntermediateCodeInstruction[] instructions) {
+	public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() {
         System.out.println("JACOB WARNING: IR code has not been written for this node.");
-        return instructions;
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+		return instructions;
 	}
 }

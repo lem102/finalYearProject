@@ -1,6 +1,7 @@
 package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
@@ -132,7 +133,15 @@ public class RootNode extends ContainingNode {
 	}
 
 	public IntermediateCodeInstruction[] beginIntermediateCodeGeneration() {
-        IntermediateCodeInstruction[] instructions = {};
-		return this.generateItermediateCode(instructions);
+		return this.generateIntermediateCode().toArray(new IntermediateCodeInstruction[0]);
 	}
+
+    @Override
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() {
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        for (StatementNode definitionNode : this.getStatements()) {
+            instructions.addAll(definitionNode.generateIntermediateCode());
+        }
+		return instructions;
+    }
 }

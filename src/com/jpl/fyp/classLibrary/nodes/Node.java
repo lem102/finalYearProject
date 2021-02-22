@@ -1,5 +1,7 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import java.util.ArrayList;
+
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
@@ -10,5 +12,5 @@ public interface Node
 
     void validate(SymbolTableEntry[] entries) throws JPLException;
 
-    IntermediateCodeInstruction[] generateItermediateCode(IntermediateCodeInstruction[] instructions);
+    ArrayList<IntermediateCodeInstruction> generateIntermediateCode();
 }

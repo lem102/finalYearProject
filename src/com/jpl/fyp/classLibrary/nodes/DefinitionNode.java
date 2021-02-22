@@ -95,4 +95,10 @@ public class DefinitionNode extends ContainingNode {
         }
         return stringOfArguments;
 	}
+
+    @Override
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() {
+        // label (function name)
+        // statements in function
+    }
 }
