@@ -71,21 +71,21 @@ public class ExpressionParser
 		{
 		    return findFirstOccuranceOfComparisonLocation(tokens);
 		}
-		else if (containsType(tokens, TokenType.Divide))
+        else if (containsType(tokens, TokenType.Subtract))
 		{
-		    return findFirstOccuranceOfTypeLocation(tokens, TokenType.Divide);
+		    return findFirstOccuranceOfTypeLocation(tokens, TokenType.Subtract);
 		}
-		else if (containsType(tokens, TokenType.Multiply))
-		{
-		    return findFirstOccuranceOfTypeLocation(tokens, TokenType.Multiply);
-		}
-		else if (containsType(tokens, TokenType.Add))
+        else if (containsType(tokens, TokenType.Add))
 		{
 		    return findFirstOccuranceOfTypeLocation(tokens, TokenType.Add);
 		}
-		else if (containsType(tokens, TokenType.Subtract))
+        else if (containsType(tokens, TokenType.Multiply))
 		{
-		    return findFirstOccuranceOfTypeLocation(tokens, TokenType.Subtract);
+		    return findFirstOccuranceOfTypeLocation(tokens, TokenType.Multiply);
+		}
+		else if (containsType(tokens, TokenType.Divide))
+		{
+		    return findFirstOccuranceOfTypeLocation(tokens, TokenType.Divide);
 		}
 		else
 		{
