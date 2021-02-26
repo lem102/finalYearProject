@@ -30,7 +30,7 @@ public class StatementNode implements Node
 	}
 
 	@Override
-	public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() {
+	public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
         System.out.println("JACOB WARNING: IR code has not been written for this node.");
         var instructions = new ArrayList<IntermediateCodeInstruction>();
 		return instructions;

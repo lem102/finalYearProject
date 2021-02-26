@@ -1,5 +1,8 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import java.util.ArrayList;
+
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
@@ -7,7 +10,7 @@ import com.jpl.fyp.classLibrary.TokenType;
 
 public class ExpressionNode
 {
-    public ExpressionElementNode rootExpressionElementNode;
+    private ExpressionElementNode rootExpressionElementNode;
 
     private TokenType[] legalTypes = {
         TokenType.Add,
@@ -38,8 +41,7 @@ public class ExpressionNode
 	private void validateTokens(Token[] tokens) throws JPLException {
         for (Token token : tokens) {
             if (this.isTokenIllegal(token)) {
-                System.out.println(token);
-                throw new JPLException("Expression Node: illegal token");
+                throw new JPLException("Expression Node: illegal token: " + token);
             }
         }
 	}
@@ -62,4 +64,10 @@ public class ExpressionNode
     public void validate(SymbolTableEntry[] entries) throws JPLException {
         this.rootExpressionElementNode.validate(entries);
     }
+
+	public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        instructions.addAll(this.rootExpressionElementNode.generateIntermediateCode());
+		return instructions;
+	}
 }

@@ -1,7 +1,9 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
@@ -53,4 +55,12 @@ public class IfNode extends ConditionalNode
             + super.getElseNode() + "\n"
             + "}\n";
 	}
+
+    @Override
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        instructions.addAll(this.testExpression.generateIntermediateCode());
+        // instructions.add(this.generateConditionalGoto());
+        return instructions;
+    }
 }

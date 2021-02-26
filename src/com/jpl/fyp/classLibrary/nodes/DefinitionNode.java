@@ -98,7 +98,7 @@ public class DefinitionNode extends ContainingNode {
 	}
 
     @Override
-    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() {
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
         var instructions = new ArrayList<IntermediateCodeInstruction>();
         instructions.add(this.generateLabelInstruction());
         instructions.add(this.generateBeginFunctionInstruction());
@@ -108,10 +108,13 @@ public class DefinitionNode extends ContainingNode {
     }
 
 	private IntermediateCodeInstruction generateEndFunctionInstruction() {
-		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.EndFunction);
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.EndFunction,
+                                               null,
+                                               null,
+                                               null);
 	}
 
-	private ArrayList<IntermediateCodeInstruction> generateIntermediateCodeOfStatements() {
+	private ArrayList<IntermediateCodeInstruction> generateIntermediateCodeOfStatements() throws JPLException {
         var instructions = new ArrayList<IntermediateCodeInstruction>();
         for (StatementNode statement : this.getStatements()) {
             instructions.addAll(statement.generateIntermediateCode());
@@ -120,10 +123,16 @@ public class DefinitionNode extends ContainingNode {
 	}
 
 	private IntermediateCodeInstruction generateBeginFunctionInstruction() {
-		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.BeginFunction);
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.BeginFunction,
+                                               null,
+                                               null,
+                                               null);
 	}
 
 	private IntermediateCodeInstruction generateLabelInstruction() {
-		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Label, this.definitionName);
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Label,
+                                               this.definitionName,
+                                               null,
+                                               null);
 	}
 }

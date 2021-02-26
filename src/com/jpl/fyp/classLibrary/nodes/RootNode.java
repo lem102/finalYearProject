@@ -132,12 +132,12 @@ public class RootNode extends ContainingNode {
         this.validate(entries);
 	}
 
-	public IntermediateCodeInstruction[] beginIntermediateCodeGeneration() {
+	public IntermediateCodeInstruction[] beginIntermediateCodeGeneration() throws JPLException {
 		return this.generateIntermediateCode().toArray(new IntermediateCodeInstruction[0]);
 	}
 
     @Override
-    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() {
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
         var instructions = new ArrayList<IntermediateCodeInstruction>();
         for (StatementNode definitionNode : this.getStatements()) {
             instructions.addAll(definitionNode.generateIntermediateCode());

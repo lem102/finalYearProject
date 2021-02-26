@@ -12,5 +12,5 @@ public interface Node
 
     void validate(SymbolTableEntry[] entries) throws JPLException;
 
-    ArrayList<IntermediateCodeInstruction> generateIntermediateCode();
+    ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException;
 }

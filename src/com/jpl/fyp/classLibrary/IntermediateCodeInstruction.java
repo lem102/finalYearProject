@@ -2,25 +2,28 @@ package com.jpl.fyp.classLibrary;
 
 public class IntermediateCodeInstruction {
 	// class is based off the quadruple concept from dragon book page 366
-    // TODO: usage of string as type is temporary, should refer to symbol table or something similar.
+    private static int temporaryVariableIndex = 0;
+    private static int nextUnnamedLabelNumber = 0;
+
+	public static int getCurrentTemporaryVariableIndex() {
+		return temporaryVariableIndex;
+	}
+    
+    public static String getNewTemporaryVariableName() {
+        int currentIndex = temporaryVariableIndex;
+        temporaryVariableIndex++;
+        return "t" + currentIndex;
+    }
+
     private IntermediateCodeInstructionType operator;
     private String argument1;
     private String argument2;
     private String result;
 
-    public IntermediateCodeInstruction(IntermediateCodeInstructionType operator) {
-        this(operator, "");
-	}
-
-    public IntermediateCodeInstruction(IntermediateCodeInstructionType operator, String argument1) {
-        this(operator, "", "");
-	}
-
-	public IntermediateCodeInstruction(IntermediateCodeInstructionType operator, String argument1, String argument2) {
-        this(operator, "", "", "");
-	}
-
-	public IntermediateCodeInstruction(IntermediateCodeInstructionType operator, String argument1, String argument2, String result) {
+    public IntermediateCodeInstruction(IntermediateCodeInstructionType operator,
+                                       String argument1,
+                                       String argument2,
+                                       String result) {
         this.operator = operator;
         this.argument1 = argument1;
         this.argument2 = argument2;
@@ -29,6 +32,14 @@ public class IntermediateCodeInstruction {
 
 	@Override
     public String toString() {
-        return operator.toString() + ;
+        return String.format("TAC Instruction: {%-15s %-15s %-15s %-15s}",
+                             operator.toString(),
+                             argument1,
+                             argument2,
+                             result);
     }
+
+	public static String IntegerToInstructionName(int integer) {
+		return "t" + integer;
+	}
 }
