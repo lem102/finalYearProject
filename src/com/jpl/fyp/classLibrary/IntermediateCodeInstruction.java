@@ -3,7 +3,7 @@ package com.jpl.fyp.classLibrary;
 public class IntermediateCodeInstruction {
 	// class is based off the quadruple concept from dragon book page 366
     private static int temporaryVariableIndex = 0;
-    private static int nextUnnamedLabelNumber = 0;
+    private static int labelIndex = 0;
 
 	public static int getCurrentTemporaryVariableIndex() {
 		return temporaryVariableIndex;
@@ -14,6 +14,12 @@ public class IntermediateCodeInstruction {
         temporaryVariableIndex++;
         return "t" + currentIndex;
     }
+
+    public static String getNewLabelName() {
+        int currentIndex = labelIndex;
+        labelIndex++;
+        return "L" + currentIndex;
+	}
 
     private IntermediateCodeInstructionType operator;
     private String argument1;
