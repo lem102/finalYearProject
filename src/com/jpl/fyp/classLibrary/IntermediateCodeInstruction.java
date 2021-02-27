@@ -30,6 +30,10 @@ public class IntermediateCodeInstruction {
         this.result = result;
 	}
 
+    public String getResult() {
+        return this.result;
+    }
+
 	@Override
     public String toString() {
         return String.format("TAC Instruction: {%-15s %-15s %-15s %-15s}",

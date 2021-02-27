@@ -54,28 +54,48 @@ public class BinaryElementNode extends ExpressionElementNode
 
     @Override
     public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
+        ArrayList<IntermediateCodeInstruction> leftSideIntermediateCode = this.leftSide.generateIntermediateCode();
+        ArrayList<IntermediateCodeInstruction> rightSideIntermediateCode = this.rightSide.generateIntermediateCode();
         var instructions = new ArrayList<IntermediateCodeInstruction>();
-        instructions.addAll(this.leftSide.generateIntermediateCode());
-        instructions.addAll(this.rightSide.generateIntermediateCode());
-        instructions.add(this.generateInstructionForCurrentNode());
+        instructions.addAll(leftSideIntermediateCode);
+        instructions.addAll(rightSideIntermediateCode);
+        instructions.add(this.generateInstructionForCurrentNode(leftSideIntermediateCode, rightSideIntermediateCode));
         return instructions;
     }
 
-	private IntermediateCodeInstruction generateInstructionForCurrentNode() throws JPLException {
+	private IntermediateCodeInstruction generateInstructionForCurrentNode(ArrayList<IntermediateCodeInstruction> leftSideIntermediateCode,
+                                                                          ArrayList<IntermediateCodeInstruction> rightSideIntermediateCode)
+        throws JPLException {
         IntermediateCodeInstructionType operator = this.getInstructionType();
-		String leftArgument = generateSideArgument(this.leftSide, 1);
-        String rightArgument = generateSideArgument(this.rightSide, 2);
+		String leftArgument = generateSideArgument(this.leftSide, 1, leftSideIntermediateCode);
+        
+        String rightArgument;
+        if (this.leftSide instanceof ValueElementNode) {
+            rightArgument = generateSideArgument(this.rightSide, 1, rightSideIntermediateCode);
+        } else {
+            rightArgument = generateSideArgument(this.rightSide, 2, rightSideIntermediateCode);
+        }
+        
         String result = IntermediateCodeInstruction.getNewTemporaryVariableName();
         return new IntermediateCodeInstruction(operator, leftArgument, rightArgument, result);
 	}
 
-	private String generateSideArgument(ExpressionElementNode node, int offset) throws JPLException {
+	private String generateSideArgument(ExpressionElementNode node, int offset, ArrayList<IntermediateCodeInstruction> leftSideIntermediateCode) throws JPLException {
+
+
+        if (!leftSideIntermediateCode.isEmpty()) {
+            System.out.println("test" + leftSideIntermediateCode.get(leftSideIntermediateCode.size() -1).getResult());
+        }
+
+
+        
 		String result;
 		if (node instanceof ValueElementNode) {
             result = node.getToken().tokenValue;
         } else if (node instanceof BinaryElementNode) {
             int currentTemporaryVariableIndex = IntermediateCodeInstruction.getCurrentTemporaryVariableIndex();
-            result = IntermediateCodeInstruction.IntegerToInstructionName(currentTemporaryVariableIndex - offset);
+            // result = IntermediateCodeInstruction.IntegerToInstructionName(currentTemporaryVariableIndex - offset);
+            result = leftSideIntermediateCode.get(leftSideIntermediateCode.size() -1).getResult();
         } else {
             throw new JPLException("BinaryElementNode : unhandled ElementNode type.");
         }
