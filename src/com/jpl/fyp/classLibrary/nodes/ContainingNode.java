@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
+import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTable;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
@@ -70,4 +72,19 @@ public class ContainingNode extends StatementNode {
         stringOfStatements += "}\n";
         return stringOfStatements;
     }
+
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCodeOfStatements() throws JPLException {
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        for (StatementNode statement : this.getStatements()) {
+            instructions.addAll(statement.generateIntermediateCode());
+        }
+		return instructions;
+	}
+    
+	public IntermediateCodeInstruction generateLabelInstruction(String label) {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Label,
+                                               label,
+                                               null,
+                                               null);
+	}
 }

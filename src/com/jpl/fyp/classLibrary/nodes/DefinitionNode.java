@@ -100,9 +100,9 @@ public class DefinitionNode extends ContainingNode {
     @Override
     public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
         var instructions = new ArrayList<IntermediateCodeInstruction>();
-        instructions.add(this.generateLabelInstruction());
+        instructions.add(super.generateLabelInstruction(this.definitionName));
         instructions.add(this.generateBeginFunctionInstruction());
-        instructions.addAll(this.generateIntermediateCodeOfStatements());
+        instructions.addAll(super.generateIntermediateCodeOfStatements());
         instructions.add(generateEndFunctionInstruction());
         return instructions;
     }
@@ -114,24 +114,9 @@ public class DefinitionNode extends ContainingNode {
                                                null);
 	}
 
-	private ArrayList<IntermediateCodeInstruction> generateIntermediateCodeOfStatements() throws JPLException {
-        var instructions = new ArrayList<IntermediateCodeInstruction>();
-        for (StatementNode statement : this.getStatements()) {
-            instructions.addAll(statement.generateIntermediateCode());
-        }
-		return instructions;
-	}
-
 	private IntermediateCodeInstruction generateBeginFunctionInstruction() {
 		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.BeginFunction,
                                                null,
-                                               null,
-                                               null);
-	}
-
-	private IntermediateCodeInstruction generateLabelInstruction() {
-		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Label,
-                                               this.definitionName,
                                                null,
                                                null);
 	}
