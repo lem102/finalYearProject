@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
+import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
@@ -59,8 +60,22 @@ public class IfNode extends ConditionalNode
     @Override
     public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
         var instructions = new ArrayList<IntermediateCodeInstruction>();
-        instructions.addAll(this.testExpression.generateIntermediateCode());
-        // instructions.add(this.generateConditionalGoto());
+        ArrayList<IntermediateCodeInstruction> testExpressionIntermediateCode = this.testExpression.generateIntermediateCode();
+        instructions.addAll(testExpressionIntermediateCode);
+
+        String expressionResultVariableName = testExpressionIntermediateCode.get(testExpressionIntermediateCode.size() -1).getResult();
+        String label = IntermediateCodeInstruction.getNewLabelName();
+        instructions.add(this.generateConditionalGoto(label, expressionResultVariableName));
+        instructions.addAll(super.generateIntermediateCodeOfStatements());
+        instructions.add(super.generateLabelInstruction(label));
         return instructions;
     }
+
+	private IntermediateCodeInstruction generateConditionalGoto(String label,
+                                                                String expressionResultVariableName) {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.IfFalse,
+                                               expressionResultVariableName,
+                                               null,
+                                               label);
+	}
 }
