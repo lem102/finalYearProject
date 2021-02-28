@@ -1,7 +1,10 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
+import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.JPLType;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
@@ -71,4 +74,33 @@ public class DeclarationNode extends StatementNode
         
         return output;
     }
+
+    @Override
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
+
+        ArrayList<IntermediateCodeInstruction> expressionIntermediateCode = this.expression.generateIntermediateCode();
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        instructions.addAll(expressionIntermediateCode);
+        String expressionResult = getExpressionResult(expressionIntermediateCode);
+		instructions.add(this.generateAssignmentInstruction(expressionResult));
+        return instructions;
+    }
+
+	private String getExpressionResult(ArrayList<IntermediateCodeInstruction> expressionIntermediateCode) {
+		String expressionResultVariableName;
+        if (expressionIntermediateCode.size() > 0) {
+            expressionResultVariableName = expressionIntermediateCode.get(expressionIntermediateCode.size() -1).getResult();
+        } else {
+            String tokenValue = this.expression.getRootExpressionElementNode().getToken().tokenValue;
+            expressionResultVariableName = tokenValue;
+        }
+		return expressionResultVariableName;
+	}
+
+	private IntermediateCodeInstruction generateAssignmentInstruction(String expressionResultVariableName) {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Assign,
+                                               expressionResultVariableName,
+                                               null,
+                                               this.name);
+	}
 }

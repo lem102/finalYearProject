@@ -70,4 +70,8 @@ public class ExpressionNode
         instructions.addAll(this.rootExpressionElementNode.generateIntermediateCode());
 		return instructions;
 	}
+
+	public ExpressionElementNode getRootExpressionElementNode() {
+		return this.rootExpressionElementNode;
+	}
 }
