@@ -20,4 +20,7 @@ public enum IntermediateCodeInstructionType {
     LessThan,
     GreaterThanOrEqualTo,
     LessThanOrEqualTo,
+
+    IfFalse,
+    Assign,
 }
