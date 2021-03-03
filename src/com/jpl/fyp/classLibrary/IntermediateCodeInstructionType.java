@@ -21,6 +21,8 @@ public enum IntermediateCodeInstructionType {
     GreaterThanOrEqualTo,
     LessThanOrEqualTo,
 
-    IfFalse,
+    IfFalseGoto,
     Assign,
+    Declare,
+    Goto,
 }

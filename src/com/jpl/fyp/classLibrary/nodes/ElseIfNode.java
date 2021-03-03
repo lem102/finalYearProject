@@ -1,13 +1,14 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 
-public class ElseIfNode extends IfNode
-{
+public class ElseIfNode extends IfNode {
 	public ElseIfNode(Token[] tokens) throws JPLException {
         super(prepareTokens(tokens));
 	}
@@ -21,4 +22,11 @@ public class ElseIfNode extends IfNode
 
         return preparedTokens;
 	}
+
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode(String endLabel) throws JPLException {
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        System.out.println("else if");
+        instructions.addAll(super.generateStatementInstructions());
+        return instructions;
+    }
 }

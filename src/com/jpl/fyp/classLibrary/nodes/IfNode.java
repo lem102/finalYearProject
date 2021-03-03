@@ -2,6 +2,8 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Stream;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
@@ -60,20 +62,55 @@ public class IfNode extends ConditionalNode
     @Override
     public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
         var instructions = new ArrayList<IntermediateCodeInstruction>();
-        ArrayList<IntermediateCodeInstruction> testExpressionIntermediateCode = this.testExpression.generateIntermediateCode();
-        instructions.addAll(testExpressionIntermediateCode);
+        instructions.addAll(this.generateIfStatementInstructions());
 
-        String expressionResultVariableName = testExpressionIntermediateCode.get(testExpressionIntermediateCode.size() -1).getResult();
-        String label = IntermediateCodeInstruction.getNewLabelName();
-        instructions.add(this.generateConditionalGoto(label, expressionResultVariableName));
-        instructions.addAll(super.generateIntermediateCodeOfStatements());
-        instructions.add(super.generateLabelInstruction(label));
+        if (this.getElseNode() != null) {
+            String endLabel = IntermediateCodeInstruction.getNewLabelName();
+
+            IntermediateCodeInstruction gotoEndInstruction = this.generateGotoInstruction(endLabel);
+            instructions = this.insertGotoEndInstruction(instructions, gotoEndInstruction);
+            IntermediateCodeInstruction endLabelInstruction = this.generateLabelInstruction(endLabel);
+            
+            instructions.addAll(this.getElseNode().generateIntermediateCode(endLabel));
+            instructions.add(endLabelInstruction);
+        }
+        
         return instructions;
     }
 
-	private IntermediateCodeInstruction generateConditionalGoto(String label,
-                                                                String expressionResultVariableName) {
-		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.IfFalse,
+	private ArrayList<IntermediateCodeInstruction> insertGotoEndInstruction(ArrayList<IntermediateCodeInstruction> instructions,
+                                                                            IntermediateCodeInstruction gotoEndInstruction) {
+        instructions.add(instructions.size() -2, gotoEndInstruction);
+		return instructions;
+	}
+
+	private IntermediateCodeInstruction generateGotoInstruction(String endLabel) {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Goto,
+                                               null,
+                                               null,
+                                               endLabel);
+	}
+
+	private ArrayList<IntermediateCodeInstruction> generateIfStatementInstructions() throws JPLException {
+        ArrayList<IntermediateCodeInstruction> testExpressionInstructions = this.testExpression.generateIntermediateCode();
+        String expressionResultVariableName = testExpressionInstructions.get(testExpressionInstructions.size() -1).getResult();
+        String label = IntermediateCodeInstruction.getNewLabelName();
+        IntermediateCodeInstruction conditionalGotoInstruction = this.generateConditionalGotoInstructions(label, expressionResultVariableName);
+        ArrayList<IntermediateCodeInstruction> statementInstructions = super.generateStatementInstructions();
+        IntermediateCodeInstruction labelInstruction = super.generateLabelInstruction(label);
+        
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        instructions.addAll(testExpressionInstructions);
+        instructions.add(conditionalGotoInstruction);
+        instructions.addAll(statementInstructions);
+        instructions.add(labelInstruction);
+
+        return instructions;
+	}
+
+	private IntermediateCodeInstruction generateConditionalGotoInstructions(String label,
+                                                                                String expressionResultVariableName) {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.IfFalseGoto,
                                                expressionResultVariableName,
                                                null,
                                                label);

@@ -2,6 +2,7 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
@@ -73,7 +74,7 @@ public class ContainingNode extends StatementNode {
         return stringOfStatements;
     }
 
-    public ArrayList<IntermediateCodeInstruction> generateIntermediateCodeOfStatements() throws JPLException {
+    public ArrayList<IntermediateCodeInstruction> generateStatementInstructions() throws JPLException {
         var instructions = new ArrayList<IntermediateCodeInstruction>();
         for (StatementNode statement : this.getStatements()) {
             instructions.addAll(statement.generateIntermediateCode());
@@ -86,5 +87,10 @@ public class ContainingNode extends StatementNode {
                                                label,
                                                null,
                                                null);
+	}
+
+	public ArrayList<IntermediateCodeInstruction> generateIntermediateCode(String endLabel) throws JPLException {
+        System.out.println("JACOB WARNING: should not call this method.");
+        return new ArrayList<IntermediateCodeInstruction>();
 	}
 }

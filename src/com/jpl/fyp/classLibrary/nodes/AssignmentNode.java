@@ -1,7 +1,10 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
+import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
@@ -53,4 +56,32 @@ public class AssignmentNode extends StatementNode
         Validator.validateIdentifierIsDeclared(entries, this.assignmentTarget);
         this.expression.validate(entries);
     }
+
+    @Override
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        ArrayList<IntermediateCodeInstruction> expressionIntermediateCode = this.expression.generateIntermediateCode();
+        instructions.addAll(expressionIntermediateCode);
+        String expressionResult = this.getExpressionResult(expressionIntermediateCode);
+		instructions.add(this.generateAssignmentInstruction(expressionResult));
+        return instructions;
+    }
+
+    private String getExpressionResult(ArrayList<IntermediateCodeInstruction> expressionIntermediateCode) {
+		String expressionResultVariableName;
+        if (expressionIntermediateCode.size() > 0) {
+            expressionResultVariableName = expressionIntermediateCode.get(expressionIntermediateCode.size() -1).getResult();
+        } else {
+            String tokenValue = this.expression.getRootExpressionElementNode().getToken().tokenValue;
+            expressionResultVariableName = tokenValue;
+        }
+		return expressionResultVariableName;
+	}
+
+	private IntermediateCodeInstruction generateAssignmentInstruction(String expressionResultVariableName) {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Assign,
+                                               expressionResultVariableName,
+                                               null,
+                                               this.assignmentTarget);
+	}
 }

@@ -77,12 +77,19 @@ public class DeclarationNode extends StatementNode
 
     @Override
     public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
-
-        ArrayList<IntermediateCodeInstruction> expressionIntermediateCode = this.expression.generateIntermediateCode();
         var instructions = new ArrayList<IntermediateCodeInstruction>();
-        instructions.addAll(expressionIntermediateCode);
-        String expressionResult = getExpressionResult(expressionIntermediateCode);
-		instructions.add(this.generateAssignmentInstruction(expressionResult));
+
+        IntermediateCodeInstruction declarationInstruction;
+        if (this.expression == null) {
+            declarationInstruction = this.generateDeclarationInstruction();
+        } else {
+            ArrayList<IntermediateCodeInstruction> expressionIntermediateCode = this.expression.generateIntermediateCode();
+            instructions.addAll(expressionIntermediateCode);
+            String expressionResult = this.getExpressionResult(expressionIntermediateCode);
+            declarationInstruction = this.generateDeclarationInstruction(expressionResult);
+        }
+        instructions.add(declarationInstruction);
+
         return instructions;
     }
 
@@ -97,10 +104,19 @@ public class DeclarationNode extends StatementNode
 		return expressionResultVariableName;
 	}
 
-	private IntermediateCodeInstruction generateAssignmentInstruction(String expressionResultVariableName) {
-		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Assign,
+	private IntermediateCodeInstruction generateDeclarationInstruction(String expressionResultVariableName) {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Declare,
                                                expressionResultVariableName,
                                                null,
                                                this.name);
 	}
+
+    
+	private IntermediateCodeInstruction generateDeclarationInstruction() {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Declare,
+                                               null,
+                                               null,
+                                               this.name);
+	}
+
 }

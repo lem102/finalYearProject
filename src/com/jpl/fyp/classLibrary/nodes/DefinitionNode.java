@@ -102,7 +102,7 @@ public class DefinitionNode extends ContainingNode {
         var instructions = new ArrayList<IntermediateCodeInstruction>();
         instructions.add(super.generateLabelInstruction(this.definitionName));
         instructions.add(this.generateBeginFunctionInstruction());
-        instructions.addAll(super.generateIntermediateCodeOfStatements());
+        instructions.addAll(super.generateStatementInstructions());
         instructions.add(generateEndFunctionInstruction());
         return instructions;
     }
