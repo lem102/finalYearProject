@@ -25,8 +25,10 @@ public class ElseIfNode extends IfNode {
 
     public ArrayList<IntermediateCodeInstruction> generateIntermediateCode(String endLabel) throws JPLException {
         var instructions = new ArrayList<IntermediateCodeInstruction>();
-        System.out.println("else if");
-        instructions.addAll(super.generateStatementInstructions());
+        instructions.addAll(this.generateIfStatementInstructions());
+        IntermediateCodeInstruction gotoEndInstruction = this.generateGotoInstruction(endLabel);
+		instructions = this.insertGotoEndInstruction(instructions, gotoEndInstruction);
+        instructions.addAll(this.getElseNode().generateIntermediateCode(endLabel));
         return instructions;
     }
 }

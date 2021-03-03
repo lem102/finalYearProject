@@ -78,20 +78,20 @@ public class IfNode extends ConditionalNode
         return instructions;
     }
 
-	private ArrayList<IntermediateCodeInstruction> insertGotoEndInstruction(ArrayList<IntermediateCodeInstruction> instructions,
+	public ArrayList<IntermediateCodeInstruction> insertGotoEndInstruction(ArrayList<IntermediateCodeInstruction> instructions,
                                                                             IntermediateCodeInstruction gotoEndInstruction) {
-        instructions.add(instructions.size() -2, gotoEndInstruction);
+        instructions.add(instructions.size() -1, gotoEndInstruction);
 		return instructions;
 	}
 
-	private IntermediateCodeInstruction generateGotoInstruction(String endLabel) {
+	public IntermediateCodeInstruction generateGotoInstruction(String endLabel) {
 		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Goto,
                                                null,
                                                null,
                                                endLabel);
 	}
 
-	private ArrayList<IntermediateCodeInstruction> generateIfStatementInstructions() throws JPLException {
+	public ArrayList<IntermediateCodeInstruction> generateIfStatementInstructions() throws JPLException {
         ArrayList<IntermediateCodeInstruction> testExpressionInstructions = this.testExpression.generateIntermediateCode();
         String expressionResultVariableName = testExpressionInstructions.get(testExpressionInstructions.size() -1).getResult();
         String label = IntermediateCodeInstruction.getNewLabelName();

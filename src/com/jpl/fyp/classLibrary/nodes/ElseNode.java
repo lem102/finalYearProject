@@ -1,7 +1,8 @@
 package com.jpl.fyp.classLibrary.nodes;
 
-import java.util.ArrayDeque;
+import java.util.ArrayList;
 
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
@@ -35,4 +36,10 @@ public class ElseNode extends ContainingNode
         return "Else Node:\n"
             + super.toString();
 	}
+
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode(String endLabel) throws JPLException {
+		var instructions = new ArrayList<IntermediateCodeInstruction>();
+        instructions.addAll(super.generateStatementInstructions());
+		return instructions;
+    }
 }
