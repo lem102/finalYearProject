@@ -3,6 +3,7 @@ package com.jpl.fyp.classLibrary.nodes;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
@@ -53,5 +54,28 @@ public class WhileNode extends ContainingNode
             + testExpression
             + ")\n"
             + super.toString();
+    }
+
+    @Override
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
+        ArrayList<IntermediateCodeInstruction> testExpressionInstructions = this.testExpression.generateIntermediateCode();
+        String expressionResultVariableName = testExpressionInstructions.get(testExpressionInstructions.size() -1).getResult();
+        String preLoopLabel = IntermediateCodeInstruction.getNewLabelName();
+        String postLoopLabel = IntermediateCodeInstruction.getNewLabelName();
+        IntermediateCodeInstruction exitLoopConditionalGotoInstruction = super.generateConditionalGotoInstructions(postLoopLabel, expressionResultVariableName);
+        ArrayList<IntermediateCodeInstruction> statementInstructions = super.generateStatementInstructions();
+        IntermediateCodeInstruction preLoopLabelInstruction = super.generateLabelInstruction(preLoopLabel);
+        IntermediateCodeInstruction postLoopLabelInstruction = super.generateLabelInstruction(postLoopLabel);
+        IntermediateCodeInstruction loopingGotoInstruction = super.generateGotoInstruction(preLoopLabel);
+
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        instructions.add(preLoopLabelInstruction);
+        instructions.addAll(testExpressionInstructions);
+        instructions.add(exitLoopConditionalGotoInstruction);
+        instructions.addAll(statementInstructions);
+        instructions.add(loopingGotoInstruction);
+        instructions.add(postLoopLabelInstruction);
+        
+        return instructions;
     }
 }
