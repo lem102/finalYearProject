@@ -93,4 +93,20 @@ public class ContainingNode extends StatementNode {
         System.out.println("JACOB WARNING: should not call this method.");
         return new ArrayList<IntermediateCodeInstruction>();
 	}
+
+    
+	public IntermediateCodeInstruction generateConditionalGotoInstructions(String label,
+                                                                           String expressionResultVariableName) {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.IfFalseGoto,
+                                               expressionResultVariableName,
+                                               null,
+                                               label);
+	}
+
+	public IntermediateCodeInstruction generateGotoInstruction(String endLabel) {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Goto,
+                                               null,
+                                               null,
+                                               endLabel);
+	}
 }

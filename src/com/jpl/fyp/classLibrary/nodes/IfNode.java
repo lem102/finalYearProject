@@ -84,18 +84,11 @@ public class IfNode extends ConditionalNode
 		return instructions;
 	}
 
-	public IntermediateCodeInstruction generateGotoInstruction(String endLabel) {
-		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Goto,
-                                               null,
-                                               null,
-                                               endLabel);
-	}
-
 	public ArrayList<IntermediateCodeInstruction> generateIfStatementInstructions() throws JPLException {
         ArrayList<IntermediateCodeInstruction> testExpressionInstructions = this.testExpression.generateIntermediateCode();
         String expressionResultVariableName = testExpressionInstructions.get(testExpressionInstructions.size() -1).getResult();
         String label = IntermediateCodeInstruction.getNewLabelName();
-        IntermediateCodeInstruction conditionalGotoInstruction = this.generateConditionalGotoInstructions(label, expressionResultVariableName);
+        IntermediateCodeInstruction conditionalGotoInstruction = super.generateConditionalGotoInstructions(label, expressionResultVariableName);
         ArrayList<IntermediateCodeInstruction> statementInstructions = super.generateStatementInstructions();
         IntermediateCodeInstruction labelInstruction = super.generateLabelInstruction(label);
         
@@ -106,13 +99,5 @@ public class IfNode extends ConditionalNode
         instructions.add(labelInstruction);
 
         return instructions;
-	}
-
-	private IntermediateCodeInstruction generateConditionalGotoInstructions(String label,
-                                                                                String expressionResultVariableName) {
-		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.IfFalseGoto,
-                                               expressionResultVariableName,
-                                               null,
-                                               label);
 	}
 }
