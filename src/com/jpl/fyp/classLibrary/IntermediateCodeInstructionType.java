@@ -25,4 +25,6 @@ public enum IntermediateCodeInstructionType {
     Assign,
     Declare,
     Goto,
+    LabelCall,
+    PushParameter,
 }

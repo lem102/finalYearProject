@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.jpl.fyp.classLibrary.ExpressionInstructionInformation;
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
+import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
@@ -84,11 +87,49 @@ public class FunctionCallNode extends StatementNode {
 
     @Override
 	public void validate(SymbolTableEntry[] entries) throws JPLException {
-        // write this next boyo
         Validator.validateIdentifierIsDeclared(entries, this.identifier);
         Validator.validateNumberOfArguments(entries, this.identifier, this.arguments);
         for (ExpressionNode argument : this.arguments) {
             argument.validate(entries);
         }
+	}
+
+    @Override
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
+        var argumentInstructionInformation = new ExpressionInstructionInformation(this.arguments);
+        ArrayList<IntermediateCodeInstruction> instructionsForArguments = argumentInstructionInformation.getExpressionInstructions();
+        ArrayList<String> expressionResultVariableNames = argumentInstructionInformation.getExpressionResultVariableNames();
+        
+        ArrayList<IntermediateCodeInstruction> pushParamaterInstructions = generatePushParameterInstructions(expressionResultVariableNames);
+        IntermediateCodeInstruction labelCallInstruction = this.generateLabelCallInstruction(this.identifier);
+        
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        instructions.addAll(instructionsForArguments);
+        instructions.addAll(pushParamaterInstructions);
+        instructions.add(labelCallInstruction);
+        
+        return instructions;
+    }
+
+	private ArrayList<IntermediateCodeInstruction> generatePushParameterInstructions(ArrayList<String> expressionResultVariableNames) {
+		var pushParamaterInstructions = new ArrayList<IntermediateCodeInstruction>();
+        for (String resultVariableName : expressionResultVariableNames) {
+            pushParamaterInstructions.add(this.generatePushParameterInstruction(resultVariableName));
+        }
+		return pushParamaterInstructions;
+	}
+
+	private IntermediateCodeInstruction generatePushParameterInstruction(String resultVariableName) {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.PushParameter,
+                                               resultVariableName,
+                                               null,
+                                               null);
+	}
+
+	private IntermediateCodeInstruction generateLabelCallInstruction(String functionName) {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.LabelCall,
+                                               null,
+                                               null,
+                                               functionName);
 	}
 }

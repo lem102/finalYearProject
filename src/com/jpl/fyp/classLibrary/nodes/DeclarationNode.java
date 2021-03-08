@@ -3,6 +3,7 @@ package com.jpl.fyp.classLibrary.nodes;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.jpl.fyp.classLibrary.ExpressionInstructionInformation;
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
 import com.jpl.fyp.classLibrary.JPLException;
@@ -77,32 +78,16 @@ public class DeclarationNode extends StatementNode
 
     @Override
     public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
+        ExpressionInstructionInformation argumentInstructionInformation = new ExpressionInstructionInformation(this.expression);
+        ArrayList<IntermediateCodeInstruction> expressionIntermediateCode = argumentInstructionInformation.getExpressionInstructions();
+        String expressionResult = argumentInstructionInformation.getExpressionResultVariableName();
+        IntermediateCodeInstruction declarationInstruction = this.generateDeclarationInstruction(expressionResult);
+
         var instructions = new ArrayList<IntermediateCodeInstruction>();
-
-        IntermediateCodeInstruction declarationInstruction;
-        if (this.expression == null) {
-            declarationInstruction = this.generateDeclarationInstruction();
-        } else {
-            ArrayList<IntermediateCodeInstruction> expressionIntermediateCode = this.expression.generateIntermediateCode();
-            instructions.addAll(expressionIntermediateCode);
-            String expressionResult = this.getExpressionResult(expressionIntermediateCode);
-            declarationInstruction = this.generateDeclarationInstruction(expressionResult);
-        }
+        instructions.addAll(expressionIntermediateCode);
         instructions.add(declarationInstruction);
-
         return instructions;
     }
-
-	private String getExpressionResult(ArrayList<IntermediateCodeInstruction> expressionIntermediateCode) {
-		String expressionResultVariableName;
-        if (expressionIntermediateCode.size() > 0) {
-            expressionResultVariableName = expressionIntermediateCode.get(expressionIntermediateCode.size() -1).getResult();
-        } else {
-            String tokenValue = this.expression.getRootExpressionElementNode().getToken().tokenValue;
-            expressionResultVariableName = tokenValue;
-        }
-		return expressionResultVariableName;
-	}
 
 	private IntermediateCodeInstruction generateDeclarationInstruction(String expressionResultVariableName) {
 		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Declare,
@@ -110,13 +95,4 @@ public class DeclarationNode extends StatementNode
                                                null,
                                                this.name);
 	}
-
-    
-	private IntermediateCodeInstruction generateDeclarationInstruction() {
-		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Declare,
-                                               null,
-                                               null,
-                                               this.name);
-	}
-
 }
