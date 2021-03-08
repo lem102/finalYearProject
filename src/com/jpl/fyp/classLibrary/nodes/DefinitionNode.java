@@ -103,7 +103,7 @@ public class DefinitionNode extends ContainingNode {
         instructions.add(super.generateLabelInstruction(this.definitionName));
         instructions.add(this.generateBeginFunctionInstruction());
         instructions.addAll(super.generateStatementInstructions());
-        instructions.add(generateEndFunctionInstruction());
+        instructions.add(this.generateEndFunctionInstruction());
         return instructions;
     }
 
