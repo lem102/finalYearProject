@@ -128,8 +128,8 @@ public class FunctionCallNode extends StatementNode {
 
 	private IntermediateCodeInstruction generateLabelCallInstruction(String functionName) {
 		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.LabelCall,
+                                               functionName,
                                                null,
-                                               null,
-                                               functionName);
+                                               IntermediateCodeInstruction.getNewTemporaryVariableName());
 	}
 }

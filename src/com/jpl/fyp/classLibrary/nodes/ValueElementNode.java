@@ -10,8 +10,7 @@ import com.jpl.fyp.classLibrary.TokenType;
 import com.jpl.fyp.compilerComponent.Validator;
 
 public class ValueElementNode extends ExpressionElementNode {
-    public ValueElementNode(Token token)
-    {
+    public ValueElementNode(Token token) {
         super(token);
     }
 

@@ -63,10 +63,10 @@ public class BinaryElementNode extends ExpressionElementNode
         instructions.addAll(leftExpressionIntermediateCode);
         instructions.addAll(rightExpressionIntermediateCode);
         instructions.add(new IntermediateCodeInstruction(this.getInstructionType(),
-                                                         generateSideArgument(leftExpression,
-                                                                              leftExpressionIntermediateCode),
-                                                         generateSideArgument(rightExpression,
-                                                                              rightExpressionIntermediateCode),
+                                                         this.generateSideArgument(leftExpression,
+                                                                                   leftExpressionIntermediateCode),
+                                                         this.generateSideArgument(rightExpression,
+                                                                                   rightExpressionIntermediateCode),
                                                          IntermediateCodeInstruction.getNewTemporaryVariableName()));
         return instructions;
     }
@@ -75,7 +75,9 @@ public class BinaryElementNode extends ExpressionElementNode
                                         ArrayList<IntermediateCodeInstruction> intermediateCode) throws JPLException {
 		if (node instanceof ValueElementNode) {
             return node.getToken().tokenValue;
-        } else if (node instanceof BinaryElementNode) {
+        } else if (node instanceof BinaryElementNode
+                   ||
+                   node instanceof FunctionElementNode) {
             return intermediateCode.get(intermediateCode.size() -1).getResult();
         } else {
             throw new JPLException("BinaryElementNode : unhandled ElementNode type.");

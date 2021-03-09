@@ -68,19 +68,19 @@ public class DeclarationNode extends StatementNode
     {
         String output = "";
         output += "Declaration:\n";
-        output += "Type: " + type + "\n";
-        output += "Name: " + name + "\n";
+        output += "Type: " + this.type + "\n";
+        output += "Name: " + this.name + "\n";
         output += "Expression:\n";
-        output += expression + "\n";
+        output += this.expression + "\n";
         
         return output;
     }
 
     @Override
     public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
-        ExpressionInstructionInformation argumentInstructionInformation = new ExpressionInstructionInformation(this.expression);
-        ArrayList<IntermediateCodeInstruction> expressionIntermediateCode = argumentInstructionInformation.getExpressionInstructions();
-        String expressionResult = argumentInstructionInformation.getExpressionResultVariableName();
+        var expressionInstructionInformation = new ExpressionInstructionInformation(this.expression);
+        ArrayList<IntermediateCodeInstruction> expressionIntermediateCode = expressionInstructionInformation.getExpressionInstructions();
+        String expressionResult = expressionInstructionInformation.getExpressionResultVariableName();
         IntermediateCodeInstruction declarationInstruction = this.generateDeclarationInstruction(expressionResult);
 
         var instructions = new ArrayList<IntermediateCodeInstruction>();

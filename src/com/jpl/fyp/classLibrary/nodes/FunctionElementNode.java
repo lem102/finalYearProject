@@ -3,6 +3,7 @@ package com.jpl.fyp.classLibrary.nodes;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
@@ -29,4 +30,8 @@ public class FunctionElementNode extends ExpressionElementNode {
     public void validate(SymbolTableEntry[] entries) throws JPLException {
         this.functionCallNode.validate(entries);
     }
+
+	public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
+		return this.functionCallNode.generateIntermediateCode();
+	}
 }
