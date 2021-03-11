@@ -78,8 +78,7 @@ public class IfNode extends ConditionalNode
         return instructions;
     }
 
-	public ArrayList<IntermediateCodeInstruction> insertGotoEndInstruction(ArrayList<IntermediateCodeInstruction> instructions,
-                                                                            IntermediateCodeInstruction gotoEndInstruction) {
+	public ArrayList<IntermediateCodeInstruction> insertGotoEndInstruction(ArrayList<IntermediateCodeInstruction> instructions, IntermediateCodeInstruction gotoEndInstruction) {
         instructions.add(instructions.size() -1, gotoEndInstruction);
 		return instructions;
 	}

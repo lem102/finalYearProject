@@ -28,7 +28,10 @@ public class ElseIfNode extends IfNode {
         instructions.addAll(this.generateIfStatementInstructions());
         IntermediateCodeInstruction gotoEndInstruction = this.generateGotoInstruction(endLabel);
 		instructions = this.insertGotoEndInstruction(instructions, gotoEndInstruction);
-        instructions.addAll(this.getElseNode().generateIntermediateCode(endLabel));
+        
+        if (this.getElseNode() != null) {
+            instructions.addAll(this.getElseNode().generateIntermediateCode(endLabel));
+        }
         return instructions;
     }
 }
