@@ -22,11 +22,9 @@ public class RootNode extends ContainingNode {
 
         if (node instanceof DefinitionNode) {
             addDefinitionNodeToDefinitions(node);
-        }
-        else if (node instanceof ElseNode || node instanceof ElseIfNode) {
+        } else if (node instanceof ElseNode || node instanceof ElseIfNode) {
             this.addElseOrElseIfNodeToCurrentIfStatement(node);
-        }
-        else {
+        } else {
             this.addGenericStatementNodeToCurrentContainingStatement(node);
         }
 
@@ -43,7 +41,6 @@ public class RootNode extends ContainingNode {
             getCurrentContainingNode().addSymbolToTable(nodeSymbolTableEntry);
         }
 	}
-
 
     private ContainingNode getCurrentContainingNode() {
         return nestingStatus.peek();

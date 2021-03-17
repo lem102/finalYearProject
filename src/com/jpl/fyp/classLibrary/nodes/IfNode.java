@@ -2,11 +2,8 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Stream;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
-import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
@@ -85,7 +82,7 @@ public class IfNode extends ConditionalNode
 
 	public ArrayList<IntermediateCodeInstruction> generateIfStatementInstructions() throws JPLException {
         ArrayList<IntermediateCodeInstruction> testExpressionInstructions = this.testExpression.generateIntermediateCode();
-        String expressionResultVariableName = testExpressionInstructions.get(testExpressionInstructions.size() -1).getResult();
+        String expressionResultVariableName = super.getExpressionResultVariableName(this.testExpression.getRootExpressionElementNode().getToken(), testExpressionInstructions);
         String label = IntermediateCodeInstruction.getNewLabelName();
         IntermediateCodeInstruction conditionalGotoInstruction = super.generateConditionalGotoInstructions(label, expressionResultVariableName);
         ArrayList<IntermediateCodeInstruction> statementInstructions = super.generateStatementInstructions();

@@ -36,6 +36,17 @@ public class IntermediateCodeInstruction {
         this.result = result;
 	}
 
+    public IntermediateCodeInstructionType getOperator() {
+        return this.operator;
+    }
+
+    public String getArgument1() {
+        return this.argument1;
+    }
+    public String getArgument2() {
+        return this.argument2;
+    }
+
     public String getResult() {
         return this.result;
     }

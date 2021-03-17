@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
+import com.jpl.fyp.classLibrary.Token;
+import com.jpl.fyp.classLibrary.TokenType;
 
 public class StatementNode implements Node
 {
@@ -34,5 +36,13 @@ public class StatementNode implements Node
         System.out.println("JACOB WARNING: IR code has not been written for this node.");
         var instructions = new ArrayList<IntermediateCodeInstruction>();
 		return instructions;
+	}
+
+	public String getExpressionResultVariableName(Token token, ArrayList<IntermediateCodeInstruction> testExpressionInstructions) {
+        if (token.tokenType == TokenType.Integer) {
+            return token.tokenValue;
+        } else {
+            return testExpressionInstructions.get(testExpressionInstructions.size() -1).getResult();
+        }
 	}
 }

@@ -26,15 +26,13 @@ public class FunctionCallNode extends StatementNode {
     }
 
     private ExpressionNode[] parseArgumentTokens(Token[] tokens) throws JPLException {
-        if (tokens.length == 0)
-        {
+        if (tokens.length == 0) {
             return new ExpressionNode[0];
         }
         
         var output = new ArrayList<ExpressionNode>();
 
-        for (Token[] tokenArray : splitTokensByArgument(tokens))
-        {
+        for (Token[] tokenArray : splitTokensByArgument(tokens)) {
             output.add(new ExpressionNode(tokenArray));
         }
 

@@ -2,9 +2,14 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
-import com.jpl.fyp.classLibrary.*;
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
+import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
+import com.jpl.fyp.classLibrary.JPLException;
+import com.jpl.fyp.classLibrary.JPLType;
+import com.jpl.fyp.classLibrary.SymbolTableEntry;
+import com.jpl.fyp.classLibrary.Token;
+import com.jpl.fyp.classLibrary.TokenType;
 
 public class DefinitionNode extends ContainingNode {
     public String definitionName;

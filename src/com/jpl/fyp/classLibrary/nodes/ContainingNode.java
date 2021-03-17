@@ -2,7 +2,6 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
@@ -10,6 +9,8 @@ import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTable;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
+import com.jpl.fyp.classLibrary.Token;
+import com.jpl.fyp.classLibrary.TokenType;
 
 public class ContainingNode extends StatementNode {
     private List<StatementNode> statements;
@@ -31,6 +32,10 @@ public class ContainingNode extends StatementNode {
 	public void setStatements(ArrayList<StatementNode> statements) {
         this.statements = statements;
 	}
+
+    public SymbolTable getSymbolTable() {
+        return this.symbolTable;
+    }
 
 	public void addSymbolToTable(SymbolTableEntry symbolTableEntry) {
         this.symbolTable.addSymbol(symbolTableEntry);

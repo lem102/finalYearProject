@@ -59,7 +59,7 @@ public class WhileNode extends ContainingNode
     @Override
     public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
         ArrayList<IntermediateCodeInstruction> testExpressionInstructions = this.testExpression.generateIntermediateCode();
-        String expressionResultVariableName = testExpressionInstructions.get(testExpressionInstructions.size() -1).getResult();
+        String expressionResultVariableName = super.getExpressionResultVariableName(this.testExpression.getRootExpressionElementNode().getToken(), testExpressionInstructions);
         String preLoopLabel = IntermediateCodeInstruction.getNewLabelName();
         String postLoopLabel = IntermediateCodeInstruction.getNewLabelName();
         IntermediateCodeInstruction exitLoopConditionalGotoInstruction = super.generateConditionalGotoInstructions(postLoopLabel, expressionResultVariableName);

@@ -67,6 +67,10 @@ public class Lexer
         TokenType tokenType;
 
         switch (tokenString) {
+            case "print": {
+                tokenType = TokenType.Print;
+                break;
+            }
             case "while": {
                 tokenType = TokenType.While;
                 break;

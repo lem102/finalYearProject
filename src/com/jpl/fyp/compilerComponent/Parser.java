@@ -2,8 +2,20 @@ package com.jpl.fyp.compilerComponent;
 
 import java.util.Arrays;
 
-import com.jpl.fyp.classLibrary.*;
-import com.jpl.fyp.classLibrary.nodes.*;
+import com.jpl.fyp.classLibrary.JPLException;
+import com.jpl.fyp.classLibrary.Token;
+import com.jpl.fyp.classLibrary.TokenType;
+import com.jpl.fyp.classLibrary.nodes.AssignmentNode;
+import com.jpl.fyp.classLibrary.nodes.DeclarationNode;
+import com.jpl.fyp.classLibrary.nodes.DefinitionNode;
+import com.jpl.fyp.classLibrary.nodes.ElseIfNode;
+import com.jpl.fyp.classLibrary.nodes.ElseNode;
+import com.jpl.fyp.classLibrary.nodes.FunctionCallNode;
+import com.jpl.fyp.classLibrary.nodes.IfNode;
+import com.jpl.fyp.classLibrary.nodes.RootNode;
+import com.jpl.fyp.classLibrary.nodes.StatementNode;
+import com.jpl.fyp.classLibrary.nodes.WhileNode;
+import com.jpl.fyp.classLibrary.nodes.PrintNode;
 
 public class Parser
 {
@@ -32,38 +44,34 @@ public class Parser
         int endOfStatement = elementsUntilPastEndOfStatement(tokens, tokenIndex);
         int endOfHeader = elementsUntilPastEndOfHeader(tokens, tokenIndex);
         
-		switch (tokens[tokenIndex].tokenType)
-		{
-            case Define:
-            {
+		switch (tokens[tokenIndex].tokenType) {
+            case Define: {
                 Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfHeader);
                 return new DefinitionNode(relevantTokens);
             } 
-		    case IntegerDeclaration:
-		    {
+		    case IntegerDeclaration: {
 		        Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfStatement);
 		        return new DeclarationNode(relevantTokens);
 		    }
-		    case Identifier:
-		    {
+		    case Identifier: {
 		        return parseStatementBeginningWithIdentifier(tokens, tokenIndex, endOfStatement);
 		    }
-		    case While:
-		    {
+		    case While: {
 		        Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfHeader);
 		        return new WhileNode(relevantTokens);
 		    }
-		    case If:
-		    {
+		    case If: {
 		        Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfHeader);
 		        return new IfNode(relevantTokens);
 		    }
-		    case Else:
-		    {
+		    case Else: {
 		        return parseStatementBeginningWithElse(tokens, tokenIndex, endOfHeader);
 		    }
-		    default:
-		    {
+            case Print: {
+                Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfStatement);
+                return new PrintNode(relevantTokens);
+            }
+		    default: {
 		        throw new JPLException("unhandled token");
 		    }
 		}

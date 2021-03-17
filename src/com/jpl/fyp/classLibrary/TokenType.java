@@ -31,4 +31,6 @@ public enum TokenType
     LessThan,
     GreaterThanOrEqualTo,
     LessThanOrEqualTo,
+
+    Print,
 }
