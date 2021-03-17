@@ -1,7 +1,6 @@
 package com.jpl.fyp.compilerComponent;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 
@@ -30,7 +29,19 @@ public class IntermediateCodeTranslator {
                 break;
             }
             case Add: {
-                lines.addAll(translateAdd(instruction));
+                lines.addAll(translateSummation(instruction, "add"));
+                break;
+            }
+            case Subtract: {
+                lines.addAll(translateSummation(instruction, "sub"));
+                break;
+            }
+            case Multiply: {
+                lines.addAll(translateMultiplication(instruction, "mul"));
+                break;
+            }
+            case Divide: {
+                lines.addAll(translateMultiplication(instruction, "div"));
                 break;
             }
             default: {
@@ -58,19 +69,16 @@ public class IntermediateCodeTranslator {
 	private static ArrayList<String> translateDeclare(IntermediateCodeInstruction instruction) {
         String instructionResult = instruction.getResult();
         String instructionArgument = instruction.getArgument1();
-
-        String firstLine;
-        if (isInteger(instructionArgument)) {
-            firstLine = "mov eax, " + instructionArgument;
-        } else {
-            firstLine = "mov eax, [" + instructionArgument + "]";
+        if (instructionArgument == null) {
+            instructionArgument = "0";
         }
-        String secondLine = "mov [" + instructionResult + "], eax";
+
+        String firstLine = operationBuilder("mov", "eax", addBracketsIfVariable(instructionArgument));
+        String secondLine = operationBuilder("mov", addBracketsIfVariable(instructionResult), "eax");
 
         var lines = new ArrayList<String>();
         lines.add(firstLine);
         lines.add(secondLine);
-        
 		return lines;
 	}
 
@@ -83,20 +91,57 @@ public class IntermediateCodeTranslator {
         }
 	}
 
-	private static ArrayList<String> translateAdd(IntermediateCodeInstruction instruction) {
+	private static ArrayList<String> translateSummation(IntermediateCodeInstruction instruction, String operation) {
+        String firstArgument = instruction.getArgument1();
+        String secondArgument = instruction.getArgument2();
+        String result = instruction.getResult();
+
+        String firstLine = operationBuilder("mov", "eax", addBracketsIfVariable(firstArgument));
+        String secondLine = operationBuilder("mov", "ebx", addBracketsIfVariable(secondArgument));
+        String thirdLine = operationBuilder(operation, "eax", "ebx");
+        String fourthLine = operationBuilder("mov", addBracketsIfVariable(result), "eax");
+
         var lines = new ArrayList<String>();
-
-        var firstLine = "mov eax, " + instruction.getArgument1();
-        var secondLine = "mov ebx, " + instruction.getArgument2();
-        var thirdLine = "add eax, ebx";
-        var fourthLine = "mov [" + instruction.getResult() + "], eax";
-
         lines.add(firstLine);
         lines.add(secondLine);
         lines.add(thirdLine);
         lines.add(fourthLine);
-        
+
 		return lines;
 	}
 
+    private static ArrayList<String> translateMultiplication(IntermediateCodeInstruction instruction, String operation) {
+        String firstArgument = instruction.getArgument1();
+        String secondArgument = instruction.getArgument2();
+        String result = instruction.getResult();
+
+        String firstLine = operationBuilder("mov", "eax", addBracketsIfVariable(firstArgument));
+        String secondLine = operationBuilder("mov", "ebx", addBracketsIfVariable(secondArgument));
+        String thirdLine = operationBuilder(operation, "ebx");
+        String fourthLine = operationBuilder("mov", addBracketsIfVariable(result), "eax");
+
+        var lines = new ArrayList<String>();
+        lines.add(firstLine);
+        lines.add(secondLine);
+        lines.add(thirdLine);
+        lines.add(fourthLine);
+
+		return lines;
+	}
+
+    private static String operationBuilder(String operator, String argument) {
+		return operator + " " + argument;
+	}
+
+	private static String operationBuilder(String operator, String argument1, String argument2) {
+        return operator + " " + argument1 + ", " + argument2;
+    }
+
+    private static String addBracketsIfVariable(String argument) {
+        if (isInteger(argument)) {
+            return argument;
+        } else {
+            return "[" + argument + "]";
+        }
+    }
 }

@@ -2,8 +2,10 @@ package com.jpl.fyp.compilerComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
+import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.nodes.RootNode;
 
 public class AssemblyCodeGenerator {
@@ -35,17 +37,24 @@ public class AssemblyCodeGenerator {
 
     private static ArrayList<String> createVariableStorage(RootNode syntaxTree) {
         var lines = new ArrayList<String>();
+
+        SymbolTableEntry[] declaredSymbols = syntaxTree.getAllVariableSymbols();
+        
+        lines.addAll(createDeclaredVariableStorage(declaredSymbols));
         lines.addAll(createTemporaryVariableStorage());
-
-        // ContainingNode test = (ContainingNode)syntaxTree.getStatements().get(0);
-        // String variableName = test.getSymbolTable().getSymbols().get(0).getName();
-
-        // lines.add(variableName + ": resb 4");
 
         return lines;
     }
 
-    private static ArrayList<String> createTemporaryVariableStorage() {
+    private static ArrayList<String> createDeclaredVariableStorage(SymbolTableEntry[] declaredSymbols) {
+        var lines = new ArrayList<String>();
+        for (SymbolTableEntry symbol : declaredSymbols) {
+            lines.add(symbol.getName() + ": resb 4");
+        }
+		return lines;
+	}
+
+	private static ArrayList<String> createTemporaryVariableStorage() {
         var lines = new ArrayList<String>();
         int numberOfTemporaryVariables = IntermediateCodeInstruction.getCurrentTemporaryVariableIndex();
         for (int i = 0; i < numberOfTemporaryVariables; i++) {

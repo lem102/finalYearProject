@@ -9,8 +9,6 @@ import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.SymbolTable;
 import com.jpl.fyp.classLibrary.SymbolTableEntry;
-import com.jpl.fyp.classLibrary.Token;
-import com.jpl.fyp.classLibrary.TokenType;
 
 public class ContainingNode extends StatementNode {
     private List<StatementNode> statements;
@@ -114,4 +112,15 @@ public class ContainingNode extends StatementNode {
                                                null,
                                                endLabel);
 	}
+
+    @Override
+    public ArrayList<SymbolTableEntry> getAllSymbols() {
+        var entries = new ArrayList<SymbolTableEntry>();
+        entries.addAll(this.symbolTable.getSymbols());
+
+        for (StatementNode statement : this.getStatements()) {
+            entries.addAll(statement.getAllSymbols());
+        }
+        return entries;
+    }
 }

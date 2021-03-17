@@ -141,4 +141,12 @@ public class RootNode extends ContainingNode {
         }
 		return instructions;
     }
+
+	public SymbolTableEntry[] getAllVariableSymbols() {
+        var symbols = new ArrayList<SymbolTableEntry>();
+        for (StatementNode statement : this.getStatements()) {
+            symbols.addAll(statement.getAllSymbols());
+        }
+		return symbols.toArray(new SymbolTableEntry[0]);
+	}
 }

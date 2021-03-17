@@ -1,6 +1,7 @@
 package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
@@ -8,13 +9,11 @@ import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 
-public class StatementNode implements Node
-{
+public class StatementNode implements Node {
     private SymbolTableEntry symbolTableEntry;
     
 	@Override
-	public int moveIndexToNextStatement(int endOfStatement, int endOfHeader)
-    {
+	public int moveIndexToNextStatement(int endOfStatement, int endOfHeader) {
 		return endOfStatement;
 	}
 
@@ -41,8 +40,18 @@ public class StatementNode implements Node
 	public String getExpressionResultVariableName(Token token, ArrayList<IntermediateCodeInstruction> testExpressionInstructions) {
         if (token.tokenType == TokenType.Integer) {
             return token.tokenValue;
-        } else {
+        } else if (testExpressionInstructions.size() > 0) {
             return testExpressionInstructions.get(testExpressionInstructions.size() -1).getResult();
+        } else {
+            return token.tokenValue;
         }
+	}
+
+	public ArrayList<SymbolTableEntry> getAllSymbols() {
+        var entries = new ArrayList<SymbolTableEntry>();
+        // if (this.symbolTableEntry != null) {
+        //     entries.add(this.symbolTableEntry);
+        // }
+		return entries;
 	}
 }
