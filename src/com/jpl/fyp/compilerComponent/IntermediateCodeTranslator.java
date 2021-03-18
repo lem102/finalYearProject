@@ -1,6 +1,7 @@
 package com.jpl.fyp.compilerComponent;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 
@@ -20,10 +21,7 @@ public class IntermediateCodeTranslator {
                 lines.add(instruction.getArgument1() + ":");
                 break;
             }
-            case Declare: {
-                lines.addAll(translateDeclareOrAssign(instruction));
-                break;
-            }
+            case Declare: 
             case Assign: {
                 lines.addAll(translateDeclareOrAssign(instruction));
                 break;
@@ -48,12 +46,80 @@ public class IntermediateCodeTranslator {
                 lines.addAll(translateArithmeticOperation(instruction, "div"));
                 break;
             }
+            case Equal: {
+                lines.addAll(translateComparison(instruction, "sete"));
+                break;
+            }
+            case NotEqual: {
+                lines.addAll(translateComparison(instruction, "setne"));
+                break;
+            }
+            case LessThan: {
+                lines.addAll(translateComparison(instruction, "setl"));
+                break;
+            }
+            case LessThanOrEqualTo: {
+                lines.addAll(translateComparison(instruction, "setle"));
+                break;
+            }
+            case GreaterThan: {
+                lines.addAll(translateComparison(instruction, "setg"));
+                break;
+            }
+            case GreaterThanOrEqualTo: {
+                lines.addAll(translateComparison(instruction, "setge"));
+                break;
+            }
+            case And: {
+                lines.addAll(translateLogicalComparison(instruction, "and"));
+                break;
+            }
+            case Or: {
+                lines.addAll(translateLogicalComparison(instruction, "or"));
+                break;
+            }
             default: {
                 lines.add("; instruction untranslated");
                 break;
             }
         }
         return lines;
+	}
+
+	private static ArrayList<String> translateLogicalComparison(IntermediateCodeInstruction instruction, String logicalComparison) {
+        String firstArgument = instruction.getArgument1();
+        String secondArgument = instruction.getArgument2();
+        String variableForResultToBeStoredIn = instruction.getResult();
+
+        String loadFirstArgumentIntoEax = operationBuilder("mov", "eax", addBracketsIfVariable(firstArgument));
+        String compareSecondArgumentWithEax = operationBuilder(logicalComparison, "eax", addBracketsIfVariable(secondArgument));
+        String storeResult = operationBuilder("mov", addBracketsIfVariable(variableForResultToBeStoredIn), "eax");
+
+        var lines = new ArrayList<String>();
+        lines.add(loadFirstArgumentIntoEax);
+        lines.add(compareSecondArgumentWithEax);
+        lines.add(storeResult);
+		return lines;
+	}
+
+	private static ArrayList<String> translateComparison(IntermediateCodeInstruction instruction, String comparison) {
+        String firstArgument = instruction.getArgument1();
+        String secondArgument = instruction.getArgument2();
+        String variableForResultToBeStoredIn = instruction.getResult();
+
+        String loadFirstArgumentIntoEax = operationBuilder("mov", "eax", addBracketsIfVariable(firstArgument));
+        String compareSecondArgumentWithEax = operationBuilder("cmp", "eax", addBracketsIfVariable(secondArgument));
+        String performComparison = operationBuilder(comparison, "al");
+        String convertResult = operationBuilder("movzx", "eax", "al");
+        String storeResult = operationBuilder("mov", addBracketsIfVariable(variableForResultToBeStoredIn), "eax");
+
+        var lines = new ArrayList<String>();
+        lines.add(loadFirstArgumentIntoEax);
+        lines.add(compareSecondArgumentWithEax);
+        lines.add(performComparison);
+        lines.add(convertResult);
+        lines.add(storeResult);
+		return lines;
 	}
 
 	private static ArrayList<String> translatePrint(IntermediateCodeInstruction instruction) {
