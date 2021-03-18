@@ -1,7 +1,6 @@
 package com.jpl.fyp.compilerComponent;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 
@@ -22,11 +21,11 @@ public class IntermediateCodeTranslator {
                 break;
             }
             case Declare: {
-                lines.addAll(translateDeclare(instruction));
+                lines.addAll(translateDeclareOrAssign(instruction));
                 break;
             }
             case Assign: {
-                lines.addAll(translateAssign(instruction));
+                lines.addAll(translateDeclareOrAssign(instruction));
                 break;
             }
             case Print: {
@@ -66,34 +65,21 @@ public class IntermediateCodeTranslator {
         return lines;
 	}
 
-	private static ArrayList<String> translateDeclare(IntermediateCodeInstruction instruction) {
-        String variableToBeDeclared = instruction.getResult();
-        String initialValueOfVariable = instruction.getArgument1();
-        if (initialValueOfVariable == null) {
-            initialValueOfVariable = "0";
+	private static ArrayList<String> translateDeclareOrAssign(IntermediateCodeInstruction instruction) {
+        String targetVariableName = instruction.getResult();
+        String valueToBeAssigned = instruction.getArgument1();
+        if (valueToBeAssigned == null) {
+            valueToBeAssigned = "0";
         }
-
-        String loadIntitalValueIntoEax = operationBuilder("mov", "eax", addBracketsIfVariable(initialValueOfVariable));
-        String moveInitialValueIntoVariable = operationBuilder("mov", addBracketsIfVariable(variableToBeDeclared), "eax");
-
-        var lines = new ArrayList<String>();
-        lines.add(loadIntitalValueIntoEax);
-        lines.add(moveInitialValueIntoVariable);
-		return lines;
-	}
-
-	private static ArrayList<String> translateAssign(IntermediateCodeInstruction instruction) {
-        String variableToBeAssignedTo = instruction.getResult();
-        String newValueOfVariable = instruction.getArgument1();
-
-        String loadIntitalValueIntoEax = operationBuilder("mov", "eax", addBracketsIfVariable(newValueOfVariable));
-        String moveInitialValueIntoVariable = operationBuilder("mov", addBracketsIfVariable(variableToBeAssignedTo), "eax");        
+        String loadIntitalValueIntoEax = operationBuilder("mov", "eax", addBracketsIfVariable(valueToBeAssigned));
+        String moveInitialValueIntoVariable = operationBuilder("mov", addBracketsIfVariable(targetVariableName), "eax");        
         
 		var lines = new ArrayList<String>();
         lines.add(loadIntitalValueIntoEax);
         lines.add(moveInitialValueIntoVariable);
         return lines;
 	}
+
 
     private static ArrayList<String> translateArithmeticOperation(IntermediateCodeInstruction instruction, String operation) {
         String firstArgument = instruction.getArgument1();
@@ -141,5 +127,4 @@ public class IntermediateCodeTranslator {
             return false;
         }
 	}
-
 }
