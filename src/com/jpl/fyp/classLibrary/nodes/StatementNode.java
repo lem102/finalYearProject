@@ -48,10 +48,6 @@ public class StatementNode implements Node {
 	}
 
 	public ArrayList<SymbolTableEntry> getAllSymbols() {
-        var entries = new ArrayList<SymbolTableEntry>();
-        // if (this.symbolTableEntry != null) {
-        //     entries.add(this.symbolTableEntry);
-        // }
-		return entries;
+		return new ArrayList<SymbolTableEntry>();
 	}
 }

@@ -1,6 +1,7 @@
 package com.jpl.fyp.compilerComponent;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 
@@ -24,24 +25,28 @@ public class IntermediateCodeTranslator {
                 lines.addAll(translateDeclare(instruction));
                 break;
             }
+            case Assign: {
+                lines.addAll(translateAssign(instruction));
+                break;
+            }
             case Print: {
                 lines.addAll(translatePrint(instruction));
                 break;
             }
             case Add: {
-                lines.addAll(translateSummation(instruction, "add"));
+                lines.addAll(translateArithmeticOperation(instruction, "add"));
                 break;
             }
             case Subtract: {
-                lines.addAll(translateSummation(instruction, "sub"));
+                lines.addAll(translateArithmeticOperation(instruction, "sub"));
                 break;
             }
             case Multiply: {
-                lines.addAll(translateMultiplication(instruction, "mul"));
+                lines.addAll(translateArithmeticOperation(instruction, "mul"));
                 break;
             }
             case Divide: {
-                lines.addAll(translateMultiplication(instruction, "div"));
+                lines.addAll(translateArithmeticOperation(instruction, "div"));
                 break;
             }
             default: {
@@ -53,80 +58,63 @@ public class IntermediateCodeTranslator {
 	}
 
 	private static ArrayList<String> translatePrint(IntermediateCodeInstruction instruction) {
-        String firstLine;
-        if (isInteger(instruction.getResult())) {
-            firstLine = "mov eax, " + instruction.getResult();
-        } else {
-            firstLine = "mov eax, [" + instruction.getResult() + "]";
-        }
-        var secondLine = "call iprintLF ";
+        String loadValueToBePrintedIntoEax = operationBuilder("mov", "eax", addBracketsIfVariable(instruction.getResult()));
+        String callPrint = operationBuilder("call", "iprintLF");
         var lines = new ArrayList<String>();
-        lines.add(firstLine);
-        lines.add(secondLine);
+        lines.add(loadValueToBePrintedIntoEax);
+        lines.add(callPrint);
         return lines;
 	}
 
 	private static ArrayList<String> translateDeclare(IntermediateCodeInstruction instruction) {
-        String instructionResult = instruction.getResult();
-        String instructionArgument = instruction.getArgument1();
-        if (instructionArgument == null) {
-            instructionArgument = "0";
+        String variableToBeDeclared = instruction.getResult();
+        String initialValueOfVariable = instruction.getArgument1();
+        if (initialValueOfVariable == null) {
+            initialValueOfVariable = "0";
         }
 
-        String firstLine = operationBuilder("mov", "eax", addBracketsIfVariable(instructionArgument));
-        String secondLine = operationBuilder("mov", addBracketsIfVariable(instructionResult), "eax");
+        String loadIntitalValueIntoEax = operationBuilder("mov", "eax", addBracketsIfVariable(initialValueOfVariable));
+        String moveInitialValueIntoVariable = operationBuilder("mov", addBracketsIfVariable(variableToBeDeclared), "eax");
 
         var lines = new ArrayList<String>();
-        lines.add(firstLine);
-        lines.add(secondLine);
+        lines.add(loadIntitalValueIntoEax);
+        lines.add(moveInitialValueIntoVariable);
 		return lines;
 	}
 
-	private static boolean isInteger(String string) {
-		try {
-            Integer.parseInt(string);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
+	private static ArrayList<String> translateAssign(IntermediateCodeInstruction instruction) {
+        String variableToBeAssignedTo = instruction.getResult();
+        String newValueOfVariable = instruction.getArgument1();
+
+        String loadIntitalValueIntoEax = operationBuilder("mov", "eax", addBracketsIfVariable(newValueOfVariable));
+        String moveInitialValueIntoVariable = operationBuilder("mov", addBracketsIfVariable(variableToBeAssignedTo), "eax");        
+        
+		var lines = new ArrayList<String>();
+        lines.add(loadIntitalValueIntoEax);
+        lines.add(moveInitialValueIntoVariable);
+        return lines;
 	}
 
-	private static ArrayList<String> translateSummation(IntermediateCodeInstruction instruction, String operation) {
+    private static ArrayList<String> translateArithmeticOperation(IntermediateCodeInstruction instruction, String operation) {
         String firstArgument = instruction.getArgument1();
         String secondArgument = instruction.getArgument2();
-        String result = instruction.getResult();
+        String variableForResultToBeStoredIn = instruction.getResult();
 
-        String firstLine = operationBuilder("mov", "eax", addBracketsIfVariable(firstArgument));
-        String secondLine = operationBuilder("mov", "ebx", addBracketsIfVariable(secondArgument));
-        String thirdLine = operationBuilder(operation, "eax", "ebx");
-        String fourthLine = operationBuilder("mov", addBracketsIfVariable(result), "eax");
-
-        var lines = new ArrayList<String>();
-        lines.add(firstLine);
-        lines.add(secondLine);
-        lines.add(thirdLine);
-        lines.add(fourthLine);
-
-		return lines;
-	}
-
-    private static ArrayList<String> translateMultiplication(IntermediateCodeInstruction instruction, String operation) {
-        String firstArgument = instruction.getArgument1();
-        String secondArgument = instruction.getArgument2();
-        String result = instruction.getResult();
-
-        String firstLine = operationBuilder("mov", "eax", addBracketsIfVariable(firstArgument));
-        String secondLine = operationBuilder("mov", "ebx", addBracketsIfVariable(secondArgument));
-        String thirdLine = operationBuilder(operation, "ebx");
-        String fourthLine = operationBuilder("mov", addBracketsIfVariable(result), "eax");
+        String loadFirstValueIntoEax = operationBuilder("mov", "eax", addBracketsIfVariable(firstArgument));
+        String loadSecondValueIntoEbx = operationBuilder("mov", "ebx", addBracketsIfVariable(secondArgument));
+        String performOperation = createPerformOperationAssembly(operation);
+        String moveResultIntoVariable = operationBuilder("mov", addBracketsIfVariable(variableForResultToBeStoredIn), "eax");
 
         var lines = new ArrayList<String>();
-        lines.add(firstLine);
-        lines.add(secondLine);
-        lines.add(thirdLine);
-        lines.add(fourthLine);
-
+        lines.add(loadFirstValueIntoEax);
+        lines.add(loadSecondValueIntoEbx);
+        lines.add(performOperation);
+        lines.add(moveResultIntoVariable);
 		return lines;
+    }
+
+	private static String createPerformOperationAssembly(String operation) {
+		return operation == "mul" || operation == "div" ? operationBuilder(operation, "ebx") : operationBuilder(operation, "eax", "ebx");
 	}
 
     private static String operationBuilder(String operator, String argument) {
@@ -144,4 +132,14 @@ public class IntermediateCodeTranslator {
             return "[" + argument + "]";
         }
     }
+
+	private static boolean isInteger(String string) {
+		try {
+            Integer.parseInt(string);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+	}
+
 }
