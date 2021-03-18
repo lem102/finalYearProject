@@ -48,7 +48,10 @@ public class Lexer
     }
 
 	private static boolean isCombinationRequired(Character previousCharacter, Character currentCharacter) {
-        return (currentCharacter == '=' && (previousCharacter == '=' || previousCharacter == '!'))
+        return (currentCharacter == '=' && (previousCharacter == '='
+                                            || previousCharacter == '!'
+                                            || previousCharacter == '<'
+                                            || previousCharacter == '>'))
             || (currentCharacter == '|' && previousCharacter == '|')
             || (currentCharacter == '&' && previousCharacter == '&');
 	}
@@ -139,16 +142,32 @@ public class Lexer
                 tokenType = TokenType.Equal;
                 break;
             }
+            case "!=": {
+                tokenType = TokenType.NotEqual;
+                break;
+            }
+            case "<": {
+                tokenType = TokenType.LessThan;
+                break;
+            }
+            case ">": {
+                tokenType = TokenType.GreaterThan;
+                break;
+            }
+            case "<=": {
+                tokenType = TokenType.LessThanOrEqualTo;
+                break;
+            }
+            case ">=": {
+                tokenType = TokenType.GreaterThanOrEqualTo;
+                break;
+            }
             case "||": {
                 tokenType = TokenType.Or;
                 break;
             }
             case "&&": {
                 tokenType = TokenType.And;
-                break;
-            }
-            case "!=": {
-                tokenType = TokenType.NotEqual;
                 break;
             }
             default: {
