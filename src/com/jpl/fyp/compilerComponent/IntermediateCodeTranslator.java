@@ -35,11 +35,15 @@ public class IntermediateCodeTranslator {
                 break;
             }
             case LabelCall: {
-                lines.add(translateLabelCall(instruction));
+                lines.addAll(translateLabelCall(instruction));
                 break;
             }
             case Print: {
                 lines.addAll(translatePrint(instruction));
+                break;
+            }
+            case Return: {
+                lines.addAll(translateReturn(instruction));
                 break;
             }
             case Add: {
@@ -105,14 +109,30 @@ public class IntermediateCodeTranslator {
         return lines;
 	}
 
+	private static ArrayList<String> translateReturn(IntermediateCodeInstruction instruction) {
+        var lines = new ArrayList<String>();
+        lines.add(operationBuilder("mov", "eax", addBracketsIfVariable(instruction.getResult())));
+        lines.add("ret");
+		return lines;
+	}
+
 	private static ArrayList<String> translateEndFunction(IntermediateCodeInstruction instruction) {
         var lines = new ArrayList<String>();
         lines.add("ret");
 		return lines;
 	}
 
-	private static String translateLabelCall(IntermediateCodeInstruction instruction) {
-		return operationBuilder("call", instruction.getArgument1());
+	private static ArrayList<String> translateLabelCall(IntermediateCodeInstruction instruction) {
+        String functionToBeCalled = instruction.getArgument1();
+        String variableToStoreResultIn = instruction.getResult();
+
+        String callFunction = operationBuilder("call", functionToBeCalled);
+        String storeResultInVariable = operationBuilder("mov", addBracketsIfVariable(variableToStoreResultIn), "eax");
+        
+        var lines = new ArrayList<String>();
+        lines.add(callFunction);
+        lines.add(storeResultInVariable);
+        return lines;
 	}
 
 	private static ArrayList<String> translateBeginFunction(IntermediateCodeInstruction instruction) {
