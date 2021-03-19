@@ -16,6 +16,7 @@ import com.jpl.fyp.classLibrary.nodes.RootNode;
 import com.jpl.fyp.classLibrary.nodes.StatementNode;
 import com.jpl.fyp.classLibrary.nodes.WhileNode;
 import com.jpl.fyp.classLibrary.nodes.PrintNode;
+import com.jpl.fyp.classLibrary.nodes.ReturnNode;
 
 public class Parser
 {
@@ -70,6 +71,10 @@ public class Parser
             case Print: {
                 Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfStatement);
                 return new PrintNode(relevantTokens);
+            }
+            case Return: {
+                Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfStatement);
+                return new ReturnNode(relevantTokens);
             }
 		    default: {
 		        throw new JPLException("unhandled token");

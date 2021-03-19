@@ -29,4 +29,5 @@ public enum IntermediateCodeInstructionType {
     PushParameter,
 
     Print,
+    Return,
 }

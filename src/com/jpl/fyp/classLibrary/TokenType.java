@@ -33,4 +33,5 @@ public enum TokenType
     LessThanOrEqualTo,
 
     Print,
+    Return,
 }

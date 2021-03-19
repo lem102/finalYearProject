@@ -70,6 +70,10 @@ public class Lexer
         TokenType tokenType;
 
         switch (tokenString) {
+            case "return": {
+                tokenType = TokenType.Return;
+                break;
+            }
             case "print": {
                 tokenType = TokenType.Print;
                 break;
