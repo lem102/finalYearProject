@@ -26,6 +26,14 @@ public class IntermediateCodeTranslator {
                 lines.addAll(translateDeclareOrAssign(instruction));
                 break;
             }
+            case IfFalseGoto: {
+                lines.addAll(translateIfFalseGoto(instruction));
+                break;
+            }
+            case Goto: {
+                lines.add(translateGoto(instruction));
+                break;
+            }
             case Print: {
                 lines.addAll(translatePrint(instruction));
                 break;
@@ -84,6 +92,24 @@ public class IntermediateCodeTranslator {
             }
         }
         return lines;
+	}
+
+	private static String translateGoto(IntermediateCodeInstruction instruction) {
+		return operationBuilder("jmp", instruction.getResult());
+	}
+
+	private static ArrayList<String> translateIfFalseGoto(IntermediateCodeInstruction instruction) {
+        String expressionResult = instruction.getArgument1();
+        String postLoopLabel = instruction.getResult();
+
+        String loadExpressionResultIntoEax = operationBuilder("mov", "eax", addBracketsIfVariable(expressionResult));
+        String compare = operationBuilder("cmp", "eax", "1");
+        String jumpToPostLoopLabelIfEqual = operationBuilder("jne", postLoopLabel);
+        var lines = new ArrayList<String>();
+        lines.add(loadExpressionResultIntoEax);
+        lines.add(compare);
+        lines.add(jumpToPostLoopLabelIfEqual);
+		return lines;
 	}
 
 	private static ArrayList<String> translateLogicalComparison(IntermediateCodeInstruction instruction, String logicalComparison) {
