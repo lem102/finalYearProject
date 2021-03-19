@@ -34,6 +34,10 @@ public class IntermediateCodeTranslator {
                 lines.add(translateGoto(instruction));
                 break;
             }
+            case LabelCall: {
+                lines.add(translateLabelCall(instruction));
+                break;
+            }
             case Print: {
                 lines.addAll(translatePrint(instruction));
                 break;
@@ -55,27 +59,27 @@ public class IntermediateCodeTranslator {
                 break;
             }
             case Equal: {
-                lines.addAll(translateComparison(instruction, "sete"));
+                lines.addAll(translateValueComparison(instruction, "sete"));
                 break;
             }
             case NotEqual: {
-                lines.addAll(translateComparison(instruction, "setne"));
+                lines.addAll(translateValueComparison(instruction, "setne"));
                 break;
             }
             case LessThan: {
-                lines.addAll(translateComparison(instruction, "setl"));
+                lines.addAll(translateValueComparison(instruction, "setl"));
                 break;
             }
             case LessThanOrEqualTo: {
-                lines.addAll(translateComparison(instruction, "setle"));
+                lines.addAll(translateValueComparison(instruction, "setle"));
                 break;
             }
             case GreaterThan: {
-                lines.addAll(translateComparison(instruction, "setg"));
+                lines.addAll(translateValueComparison(instruction, "setg"));
                 break;
             }
             case GreaterThanOrEqualTo: {
-                lines.addAll(translateComparison(instruction, "setge"));
+                lines.addAll(translateValueComparison(instruction, "setge"));
                 break;
             }
             case And: {
@@ -86,12 +90,34 @@ public class IntermediateCodeTranslator {
                 lines.addAll(translateLogicalComparison(instruction, "or"));
                 break;
             }
+            // case BeginFunction: {
+            //     lines.addAll(translateBeginFunction(instruction));
+            //     break;
+            // }
+            case EndFunction: {
+                lines.addAll(translateEndFunction(instruction));
+            }
             default: {
                 lines.add("; instruction untranslated");
                 break;
             }
         }
         return lines;
+	}
+
+	private static ArrayList<String> translateEndFunction(IntermediateCodeInstruction instruction) {
+        var lines = new ArrayList<String>();
+        lines.add("ret");
+		return lines;
+	}
+
+	private static String translateLabelCall(IntermediateCodeInstruction instruction) {
+		return operationBuilder("call", instruction.getArgument1());
+	}
+
+	private static ArrayList<String> translateBeginFunction(IntermediateCodeInstruction instruction) {
+        String popEax = operationBuilder("push", "eax");
+		return null;
 	}
 
 	private static String translateGoto(IntermediateCodeInstruction instruction) {
@@ -105,6 +131,7 @@ public class IntermediateCodeTranslator {
         String loadExpressionResultIntoEax = operationBuilder("mov", "eax", addBracketsIfVariable(expressionResult));
         String compare = operationBuilder("cmp", "eax", "1");
         String jumpToPostLoopLabelIfEqual = operationBuilder("jne", postLoopLabel);
+        
         var lines = new ArrayList<String>();
         lines.add(loadExpressionResultIntoEax);
         lines.add(compare);
@@ -128,7 +155,7 @@ public class IntermediateCodeTranslator {
 		return lines;
 	}
 
-	private static ArrayList<String> translateComparison(IntermediateCodeInstruction instruction, String comparison) {
+	private static ArrayList<String> translateValueComparison(IntermediateCodeInstruction instruction, String comparison) {
         String firstArgument = instruction.getArgument1();
         String secondArgument = instruction.getArgument2();
         String variableForResultToBeStoredIn = instruction.getResult();
@@ -151,6 +178,7 @@ public class IntermediateCodeTranslator {
 	private static ArrayList<String> translatePrint(IntermediateCodeInstruction instruction) {
         String loadValueToBePrintedIntoEax = operationBuilder("mov", "eax", addBracketsIfVariable(instruction.getResult()));
         String callPrint = operationBuilder("call", "iprintLF");
+        
         var lines = new ArrayList<String>();
         lines.add(loadValueToBePrintedIntoEax);
         lines.add(callPrint);
@@ -192,7 +220,17 @@ public class IntermediateCodeTranslator {
     }
 
 	private static String createPerformOperationAssembly(String operation) {
-		return operation == "mul" || operation == "div" ? operationBuilder(operation, "ebx") : operationBuilder(operation, "eax", "ebx");
+        switch (operation) {
+            case "mul":
+            case "div": {
+                return operationBuilder(operation, "ebx");
+            }
+            case "add":
+            case "sub": {
+                return operationBuilder(operation, "eax", "ebx");
+            }
+        }
+        return null;
 	}
 
     private static String operationBuilder(String operator, String argument) {

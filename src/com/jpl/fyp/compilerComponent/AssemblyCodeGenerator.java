@@ -68,7 +68,6 @@ public class AssemblyCodeGenerator {
         lines.add(createSectionHeader("text"));
         lines.addAll(createStartGlobalAndLabel());
         lines.addAll(IntermediateCodeTranslator.translateIntermediateCodeIntoAssembly(intermediateCode));
-        lines.addAll(callExitLabel());
         return lines;
     }
 
@@ -81,7 +80,9 @@ public class AssemblyCodeGenerator {
     private static ArrayList<String> createStartGlobalAndLabel() {
         String[] lines = {
             "global _start",
-            "_start:"
+            "_start:",
+            "call main",
+            "call exit",
         };
         return new ArrayList<String>(Arrays.asList(lines));
     }
