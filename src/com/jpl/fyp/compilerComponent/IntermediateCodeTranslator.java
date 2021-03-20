@@ -38,6 +38,14 @@ public class IntermediateCodeTranslator {
                 lines.addAll(translateLabelCall(instruction));
                 break;
             }
+            case PushParameter: {
+                lines.add(translatePushParameter(instruction));
+                break;
+            }
+            case PopParameter: {
+                lines.add(translatePopParameter(instruction));
+                break;
+            }
             case Print: {
                 lines.addAll(translatePrint(instruction));
                 break;
@@ -107,6 +115,39 @@ public class IntermediateCodeTranslator {
             }
         }
         return lines;
+	}
+
+	private static String translatePopParameter(IntermediateCodeInstruction instruction) {
+        String argumentName = instruction.getArgument1();
+        String register = convertToRegister(instruction.getResult());
+		return operationBuilder("mov", addBracketsIfVariable(argumentName), register);
+	}
+
+	private static String translatePushParameter(IntermediateCodeInstruction instruction) {
+        String argument = instruction.getArgument1();
+        String register = convertToRegister(instruction.getResult());
+        return operationBuilder("mov", register, addBracketsIfVariable(argument));
+	}
+
+	private static String convertToRegister(String registerNumber) {
+        switch (registerNumber) {
+            case "0": {
+                return "eax";
+            }
+            case "1": {
+                return "ebx";
+            }
+            case "2": {
+                return "ecx";
+            }
+            case "3": {
+                return "edx";
+            }
+            default: {
+                System.out.println("convert to register error, not enough registers.");
+            }
+        }
+		return null;
 	}
 
 	private static ArrayList<String> translateReturn(IntermediateCodeInstruction instruction) {

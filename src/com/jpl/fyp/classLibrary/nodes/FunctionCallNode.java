@@ -98,12 +98,12 @@ public class FunctionCallNode extends StatementNode {
         ArrayList<IntermediateCodeInstruction> instructionsForArguments = argumentInstructionInformation.getExpressionInstructions();
         ArrayList<String> expressionResultVariableNames = argumentInstructionInformation.getExpressionResultVariableNames();
         
-        ArrayList<IntermediateCodeInstruction> pushParamaterInstructions = generatePushParameterInstructions(expressionResultVariableNames);
+        ArrayList<IntermediateCodeInstruction> pushParameterInstructions = generatePushParameterInstructions(expressionResultVariableNames);
         IntermediateCodeInstruction labelCallInstruction = this.generateLabelCallInstruction(this.identifier);
         
         var instructions = new ArrayList<IntermediateCodeInstruction>();
         instructions.addAll(instructionsForArguments);
-        instructions.addAll(pushParamaterInstructions);
+        instructions.addAll(pushParameterInstructions);
         instructions.add(labelCallInstruction);
         
         return instructions;
@@ -111,17 +111,17 @@ public class FunctionCallNode extends StatementNode {
 
 	private ArrayList<IntermediateCodeInstruction> generatePushParameterInstructions(ArrayList<String> expressionResultVariableNames) {
 		var pushParamaterInstructions = new ArrayList<IntermediateCodeInstruction>();
-        for (String resultVariableName : expressionResultVariableNames) {
-            pushParamaterInstructions.add(this.generatePushParameterInstruction(resultVariableName));
+        for (int i = 0; i < expressionResultVariableNames.size(); i++) {
+            pushParamaterInstructions.add(this.generatePushParameterInstruction(expressionResultVariableNames.get(i), i));
         }
 		return pushParamaterInstructions;
 	}
 
-	private IntermediateCodeInstruction generatePushParameterInstruction(String resultVariableName) {
+	private IntermediateCodeInstruction generatePushParameterInstruction(String resultVariableName, int registerIndex) {
 		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.PushParameter,
                                                resultVariableName,
                                                null,
-                                               null);
+                                               Integer.toString(registerIndex));
 	}
 
 	private IntermediateCodeInstruction generateLabelCallInstruction(String functionName) {

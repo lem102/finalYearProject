@@ -5,12 +5,12 @@ import com.jpl.fyp.classLibrary.JPLType;
 public class ArgumentNode
 {
     private JPLType type;
-    private String identifier;
+    private String name;
 
     @Override
     public String toString()
     {
-        return String.format("Type: %s, Identifier: %s\n", type, identifier);
+        return String.format("Type: %s, Identifier: %s\n", type, name);
     }
 
 	public JPLType getType()
@@ -23,13 +23,13 @@ public class ArgumentNode
 		this.type = type;
 	}
 
-	public String getIdentifier()
+	public String getName()
     {
-		return identifier;
+		return name;
 	}
 
-	public void setIdentifier(String identifier)
+	public void getIdentifier(String name)
     {
-		this.identifier = identifier;
+		this.name = name;
 	}
 }

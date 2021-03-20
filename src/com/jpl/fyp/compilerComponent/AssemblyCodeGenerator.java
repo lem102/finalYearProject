@@ -37,16 +37,24 @@ public class AssemblyCodeGenerator {
 
     private static ArrayList<String> createVariableStorage(RootNode syntaxTree) {
         var lines = new ArrayList<String>();
-
         SymbolTableEntry[] declaredSymbols = syntaxTree.getAllVariableSymbols();
-        
         lines.addAll(createDeclaredVariableStorage(declaredSymbols));
-        lines.addAll(createTemporaryVariableStorage());
-
+        int numberOfTemporaryVariables = IntermediateCodeInstruction.getCurrentTemporaryVariableIndex();
+        lines.addAll(createTemporaryVariableStorage(numberOfTemporaryVariables));
+        String[] parameterNames = syntaxTree.getAllParameterNames();
+        lines.addAll(createParameterVariableStorage(parameterNames));
         return lines;
     }
 
-    private static ArrayList<String> createDeclaredVariableStorage(SymbolTableEntry[] declaredSymbols) {
+	private static ArrayList<String> createParameterVariableStorage(String[] parameterNames) {
+        var lines = new ArrayList<String>();
+        for (String name : parameterNames) {
+            lines.add(name + ": resb 4");
+        }
+		return lines;
+	}
+
+	private static ArrayList<String> createDeclaredVariableStorage(SymbolTableEntry[] declaredSymbols) {
         var lines = new ArrayList<String>();
         for (SymbolTableEntry symbol : declaredSymbols) {
             lines.add(symbol.getName() + ": resb 4");
@@ -54,9 +62,8 @@ public class AssemblyCodeGenerator {
 		return lines;
 	}
 
-	private static ArrayList<String> createTemporaryVariableStorage() {
+	private static ArrayList<String> createTemporaryVariableStorage(int numberOfTemporaryVariables) {
         var lines = new ArrayList<String>();
-        int numberOfTemporaryVariables = IntermediateCodeInstruction.getCurrentTemporaryVariableIndex();
         for (int i = 0; i < numberOfTemporaryVariables; i++) {
             lines.add("t" + i + ": resb 4");
         }
@@ -68,12 +75,6 @@ public class AssemblyCodeGenerator {
         lines.add(createSectionHeader("text"));
         lines.addAll(createStartGlobalAndLabel());
         lines.addAll(IntermediateCodeTranslator.translateIntermediateCodeIntoAssembly(intermediateCode));
-        return lines;
-    }
-
-    private static ArrayList<String> callExitLabel() {
-        var lines = new ArrayList<String>();
-        lines.add("call exit");
         return lines;
     }
 

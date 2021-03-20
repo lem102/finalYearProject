@@ -27,7 +27,8 @@ public enum IntermediateCodeInstructionType {
     Goto,
     LabelCall,
     PushParameter,
+    PopParameter,
 
     Print,
-    Return,
+    Return, 
 }

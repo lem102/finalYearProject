@@ -2,6 +2,7 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
@@ -35,7 +36,7 @@ public class DefinitionNode extends ContainingNode {
                     throw new JPLException("Definition Node : Unkown type.");
                 }
             }
-            argument.setIdentifier(tokens[i+1].tokenValue);
+            argument.getIdentifier(tokens[i+1].tokenValue);
             arguments.add(argument);
         }
 		return arguments.toArray(new ArgumentNode[arguments.size()]);
@@ -106,11 +107,27 @@ public class DefinitionNode extends ContainingNode {
     public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
         var instructions = new ArrayList<IntermediateCodeInstruction>();
         instructions.add(super.generateLabelInstruction(this.definitionName));
+        instructions.addAll(this.generatePopParameterInstructions(this.arguments));
         instructions.add(this.generateBeginFunctionInstruction());
         instructions.addAll(super.generateStatementInstructions());
         instructions.add(this.generateEndFunctionInstruction());
         return instructions;
     }
+
+	private ArrayList<IntermediateCodeInstruction> generatePopParameterInstructions(ArgumentNode[] arguments) {
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        for (int argumentIndex = 0; argumentIndex < arguments.length; argumentIndex++) {
+            instructions.add(this.generatePopParameterInstruction(arguments[argumentIndex].getName(), argumentIndex));
+        }
+		return instructions;
+	}
+
+	private IntermediateCodeInstruction generatePopParameterInstruction(String argumentName, int argumentIndex) {
+        return new IntermediateCodeInstruction(IntermediateCodeInstructionType.PopParameter,
+                                               argumentName,
+                                               null,
+                                               Integer.toString(argumentIndex));
+	}
 
 	private IntermediateCodeInstruction generateEndFunctionInstruction() {
 		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.EndFunction,
@@ -124,5 +141,13 @@ public class DefinitionNode extends ContainingNode {
                                                null,
                                                null,
                                                null);
+	}
+
+    public ArrayList<String> getArgumentNames() {
+        var names = new ArrayList<String>();
+        for (ArgumentNode argument : this.arguments) {
+            names.add(argument.getName());
+        }
+        return names;
 	}
 }

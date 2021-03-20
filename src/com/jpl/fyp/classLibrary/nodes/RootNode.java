@@ -2,6 +2,7 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
@@ -148,5 +149,13 @@ public class RootNode extends ContainingNode {
             symbols.addAll(statement.getAllSymbols());
         }
 		return symbols.toArray(new SymbolTableEntry[0]);
+	}
+
+	public String[] getAllParameterNames() {
+        var names = new ArrayList<String>();
+        for (StatementNode statement : this.getStatements()) {
+            names.addAll(((DefinitionNode) statement).getArgumentNames());
+        }
+		return names.toArray(new String[0]);
 	}
 }
