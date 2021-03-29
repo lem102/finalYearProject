@@ -2,30 +2,23 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
-import com.jpl.fyp.compilerComponent.Parser;
 
-public class IfNode implements ConditionalNode
+public class IfNode extends ConditionalNode
 {
     public ExpressionNode testExpression;
-
-    private ContainingNode elseNode;
-
-	private List<StatementNode> statements;
 
     public IfNode(Token[] tokens)
         throws JPLException
     {
-        validateTokens(tokens);
-        this.statements = new ArrayList<StatementNode>();
+        this.validateTokens(tokens);
 
-        this.testExpression = new ExpressionNode();
         Token[] expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length - 2);
-        this.testExpression.expressionTokens = Arrays.asList(expressionTokens);
+        this.testExpression = new ExpressionNode(expressionTokens);
     }
 
 	private void validateTokens(Token[] tokens)
@@ -50,51 +43,57 @@ public class IfNode implements ConditionalNode
 	}
 
 	@Override
-	public String toString()
-    {
-        String output = "";
-        output += "If Statement:\n";
-        output += "(\n";        
-        output += "Expression:\n";
-        output += testExpression;
-        output += ")\n";
+	public String toString() {
+        return "If Statement:\n"
+            + "(\n"        
+            + "Expression:\n"
+            + testExpression
+            + ")\n"
+            + super.toString()
+            + "Else:\n"
+            + "{\n"
+            + super.getElseNode() + "\n"
+            + "}\n";
+	}
 
-        output += "Statements:\n";
-        output += "{\n";
-        for (StatementNode statementNode : statements)
-        {
-            output += statementNode;
+    @Override
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        instructions.addAll(this.generateIfStatementInstructions());
+
+        if (this.getElseNode() != null) {
+            String endLabel = IntermediateCodeInstruction.getNewLabelName();
+
+            IntermediateCodeInstruction gotoEndInstruction = this.generateGotoInstruction(endLabel);
+            instructions = this.insertGotoEndInstruction(instructions, gotoEndInstruction);
+            IntermediateCodeInstruction endLabelInstruction = this.generateLabelInstruction(endLabel);
+            
+            instructions.addAll(this.getElseNode().generateIntermediateCode(endLabel));
+            instructions.add(endLabelInstruction);
         }
-        output += "Else:\n";
-        output += "{\n";
-        output += elseNode + "\n";
-        output += "}\n";
-        output += "}\n";
         
-		return output;
+        return instructions;
+    }
+
+	public ArrayList<IntermediateCodeInstruction> insertGotoEndInstruction(ArrayList<IntermediateCodeInstruction> instructions, IntermediateCodeInstruction gotoEndInstruction) {
+        instructions.add(instructions.size() -1, gotoEndInstruction);
+		return instructions;
 	}
 
-	@Override
-	public List<StatementNode> getStatements()
-    {
-		return this.statements;
-	}
+	public ArrayList<IntermediateCodeInstruction> generateIfStatementInstructions() throws JPLException {
+        ArrayList<IntermediateCodeInstruction> testExpressionInstructions = this.testExpression.generateIntermediateCode();
+        String expressionResultVariableName = super.getExpressionResultVariableName(this.testExpression.getRootExpressionElementNode().getToken(), testExpressionInstructions);
+        String label = IntermediateCodeInstruction.getNewLabelName();
+        IntermediateCodeInstruction conditionalGotoInstruction = super.generateConditionalGotoInstructions(label, expressionResultVariableName);
+        ArrayList<IntermediateCodeInstruction> statementInstructions = super.generateStatementInstructions();
+        IntermediateCodeInstruction labelInstruction = super.generateLabelInstruction(label);
+        
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        instructions.addAll(testExpressionInstructions);
+        instructions.add(conditionalGotoInstruction);
+        instructions.addAll(statementInstructions);
+        instructions.add(labelInstruction);
 
-	@Override
-	public void addStatement(StatementNode statement)
-    {
-        this.statements.add(statement);
-	}
-
-	@Override
-	public ContainingNode getElseNode()
-    {
-		return this.elseNode;
-	}
-
-	@Override
-	public void setElseNode(ContainingNode elseNode)
-    {
-		this.elseNode = elseNode;
+        return instructions;
 	}
 }

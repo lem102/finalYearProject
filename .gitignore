@@ -6,3 +6,6 @@ documentation/FinalYearProjectReport.tex
 documentation/literatureReview.bbl
 documentation/literatureReview.pdf
 documentation/literatureReview.tex
+output
+output.asm
+output.o

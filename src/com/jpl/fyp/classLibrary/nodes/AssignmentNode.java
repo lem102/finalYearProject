@@ -1,13 +1,17 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
+import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
 import com.jpl.fyp.classLibrary.JPLException;
+import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
-import com.jpl.fyp.compilerComponent.Parser;
+import com.jpl.fyp.compilerComponent.Validator;
 
-public class AssignmentNode implements StatementNode
+public class AssignmentNode extends StatementNode
 {
     public String assignmentTarget;
 
@@ -17,11 +21,8 @@ public class AssignmentNode implements StatementNode
     {
         this.validateTokens(tokens);
         this.assignmentTarget = tokens[0].tokenValue;
-        // this will need changing when expression node is refactored.
-        this.expression = new ExpressionNode();
-        this.expression.expressionTokens = Arrays.asList(Arrays.copyOfRange(tokens,
-                                                                            2,
-                                                                            tokens.length));
+        var expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length-1);
+        this.expression = new ExpressionNode(expressionTokens);
     }
 
     private void validateTokens(Token[] tokens) throws JPLException
@@ -41,14 +42,46 @@ public class AssignmentNode implements StatementNode
 	}
 
 	@Override
-    public String toString()
-    {
-        var output = "Assignment Node:\n";
-        output += "AssignmentTarget: " + assignmentTarget + "\n";
-        output += "Expression:\n";
-        output += "(\n";
-        output += expression;
-        output += ")\n";
-        return output;
+    public String toString() {
+        return  "Assignment Node:\n"
+            + "AssignmentTarget: " + assignmentTarget + "\n"
+            + "Expression:\n"
+            + "(\n"
+            + expression
+            + ")\n";
     }
+
+    @Override
+    public void validate(SymbolTableEntry[] entries) throws JPLException {
+        Validator.validateIdentifierIsDeclared(entries, this.assignmentTarget);
+        this.expression.validate(entries);
+    }
+
+    @Override
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        ArrayList<IntermediateCodeInstruction> expressionIntermediateCode = this.expression.generateIntermediateCode();
+        instructions.addAll(expressionIntermediateCode);
+        String expressionResult = this.getExpressionResult(expressionIntermediateCode);
+		instructions.add(this.generateAssignmentInstruction(expressionResult));
+        return instructions;
+    }
+
+    private String getExpressionResult(ArrayList<IntermediateCodeInstruction> expressionIntermediateCode) {
+		String expressionResultVariableName;
+        if (expressionIntermediateCode.size() > 0) {
+            expressionResultVariableName = expressionIntermediateCode.get(expressionIntermediateCode.size() -1).getResult();
+        } else {
+            String tokenValue = this.expression.getRootExpressionElementNode().getToken().tokenValue;
+            expressionResultVariableName = tokenValue;
+        }
+		return expressionResultVariableName;
+	}
+
+	private IntermediateCodeInstruction generateAssignmentInstruction(String expressionResultVariableName) {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Assign,
+                                               expressionResultVariableName,
+                                               null,
+                                               this.assignmentTarget);
+	}
 }

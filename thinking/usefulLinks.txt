@@ -1,0 +1,2 @@
+https://cs.lmu.edu/~ray/notes/x86assembly/
+https://www.youtube.com/watch?v=oO8_2JJV0B4

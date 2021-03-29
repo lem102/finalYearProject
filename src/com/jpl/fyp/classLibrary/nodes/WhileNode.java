@@ -2,25 +2,23 @@ package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
+import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 
-public class WhileNode implements ContainingNode
+public class WhileNode extends ContainingNode
 {
     public ExpressionNode testExpression;
-	private List<StatementNode> statements;
 
     public WhileNode(Token[] tokens) throws JPLException
     {
         validateTokens(tokens);
-        Token[] expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length - 1);
-        // needs to be changed when expressionNode is refactored :)
-        this.testExpression = new ExpressionNode();
-        testExpression.expressionTokens = Arrays.asList(expressionTokens);
-        this.statements = new ArrayList<StatementNode>();
+        Token[] expressionTokens = Arrays.copyOfRange(tokens, 2, tokens.length - 2);
+        this.testExpression = new ExpressionNode(expressionTokens);
+        super.setStatements(new ArrayList<StatementNode>());
     }
 
 	private void validateTokens(Token[] tokens) throws JPLException
@@ -43,35 +41,41 @@ public class WhileNode implements ContainingNode
         }
 	}
 
+    @Override
+    public void validate(SymbolTableEntry[] entries) throws JPLException {
+        this.testExpression.validate(entries);
+    }
+    
 	@Override
-    public String toString()
-    {
-        String output = "";
-        output += "While Loop:\n";
-        output += "(\n";
-        output += "Expression:\n";        
-        output += testExpression;
-        output += ")\n";
-
-        output += "{\n";
-        for (StatementNode statementNode : statements)
-        {
-            output += statementNode;
-        }
-        output += "}\n";
-
-        return output;
+    public String toString() {
+        return "While Loop:\n"
+            + "(\n"
+            + "Expression:\n"
+            + testExpression
+            + ")\n"
+            + super.toString();
     }
 
     @Override
-	public List<StatementNode> getStatements()
-    {
-		return this.statements;
-	}
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
+        ArrayList<IntermediateCodeInstruction> testExpressionInstructions = this.testExpression.generateIntermediateCode();
+        String expressionResultVariableName = super.getExpressionResultVariableName(this.testExpression.getRootExpressionElementNode().getToken(), testExpressionInstructions);
+        String preLoopLabel = IntermediateCodeInstruction.getNewLabelName();
+        String postLoopLabel = IntermediateCodeInstruction.getNewLabelName();
+        IntermediateCodeInstruction exitLoopConditionalGotoInstruction = super.generateConditionalGotoInstructions(postLoopLabel, expressionResultVariableName);
+        ArrayList<IntermediateCodeInstruction> statementInstructions = super.generateStatementInstructions();
+        IntermediateCodeInstruction preLoopLabelInstruction = super.generateLabelInstruction(preLoopLabel);
+        IntermediateCodeInstruction postLoopLabelInstruction = super.generateLabelInstruction(postLoopLabel);
+        IntermediateCodeInstruction loopingGotoInstruction = super.generateGotoInstruction(preLoopLabel);
 
-	@Override
-	public void addStatement(StatementNode statement)
-    {
-        this.statements.add(statement);
-	}
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        instructions.add(preLoopLabelInstruction);
+        instructions.addAll(testExpressionInstructions);
+        instructions.add(exitLoopConditionalGotoInstruction);
+        instructions.addAll(statementInstructions);
+        instructions.add(loopingGotoInstruction);
+        instructions.add(postLoopLabelInstruction);
+        
+        return instructions;
+    }
 }

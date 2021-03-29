@@ -1,45 +1,43 @@
 package com.jpl.fyp.classLibrary.nodes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.jpl.fyp.classLibrary.ExpressionInstructionInformation;
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
+import com.jpl.fyp.classLibrary.IntermediateCodeInstructionType;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.JPLType;
+import com.jpl.fyp.classLibrary.SymbolTableEntry;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
-import com.jpl.fyp.compilerComponent.Parser;
 
-public class DeclarationNode implements StatementNode
+public class DeclarationNode extends StatementNode
 {
     public JPLType type;
 
-    public String identifier;
+    public String name;
 
     public ExpressionNode expression;
 
-    public DeclarationNode(Token[] tokens)
-        throws JPLException
-    {
+    public DeclarationNode(Token[] tokens) throws JPLException {
         this.validateTokens(tokens);
         this.type = this.tokenToType(tokens[0]);
-        this.identifier = tokens[1].tokenValue;
+        this.name = tokens[1].tokenValue;
 
-        // TODO: needs to be changed when expression node is refactored
-        if (tokens.length > 2)
+        if (tokens.length > 3)
         {
-            this.expression = new ExpressionNode();
-            Token[] expressionTokens = Arrays.copyOfRange(tokens, 3, tokens.length);
-            expression.expressionTokens = Arrays.asList(expressionTokens);
+            Token[] expressionTokens = Arrays.copyOfRange(tokens, 3, tokens.length-1);
+            this.expression = new ExpressionNode(expressionTokens);
         }
+
+        setSymbolTableEntry(new SymbolTableEntry(type, name));
 	}
 
-	private JPLType tokenToType(Token token) throws JPLException
-    {
-        if (token.tokenType == TokenType.IntegerDeclaration)
-        {
+	private JPLType tokenToType(Token token) throws JPLException {
+        if (token.tokenType == TokenType.IntegerDeclaration) {
             return JPLType.Integer;
-        }
-        else
-        {
+        } else {
             throw new JPLException("Declaration Node : Invalid type.");
         }
 	}
@@ -53,7 +51,7 @@ public class DeclarationNode implements StatementNode
         }
         else if (tokens[1].tokenType != TokenType.Identifier)
         {
-            throw new JPLException("Declaration Node : Second token must be an identifier.");
+            throw new JPLException("Declaration Node : Second token must be an name.");
         }
         else if (tokens[2].tokenType != TokenType.Assignment && tokens[2].tokenType != TokenType.Semicolon)
         {
@@ -70,11 +68,31 @@ public class DeclarationNode implements StatementNode
     {
         String output = "";
         output += "Declaration:\n";
-        output += "Type: " + type + "\n";
-        output += "Identifier: " + identifier + "\n";
+        output += "Type: " + this.type + "\n";
+        output += "Name: " + this.name + "\n";
         output += "Expression:\n";
-        output += expression + "\n";
+        output += this.expression + "\n";
         
         return output;
     }
+
+    @Override
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode() throws JPLException {
+        var expressionInstructionInformation = new ExpressionInstructionInformation(this.expression);
+        ArrayList<IntermediateCodeInstruction> expressionIntermediateCode = expressionInstructionInformation.getExpressionInstructions();
+        String expressionResult = expressionInstructionInformation.getExpressionResultVariableName();
+        IntermediateCodeInstruction declarationInstruction = this.generateDeclarationInstruction(expressionResult);
+
+        var instructions = new ArrayList<IntermediateCodeInstruction>();
+        instructions.addAll(expressionIntermediateCode);
+        instructions.add(declarationInstruction);
+        return instructions;
+    }
+
+	private IntermediateCodeInstruction generateDeclarationInstruction(String expressionResultVariableName) {
+		return new IntermediateCodeInstruction(IntermediateCodeInstructionType.Declare,
+                                               expressionResultVariableName,
+                                               null,
+                                               this.name);
+	}
 }

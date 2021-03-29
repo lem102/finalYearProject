@@ -1,17 +1,11 @@
 package com.jpl.fyp.compilerComponent;
 
-import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.List;
 
 import com.jpl.fyp.classLibrary.JPLException;
-import com.jpl.fyp.classLibrary.JPLType;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
-import com.jpl.fyp.classLibrary.nodes.ArgumentNode;
 import com.jpl.fyp.classLibrary.nodes.AssignmentNode;
-import com.jpl.fyp.classLibrary.nodes.ConditionalNode;
-import com.jpl.fyp.classLibrary.nodes.ContainingNode;
 import com.jpl.fyp.classLibrary.nodes.DeclarationNode;
 import com.jpl.fyp.classLibrary.nodes.DefinitionNode;
 import com.jpl.fyp.classLibrary.nodes.ElseIfNode;
@@ -21,166 +15,76 @@ import com.jpl.fyp.classLibrary.nodes.IfNode;
 import com.jpl.fyp.classLibrary.nodes.RootNode;
 import com.jpl.fyp.classLibrary.nodes.StatementNode;
 import com.jpl.fyp.classLibrary.nodes.WhileNode;
+import com.jpl.fyp.classLibrary.nodes.PrintNode;
+import com.jpl.fyp.classLibrary.nodes.ReturnNode;
 
 public class Parser
 {
-    public RootNode output;
-
-    public Parser(Token[] tokens) throws JPLException
-    {
-        this.output = parse(tokens);
-    }
-
-	private RootNode parse(Token[] tokens) throws JPLException
-    {
-        var nestingStatus = new ArrayDeque<ContainingNode>();
-        // TODO: in future need to have a symbol table to handle variable and function names.
-
-        // TODO: i should have an arraylist of integers that is changed to
-        // reflect the current nesting level of the parse. when a variable
-        // is declared, that array is cloned and then stored with the declaration
-        // node or in a separate variable. cant decide yet. i think storing
-        // within the declaration node is a better idea.
-        
-        // List< symbolTable = new List<(int, string, object)>();
+    public static RootNode parse(Token[] tokens) throws JPLException {
         var rootNode = new RootNode();
-
-        for (int i = 0; i < tokens.length; i++)
-        {
-            if (tokens[i].tokenType == TokenType.Define)
-            {
-                // this function modifies three values, nestingStatus, rootNode AND i.
-                // it should only modify 1.
-                i = parseDefinition(tokens, nestingStatus, rootNode, i);
-            }
-            else
-            {
-                throw new JPLException("all code must be contained within definitions.");
-            }
-        }
-
-        return rootNode;
-	}
-
-	private int parseDefinition(Token[] tokens,
-                                ArrayDeque<ContainingNode> nestingStatus,
-                                RootNode rootNode,
-                                int i) throws JPLException
-    {
-        if (containsDefinitionNode(nestingStatus))
-        {
-            throw new JPLException("cannot define function inside of function.");
-        }
-        else
-        {
-            i = parseDefinitionDeclaration(tokens,
-                                           nestingStatus,
-                                           rootNode,
-                                           i);
-
-            i = parseStatements(tokens,
-                                nestingStatus,
-                                rootNode,
-                                i);
-        }
-		return i;
-	}
-
-	private int parseStatements(Token[] tokens,
-                                ArrayDeque<ContainingNode> nestingStatus,
-                                RootNode rootNode,
-                                int i) throws JPLException
-    {
-        while (true)
-        {
-            if (tokens[i].tokenType == TokenType.ClosingBrace)
-            {
-                nestingStatus.pop();
-                if (nestingStatus.size() <= 0)
-                {
-                    break;
-                }
-                i++;
+        int tokenIndex = 0;
+        
+        while(tokenIndex <= tokens.length - 1) {
+            if (tokens[tokenIndex].tokenType == TokenType.ClosingBrace) {
+                rootNode.getNestingStatus().pop();
+                tokenIndex++;
                 continue;
             }
             
-            int endOfStatement = findEndOfStatement(tokens, i);
-            int endOfHeader = findEndOfHeader(tokens, i);
-            StatementNode node = parseNextNode(tokens, rootNode, i, endOfStatement, endOfHeader);
+            StatementNode node = parseNextStatementOrHeader(tokens, tokenIndex);
+            rootNode.addNode(node);
 
-            if (node instanceof ElseIfNode
-                ||
-                node instanceof ElseNode)
-            {
-                StatementNode previousStatementNode = getLastElement(nestingStatus.peek().getStatements());
-		        if (!(previousStatementNode instanceof IfNode))
-		        {
-                    throw new JPLException("else statement can only occur after an if or else if statement.");
-		        }
-		        var parentIfNode = (ConditionalNode)previousStatementNode;
-		        parentIfNode = getLastOfIfElseChain(parentIfNode);
-                parentIfNode.setElseNode((ContainingNode)node);
-            }
-            else
-            {
-                nestingStatus.peek().addStatement(node);
-            }
-
-            if (node instanceof ContainingNode)
-            {
-                nestingStatus.push((ContainingNode)node);
-                i = endOfHeader;
-            }
-            else
-            {
-                i = endOfStatement;
-            }
+            int endOfStatement = elementsUntilPastEndOfStatement(tokens, tokenIndex);
+            int endOfHeader = elementsUntilPastEndOfHeader(tokens, tokenIndex);
+            tokenIndex = node.moveIndexToNextStatement(endOfStatement, endOfHeader);
         }
-		return i;
+        return rootNode;
 	}
 
-	private StatementNode parseNextNode(Token[] tokens,
-                                        RootNode rootNode,
-                                        int i,
-                                        int endOfStatement,
-                                        int endOfHeader)
-        throws JPLException
-    {
-		switch (tokens[i].tokenType)
-		{
-		    case IntegerDeclaration:
-		    {
-		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfStatement);
+	private static StatementNode parseNextStatementOrHeader(Token[] tokens, int tokenIndex) throws JPLException {
+        int endOfStatement = elementsUntilPastEndOfStatement(tokens, tokenIndex);
+        int endOfHeader = elementsUntilPastEndOfHeader(tokens, tokenIndex);
+        
+		switch (tokens[tokenIndex].tokenType) {
+            case Define: {
+                Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfHeader);
+                return new DefinitionNode(relevantTokens);
+            } 
+		    case IntegerDeclaration: {
+		        Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfStatement);
 		        return new DeclarationNode(relevantTokens);
 		    }
-		    case Identifier:
-		    {
-		        return parseNodeBeginningWithIdentifier(tokens, i, endOfStatement);
+		    case Identifier: {
+		        return parseStatementBeginningWithIdentifier(tokens, tokenIndex, endOfStatement);
 		    }
-		    case While:
-		    {
-		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfHeader);
+		    case While: {
+		        Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfHeader);
 		        return new WhileNode(relevantTokens);
 		    }
-		    case If:
-		    {
-		        Token[] relevantTokens = Arrays.copyOfRange(tokens, i, endOfHeader);
+		    case If: {
+		        Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfHeader);
 		        return new IfNode(relevantTokens);
 		    }
-		    case Else:
-		    {
-		        return parseNodeBeginningWithElse(tokens, i, endOfHeader);
+		    case Else: {
+		        return parseStatementBeginningWithElse(tokens, tokenIndex, endOfHeader);
 		    }
-		    default:
-		    {
-		        throw new JPLException("unhandled token" + "\n" + rootNode);
+            case Print: {
+                Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfStatement);
+                return new PrintNode(relevantTokens);
+            }
+            case Return: {
+                Token[] relevantTokens = Arrays.copyOfRange(tokens, tokenIndex, endOfStatement);
+                return new ReturnNode(relevantTokens);
+            }
+		    default: {
+		        throw new JPLException("unhandled token");
 		    }
 		}
 	}
 
-	private StatementNode parseNodeBeginningWithElse(Token[] tokens,
-                                                     int i,
-                                                     int endOfHeader)
+	private static StatementNode parseStatementBeginningWithElse(Token[] tokens,
+                                                          int i,
+                                                          int endOfHeader)
         throws JPLException
     {
         switch (tokens[i+1].tokenType)
@@ -204,9 +108,9 @@ public class Parser
         }
 	}
 
-	private StatementNode parseNodeBeginningWithIdentifier(Token[] tokens,
-                                                           int i,
-                                                           int endOfStatement)
+	private static StatementNode parseStatementBeginningWithIdentifier(Token[] tokens,
+                                                                int i,
+                                                                int endOfStatement)
         throws JPLException
     {
 		switch (tokens[i+1].tokenType)
@@ -230,147 +134,38 @@ public class Parser
 		}
 	}
 
-    private int findEndOfStatement(Token[] tokens, int i)
+    private static int elementsUntilPastEndOfStatement(Token[] tokens,
+                                                int startIndex)
     {
-        return findNextOccuranceOfToken(tokens, i, TokenType.Semicolon);
+        return elementsUntilPastNextOccuranceOfToken(tokens,
+                                                     startIndex,
+                                                     TokenType.Semicolon);
     }
 
-    private int findEndOfHeader(Token[] tokens, int i)
+    private static int elementsUntilPastEndOfHeader(Token[] tokens,
+                                             int startIndex)
     {
-		return findNextOccuranceOfToken(tokens, i, TokenType.OpeningBrace);
+		return elementsUntilPastNextOccuranceOfToken(tokens,
+                                                     startIndex,
+                                                     TokenType.OpeningBrace);
     }
 
-    private int findNextOccuranceOfToken(Token[] tokens, int i, TokenType tokenType)
+    private static int elementsUntilPastNextOccuranceOfToken(Token[] tokens,
+                                                      int startIndex,
+                                                      TokenType tokenType)
     {
         try
         {
-            while (tokens[i].tokenType != tokenType)
+            while (tokens[startIndex].tokenType != tokenType)
             {
-                i++;
+                startIndex++;
             }
-            i++;
-            return i;
+            startIndex++;
+            return startIndex;
         }
         catch (Throwable e)
         {
             return 0;
         }
-    }
-
-	private ConditionalNode getLastOfIfElseChain(ConditionalNode parentIfNode)
-    {
-        while (parentIfNode.getElseNode() != null)
-        {
-            // TODO: Add a check here to check for rouge else nodes.
-            parentIfNode = (IfNode)parentIfNode.getElseNode();
-        }
-        return parentIfNode;
-	}
-
-	private int parseDefinitionDeclaration(Token[] tokens,
-                                           ArrayDeque<ContainingNode> nestingStatus,
-                                           RootNode rootNode,
-                                           int i) throws JPLException
-    {
-        var definitionNode = new DefinitionNode();
-        rootNode.definitions.add(definitionNode);
-        nestingStatus.push(definitionNode);
-        i++;
-        if (tokens[i].tokenType != TokenType.Identifier)
-        {
-            throw new JPLException("Definition must have a name.");
-        }
-        definitionNode.definitionName = tokens[i].tokenValue;
-        i++;
-        if (tokens[i].tokenType != TokenType.OpeningParenthesis)
-        {
-            throw new JPLException("Definition must have an opening parenthesis after name.");
-        }
-        i++;
-        if (tokens[i].tokenType == TokenType.ClosingParenthesis)
-        {
-            i++;
-        }
-        else
-        {
-            i = parseDefinitionArguments(tokens,
-                                         rootNode,
-                                         i,
-                                         definitionNode);
-        }
-        if (tokens[i].tokenType != TokenType.OpeningBrace)
-        {
-            throw new JPLException("Opening brace required after function arguments.");
-        }
-        i++;
-		return i;
-	}
-
-	private int parseDefinitionArguments(Token[] tokens,
-                                         RootNode rootNode,
-                                         int i,
-                                         DefinitionNode definitionNode) throws JPLException
-    {
-        while (true)
-        {
-            var argumentNode = new ArgumentNode();
-            definitionNode.arguments.add(argumentNode);
-            
-            // this if needs to include all other declaration tokens if/when they are added.
-            if (tokens[i].tokenType != TokenType.IntegerDeclaration)
-            {
-                throw new JPLException("arguments must have a type.");
-            }
-            argumentNode.type = JPLType.Integer;
-            i++;
-            if (tokens[i].tokenType != TokenType.Identifier)
-            {
-                throw new JPLException("arguments must have a identifier after their type.");
-            }
-
-            argumentNode.identifier = tokens[i].tokenValue;
-            i++;
-            if (tokens[i].tokenType == TokenType.ClosingParenthesis)
-            {
-                i++;
-                break;
-            }
-            else if (tokens[i].tokenType == TokenType.Comma)
-            {
-                i++;
-                continue;
-            }
-            else
-            {
-                throw new JPLException("Invalid extra token after argument.");
-            }
-        }
-		return i;
-	}
-
-	private boolean containsDefinitionNode(ArrayDeque<ContainingNode> nestingStatus)
-    {
-        for (ContainingNode containingNode : nestingStatus)
-        {
-        	if (containingNode instanceof DefinitionNode)
-            {
-                return true;
-            }
-        }
-		return false;
-	}
-
-    private <T> int getLastElementIndex(List<T> arrayList)
-    {
-        return arrayList.size() - 1;
-    }
-
-    private <T> T getLastElement(List<T> arrayList)
-    {
-        for (T t : arrayList)
-        {
-            System.out.println(t);
-        }
-        return arrayList.get(getLastElementIndex(arrayList));
     }
 }

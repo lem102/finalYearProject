@@ -1,21 +1,18 @@
 package com.jpl.fyp.classLibrary.nodes;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import com.jpl.fyp.classLibrary.IntermediateCodeInstruction;
 import com.jpl.fyp.classLibrary.JPLException;
 import com.jpl.fyp.classLibrary.Token;
 import com.jpl.fyp.classLibrary.TokenType;
 
-public class ElseNode implements ContainingNode
+public class ElseNode extends ContainingNode
 {
-    private List<StatementNode> statements;
-
     public ElseNode(Token[] tokens) throws JPLException
     {
+        super();
         this.validateTokens(tokens);
-        
-        this.statements = new ArrayList<StatementNode>();
     }
 
     private void validateTokens(Token[] tokens) throws JPLException
@@ -35,30 +32,14 @@ public class ElseNode implements ContainingNode
 	}
 
 	@Override
-	public String toString()
-    {
-        String output = "";
-        output += "Else Node:\n";
-        output += "Statements:\n";
-        output += "{\n";
-        for (StatementNode statementNode : statements)
-        {
-            output += statementNode;
-        }
-        output += "}\n";
-        
-		return output;
+	public String toString() {
+        return "Else Node:\n"
+            + super.toString();
 	}
 
-	@Override
-	public List<StatementNode> getStatements()
-    {
-		return this.statements;
-	}
-
-	@Override
-	public void addStatement(StatementNode statement)
-    {
-        this.statements.add(statement);
-	}
+    public ArrayList<IntermediateCodeInstruction> generateIntermediateCode(String endLabel) throws JPLException {
+		var instructions = new ArrayList<IntermediateCodeInstruction>();
+        instructions.addAll(super.generateStatementInstructions());
+		return instructions;
+    }
 }

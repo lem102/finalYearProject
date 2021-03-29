@@ -12,13 +12,26 @@ public enum TokenType
     OpeningBrace,
     ClosingBrace,
     Assignment,
-    Plus,
     Semicolon,
-    Equal,
-    NotEqual,
-    Or,
-    And,
     Comma,
     If,
     Else,
+    
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+
+    Or,
+    And,
+
+    Equal,
+    NotEqual,
+    GreaterThan,
+    LessThan,
+    GreaterThanOrEqualTo,
+    LessThanOrEqualTo,
+
+    Print,
+    Return,
 }
