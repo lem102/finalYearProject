@@ -437,19 +437,105 @@ The first and most important part of planning a project is gathering the
 user's requirements. I think the most important deliverable of this project
 would be the compiler itself, so the main requirement of this project would
 be a compiler that can translate code from a high level programming language
-into assembly code. This compiler has a couple of sub-requirements; it
-must be written in a way that is understandable to a second year computer
-science student, and it must be able to show the process that source code
-goes through on its journey to becoming assembly language. 
+into assembly code. 
+
+This compiler has a few sub-requirements; it must be written in a
+way that is understandable to a second year computer science student, and
+it must be able to show the process that source code goes through on its
+journey to becoming assembly language.
+
+The language that the compiler compiles from needs to be sufficiently complicated
+so as to illustrate the main issues regarding compilation, such as operator
+precedence, correct assembly generation, etc.
+
+** Choice of Tools
+
+*** Programming Language
+
+An important decision I had to make early on is which programming language
+should the compiler be written in. I chose to use Java, but considered
+two other programming languages, Python and C#.
+
+I thought Python could be a good choice for the compiler due to its prevelance
+in eduction as well as its simpler syntax when compared to Java, which
+would allow students to be able to better understand the code. However,
+upon experimenting with the object oriented side of Python, I realised
+this syntactic simplicity was only present as long as the programmer was
+writing procedural code. The final nail in the coffin was when I considered
+the fact that Python is a dynamically typed language, rather than being
+statically typed. Given the nature of my project, I think that a dynamically
+typed language would hinder me somewhat, as there will be many custom types
+in use at each stage of the compiler. A statically typed language would
+allow me to catch trivial bugs at compile time rather than having to waste
+time debugging something breaking during runtime.
+
+The other language that I was considering was C#. On the surface, C# is
+very similar to Java. C# has many advanced language features, such as a
+great deal of syntactic sugar and support for functional programming using
+LINQ and lambda expressions, which increase programmer productivity, and
+reduces the amount of boiler plate code that has to be written. Unfortunately,
+unless you are familiar with these features, and understand what they are
+doing, it is all too easy to get confused, and use them blindly without
+thinking. It is also likely that students will never have used C# before,
+compounding any potential confusion.
+
+I chose Java as the implementation language of the compiler because it
+is a very common language, and although its use in industry is gradually
+decreasing, it is still the main language used at universities for the
+purposes of teaching. Because of this, many students will be familiar with
+Java, and it lowers the barrier to entry for reading the code of this project's
+compiler. The other main advantage of Java is its great object oriented
+features, such as polymorphism and inheritance, whcih allow for very productive
+coding.
+
+** Risk Management
+
+In every project, there are risks, and this project is no exception! The
+main risk to this project that I can forsee is running out of time before
+the central deliverable (the compiler) is completed. As I have no experience
+with writing a compiler, or writing assembly, I have no idea how long it
+will take to write a given part of the codebase. There is something I can
+do to mitigate this risk, however. 
+
+As part of an ideal compiler, there would be a stage where the source code
+is checked for correctness, so if a syntactical or semantical error is
+found, then the compiler will emit an error message. As this compiler is
+not intended for serious use, I can justify skipping over that section
+in favour of the others (which have a greater educational value), and coming
+back to it later if I have time.
+
+** Product Development Plan
+
+I think I can split the development of the compiler into four main stages:
+- The Tokeniser
+- The Parser
+- The Intermediate Code Generator
+- The Assembly Generator
+
+In regards to how much time each stage of the compiler will take to write,
+I suspect that the most complicated part of the code base will be the assembly
+generator (mostly to do with the presence of assembly). The tokeniser should
+be relatively simple, with the parser and the intermediate code generator
+coming in somewhere between the tokeniser and the assembly generator. As
+each stage of the project relies on the previous, I will need to write
+them in order to make sure they work well together.
+
+Considering the difficulty levels of each stage and the order in which
+they have to be written, I think this is an appropriate plan:
+
+[[./ganntChart.png]]
 
 * Design
 ** Product Specification
+
+
+
 ** models, diagrams, etc.
 * Implementation
 ** skills and knowledge required for development
 ** implementation details
 ** testing
-* evaluation
+* Evaluation
 ** product evaluation
 ** project evaluation
 *** what did you learn?
