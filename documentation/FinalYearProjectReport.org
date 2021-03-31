@@ -449,7 +449,6 @@ so as to illustrate the main issues regarding compilation, such as operator
 precedence, correct assembly generation, etc.
 
 ** Choice of Tools
-
 *** Programming Language
 
 An important decision I had to make early on is which programming language
@@ -526,11 +525,38 @@ they have to be written, I think this is an appropriate plan:
 [[./ganntChart.png]]
 
 * Design
+
+Now I will discuss the design of the compiler.
+
 ** Product Specification
 
+When thinking about how I was going to design the compiler, I had to consider
+several things. How are compilers usually structured? What can I do to
+build a compiler in such a way that it is easily understandable to a student?
+How should I go about outputting educational output back to the user? 
 
+As we saw in the structure of a compiler subsection earlier, the process
+of compilation is split into several stages. Given this, it would make
+sense to group the code by these stages, possibly putting each stage into
+its own class. In doing this we make the code more modular and understandable.
 
-** models, diagrams, etc.
+However, if we picture each stage of the compilation taking an input (the
+output of the previous stage of compilation or in the case of the first
+stage, the source code) and returning an output for use in the next stage,
+we are presented with an opportunity to take an output of a given stage
+and present this output in a readable way to the user. 
+
+If we were to allow for such output to be emitted after each stage, then
+this could be very useful in explaining many compilation concepts to students,
+such as tokens, abstract syntax trees and intermediate code. As the student
+would be able to alter the source code that the compiler is compiling from,
+they would be able to note the differences in output.
+
+This image from the dragon book is a great illustration of the inputs and
+outputs of each stage:
+
+todo: put dragon book diagram here
+
 * Implementation
 ** skills and knowledge required for development
 ** implementation details
