@@ -558,8 +558,91 @@ outputs of each stage:
 todo: put dragon book diagram here
 
 * Implementation
-** skills and knowledge required for development
-** implementation details
+** Skills and Knowledge required for Development
+
+To implement the compiler, I had to make use of several different skills
+and bits of knowledge. In order to create anything, I first had to be able
+to program. Programming requires knowledge of a programming lanugage (Java)
+and a text editing program (Emacs) to write code in that programming language,
+and others if necessary. To automate the many terminal commands that have
+to be run to allow for the compiler to be run, I wrote a shell script which
+required knowledge of the bash scripting language. 
+
+When writing the compiler, I needed to know about the structure of a compiler
+and the various transformations source code goes through during its journey
+through the compiler, detailed previously in this report. Additionally,
+I will need to learn at least the basics of assembly language in order
+to write the code generator part of the compiler.
+
+Another thing I needed to be aware of is the cleanliness of my code when
+writing the compiler. Clean code means that it is easy to understand. Code
+being easy to understand makes it easier for students to read, and also
+makes it easier for me to fix any bugs that I find during the development
+process.
+
+The final, and arguably most important thing I need to know for the development
+process is how to find information, whether that be in books or online.
+Before starting to write any of the stages of compilation, I must first
+think about how I will solve the problems each stage poses. Before I can
+think about these problems, I must first read up on the common techniques
+used, and figure out how I can implement them. If I do not do this and
+jump blindly in, chances are I will both make very little progress and
+write code that is unreadable.
+
+** Implementation Details
+
+
+assembly generation is interesting topic
+how did i handle parsing
+how does my intermediate representation work
+structure of compiler in comparison to proper compiler
+
+In this section I will discuss my implementation of certain parts of the
+compiler.
+
+*** structure of compiler in comparison to other compiler
+
+*** Parser
+
+??? 
+
+*** expression parsing
+
+*** Intermediate Representation Details
+
+In my compiler, the intermediate representation takes the form of a collection
+of a custom Java object, referred to in the compiler code as a IntermediateCodeInstruction.
+It holds three strings and a instance of an enum. The enum refers to the
+type of instruction (e.g. assignment, goto), two of the strings refer to
+the arguments of the operation (which can be a value or the name of a variable),
+and the final string refers to where the result will be stored. This design
+is based on the quadruple concept discussed in the Dragon book [todo: insert
+reference].
+
+You might wonder why I chose to use a string as the datatype for the arguments
+and the result regardless of whether the value of the argument is an integer
+or a variable. This is because the next and final stage after the creation
+of the intermediate representation is code generation; the generation of
+assembly. As the output of the code generation stage is a string containing
+the outputted assembly, it makes sense to keep the arguments and results
+as strings to allow for easy concatenation.
+
+*** Generation of Assembly
+
+
+
+*** "build system"
+
+As Java is itself a compiled language, and this project will involve many
+Java files, I wrote a small bash script to compile all the Java files in
+the project and then run the program. Normally in a Java project, you would
+make use of a build system to do this, such as Maven. But as I want to
+keep this project as simple as possible for the benefit of students, I
+decided to write the aforementioned script. The only disadvantage of this
+that I have been able to notice is slightly longer compile times. As the
+compilation times are at most 5 seconds on a 5 year old laptop, I don't
+think this is a significant disadvantage.
+
 ** testing
 * Evaluation
 ** product evaluation
