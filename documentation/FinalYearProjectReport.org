@@ -629,7 +629,23 @@ as strings to allow for easy concatenation.
 
 *** Generation of Assembly
 
+In source code for assembly language programs, you need to assign memory
+for variables in the .bss section of a NASM file. For example, if you wanted
+to have a variable called exampleNumber, you would need some code like
+this:
 
+[todo: insert example code]
+
+In the assembly code that JPLcompiler emits, variables like the one above
+are declared in order to reserve memory for three different types of variable.
+
+- Variables declared in the source program, taken from the symbol table of the syntax tree produced by the parser
+
+- Temporary variables, used to hold the results of operations in an expression, such as 1 + 1.
+
+- Parameter variables, used to hold values passed as arguments to functions declared in the source program.
+
+These memory locations are then used in the 
 
 *** "build system"
 
@@ -640,8 +656,8 @@ make use of a build system to do this, such as Maven. But as I want to
 keep this project as simple as possible for the benefit of students, I
 decided to write the aforementioned script. The only disadvantage of this
 that I have been able to notice is slightly longer compile times. As the
-compilation times are at most 5 seconds on a 5 year old laptop, I don't
-think this is a significant disadvantage.
+compilation times are at most five seconds on a five year old laptop, I
+don't think this is a significant disadvantage.
 
 ** testing
 * Evaluation
