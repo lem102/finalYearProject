@@ -645,7 +645,14 @@ are declared in order to reserve memory for three different types of variable.
 
 - Parameter variables, used to hold values passed as arguments to functions declared in the source program.
 
-These memory locations are then used in the 
+These memory locations are then used in the .text section like this:
+
+[todo: insert more example code]
+
+This method of handling the storage definitely has its drawbacks (detailed
+later on in this report) but it is a relatively uncomplicated solution
+that is more understandable compared to an approach that would generate
+more efficient assembly code.
 
 *** "build system"
 
