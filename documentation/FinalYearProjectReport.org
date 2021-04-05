@@ -656,8 +656,11 @@ At the beginning of the method, there is an array of TokenTypes called
 types. This array is then iterated over in a foreach loop to see if a type
 is present in the provided tokens and returns its position in the list
 of tokens if it is, exiting the method. The order of the array is important,
-as the operations with the greatest precedence are located towards the
-end of the array.
+the operations with the greatest precedence are located towards the end
+of the array. This means that when the assembly is generated, the operators
+with greater precedence are evaluated first.
+
+[todo: insert another example here]
 
 *** Intermediate Representation Details
 
