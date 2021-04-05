@@ -9,6 +9,51 @@ public class ExpressionParser {
         return createElement(tokens, findRootElementIndex(tokens));
 	}
 
+	private static int findRootElementIndex(Token[] tokens) throws JPLException {
+        // Order is important.
+        TokenType[] types = {
+            TokenType.And,
+            TokenType.Or,
+            TokenType.Equal,
+            TokenType.NotEqual,
+            TokenType.GreaterThan,
+            TokenType.LessThan,
+            TokenType.GreaterThanOrEqualTo,
+            TokenType.LessThanOrEqualTo,
+            TokenType.Subtract,
+            TokenType.Add,
+            TokenType.Multiply,
+            TokenType.Divide,
+        };
+
+        for (TokenType type : types) {
+            if (tokensContainType(tokens, type)) {
+                return findFirstOccuranceOfTypeInTokens(tokens, type);
+            }
+        }
+        return 0;
+	}
+
+	private static boolean tokensContainType(Token[] tokens, TokenType type) {
+		return findFirstOccuranceOfTypeInTokens(tokens, type) != -1;
+	}
+
+    private static int findFirstOccuranceOfTypeInTokens(Token[] tokens, TokenType type) {
+        int bracketNestingDepth = 0;
+        for (int i = 0; i < tokens.length; i++) {
+            if (tokens[i].tokenType == TokenType.OpeningParenthesis) {
+                bracketNestingDepth++;
+            } else if (tokens[i].tokenType == TokenType.ClosingParenthesis) {
+                bracketNestingDepth--;
+            }
+            
+            if (tokens[i].tokenType == type && bracketNestingDepth == 0) {
+                return i;
+            }
+        }
+        return -1;
+	}
+
     private static ExpressionElementNode createElement(Token[] tokens, int tokenIndex) throws JPLException {
         Token[] leftSide = Arrays.copyOfRange(tokens, 0, tokenIndex);
         Token[] rightSide = Arrays.copyOfRange(tokens, tokenIndex+1, tokens.length);
@@ -43,50 +88,5 @@ public class ExpressionParser {
                 throw new JPLException("Expression Node : Invalid token for expression. ");
             }
 		}
-	}
-
-	private static int findRootElementIndex(Token[] tokens) throws JPLException {
-        // Order is important.
-        TokenType[] types = {
-            TokenType.And,
-            TokenType.Or,
-            TokenType.Equal,
-            TokenType.NotEqual,
-            TokenType.GreaterThan,
-            TokenType.LessThan,
-            TokenType.GreaterThanOrEqualTo,
-            TokenType.LessThanOrEqualTo,
-            TokenType.Add,
-            TokenType.Subtract,
-            TokenType.Multiply,
-            TokenType.Divide,
-        };
-
-        for (TokenType type : types) {
-            if (tokensContainType(tokens, type)) {
-                return findFirstOccuranceOfTypeInTokens(tokens, type);
-            }
-        }
-        return 0;
-	}
-
-	private static boolean tokensContainType(Token[] tokens, TokenType type) {
-		return findFirstOccuranceOfTypeInTokens(tokens, type) != -1;
-	}
-
-    private static int findFirstOccuranceOfTypeInTokens(Token[] tokens, TokenType type) {
-        int bracketNestingDepth = 0;
-        for (int i = 0; i < tokens.length; i++) {
-            if (tokens[i].tokenType == TokenType.OpeningParenthesis) {
-                bracketNestingDepth++;
-            } else if (tokens[i].tokenType == TokenType.ClosingParenthesis) {
-                bracketNestingDepth--;
-            }
-            
-            if (tokens[i].tokenType == type && bracketNestingDepth == 0) {
-                return i;
-            }
-        }
-        return -1;
 	}
 }
