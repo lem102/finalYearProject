@@ -591,12 +591,6 @@ write code that is unreadable.
 
 ** Implementation Details
 
-
-assembly generation is interesting topic
-how did i handle parsing
-how does my intermediate representation work
-structure of compiler in comparison to proper compiler
-
 In this section I will discuss my implementation of certain parts of the
 compiler.
 
@@ -606,7 +600,64 @@ compiler.
 
 ??? 
 
-*** expression parsing
+*** Expression Parsing
+
+In the JPL langugage, there are expressions in a similar manner to C-like
+languages. For example:
+
+[todo: insert expression example here]
+
+JPLcompiler parses this expression by turning it into a tree structure
+to make sure that the operations are evaluated in an order that respects
+operator precedence. First, it will search for the "root element" of the
+expression. For example, in the following example:
+
+#+begin_src text
+2 + 3
+#+end_src
+
+The $+$ is the root element. For a more complicated example:
+
+#+begin_src text
+2 + 3 * 4 - 5
+#+end_src
+
+The * is the root element. JPLcompiler finds the root element using the
+following method:
+
+#+begin_src java
+      private static int findRootElementIndex(Token[] tokens) throws JPLException {
+          // Order is important.
+          TokenType[] types = {
+              TokenType.And,
+              TokenType.Or,
+              TokenType.Equal,
+              TokenType.NotEqual,
+              TokenType.GreaterThan,
+              TokenType.LessThan,
+              TokenType.GreaterThanOrEqualTo,
+              TokenType.LessThanOrEqualTo,
+              TokenType.Subtract,
+              TokenType.Add,
+              TokenType.Multiply,
+              TokenType.Divide,
+          };
+
+          for (TokenType type : types) {
+              if (tokensContainType(tokens, type)) {
+                  return findFirstOccuranceOfTypeInTokens(tokens, type);
+              }
+          }
+          return 0;
+      }
+#+end_src
+
+At the beginning of the method, there is an array of TokenTypes called
+types. This array is then iterated over in a foreach loop to see if a type
+is present in the provided tokens and returns its position in the list
+of tokens if it is, exiting the method. The order of the array is important,
+as the operations with the greatest precedence are located towards the
+end of the array.
 
 *** Intermediate Representation Details
 
@@ -651,8 +702,8 @@ These memory locations are then used in the .text section like this:
 
 This method of handling the storage definitely has its drawbacks (detailed
 later on in this report) but it is a relatively uncomplicated solution
-that is more understandable compared to an approach that would generate
-more efficient assembly code.
+that is more understandable for a newcomer to assembly compared to an approach
+that would generate more efficient assembly code. 
 
 *** "build system"
 
