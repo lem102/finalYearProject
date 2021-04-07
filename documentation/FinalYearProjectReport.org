@@ -596,6 +596,15 @@ compiler.
 
 *** structure of compiler in comparison to other compiler
 
+JPLcompiler's structure is rather bare bones compared to a traditional
+compiler. Many of the steps required to enforce the correctness of the
+source code have been omitted in the interest of getting JPLcompiler to
+compile something within the time limit I have for this project. In a similar
+manner, many mainstream compilers are "optimising compilers" [insert reference
+to dragon book] as they perform several iterations over the intermediate
+representation in order to produce an intermediate representation that
+uses fewer instructions, and therefore generates more efficient assembly.
+
 *** Parser
 
 ??? 
@@ -603,9 +612,12 @@ compiler.
 *** Expression Parsing
 
 In the JPL langugage, there are expressions in a similar manner to C-like
-languages. For example:
+languages. For example, the following expression will evalutate to 14,
+which will be stored in the variable number:
 
-[todo: insert expression example here]
+#+begin_src text
+int number = 2 + 3 * 4;
+#+end_src
 
 JPLcompiler parses this expression by turning it into a tree structure
 to make sure that the operations are evaluated in an order that respects
@@ -657,10 +669,22 @@ types. This array is then iterated over in a foreach loop to see if a type
 is present in the provided tokens and returns its position in the list
 of tokens if it is, exiting the method. The order of the array is important,
 the operations with the greatest precedence are located towards the end
-of the array. This means that when the assembly is generated, the operators
-with greater precedence are evaluated first.
+of the array. This means that when the intermediate representation is generated,
+the operators with greater precedence are evaluated first, as they are
+closest to the furthest away leaves of the tree created by the expression.
+For example:
 
-[todo: insert another example here]
+#+begin_src text
+print 2 + 3 * 4;
+#+end_src
+
+becomes:
+
+#+begin_src text
+  {Multiply        3               4               t0             }
+  {Add             2               t0              t1             }
+  {Print           null            null            t1             }
+#+end_src
 
 *** Intermediate Representation Details
 
@@ -720,7 +744,32 @@ that I have been able to notice is slightly longer compile times. As the
 compilation times are at most five seconds on a five year old laptop, I
 don't think this is a significant disadvantage.
 
-** testing
+** Testing
+
+A compiler is a difficult thing to test completely, as even a simple programming
+language can allow for an infinite number of different source programs,
+which will result in a plethora of different scenarios; each of which could
+cause the compiler to fail. 
+
+JPLcompiler has no automated testing, such as unit testing, because I felt
+it would not be a good use of my time in this particular project. When
+writing JPLcompiler, I have added many error checks to the code, so if
+there is a problem, I will find its source very quickly. Even if an error
+manages to get past the checks, the educational output that is one of the
+requirements of the compiler will be clearly different to what it should
+be. For example, if I wrote a program in JPL that multiplies two numbers
+together and received assembly that divides two numbers, then I can look
+at the output for the tokenizer, parser and intermediate code generator
+to identify the source of the problem quickly and easily.
+
+For these reasons, I have decided that the best way to test JPLcompiler
+is by writing many different programs in JPL which use all of the language
+features, and then using JPLcompiler to compile them. This approach to
+testing will allow me to test more difficult scenarios much more quickly
+than writing unit tests that only test trivial situations. It is worth
+noting that JPLcompiler would be very easy to unit test due to it being
+split into stages and the nature of each stages output.
+
 * Evaluation
 ** product evaluation
 ** project evaluation
