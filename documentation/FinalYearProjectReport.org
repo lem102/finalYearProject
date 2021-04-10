@@ -607,7 +607,25 @@ uses fewer instructions, and therefore generates more efficient assembly.
 
 *** Parser
 
-??? 
+Instead of implementing a proper parsing algorithm, such as a shift-reducing
+parser, I opted for a simpler approach. At the beginning of each statement,
+the parser will inspect the first token of the statement to determine the
+type of statement. If that is not enough to determine the type of statement,
+then the following tokens is used to classify the statement. An example of
+such a statement would be:
+
+#+begin_src text
+  int x = 2;
+#+end_src
+
+The first token, the integer declaration token, is not enough to determine
+the type of statement, as it could be a declaration statement or a assignment
+statement depending on the following tokens. In the above example, if the
+third token in the sequence is an assignment token (=), then the statement
+is an assignment statement, and all the tokens of the statement are passed
+to a function that checks that the tokens follow the rules of the language.
+If the statement involves an expression, then the tokens that belong to
+that expression will be sent to an expression parsing function.
 
 *** Expression Parsing
 
