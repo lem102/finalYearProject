@@ -792,8 +792,72 @@ split into stages and the nature of each stages output.
 ** product evaluation
 ** project evaluation
 *** what did you learn?
+
+- learned more about OOP.
+
+As JPLcompiler is written in the extremely object oriented language Java,
+I became much more comfortable with several object oriented concepts. I
+was already comfortable with the concepts of classes and objects thanks
+to previous experience from university and placement work. 
+
+While I understood the theory, my practical understanding of concepts like
+polymorphism, inheritance and their benefits were lacking. Working on this
+project required me to make use of both of these concepts, especially in
+regards to the parser, where the class StatementNode has many subclasses
+which need to make use of methods inherited from their parent class. Writing
+this code has made me much more aware of the benefits of these concepts,
+and much more comfortable using them in future work.
+
+- learned about how to run Java projects without an IDE or build tool
+
+During my previous university work that has involved Java, we were directed
+to make use of the IntelliJ IDE. One of the features of this IDE is a GUI
+button that can be pressed to run the project. With what I now know after
+working on this project is that pressing this button will send a command
+to a build tool (e.g. gradle or maven). The build tool will then read a
+project file that has been created automatically by IntelliJ, and follow
+the commands within to efficiently compile the Java project (only invoke
+the java compiler for files that havent been compiled before or changed
+since last compilation), and then run it.
+
+As I decided that compile times weren't that important to me for developing
+this project, I decided to write a simple bash script to invoke the compiler
+for all Java files in my src directory. This introduced me to many Java
+concepts such as the classpath, and how to use the command line development
+tools for Java, javac (the command to invoke the compiler) and java (the
+command to run the compiled files on the JVM). This dispelled a lot of
+the mystery surrounding what happens when I click the magic go button in
+the IDE, and improved my understanding of the important role that compilers
+play in programming.
+
+- discovered many of the flaws of java
+- aquired a lot of experience working in an object oriented style on a large project.
+- learnt a lot regarding the basics of assembly
+- the benefits of using a clean coding style when going back to code written a long time ago.
+- the drawbacks of oop
+- history of compiler and its significance in computing
+- what does a compiler do
+- how does a compiler work
+- 
+
 *** what competencies/skills did you develop?
+
+- clean coding
+- writing assembly
+- writing java
+- writing bash
+- designing a large solo project (computer science thinking)
+- use of git
+- 
+
+
 *** self-criticism/reflection
+
+- should have put more thought into the design of the parser before i started writing it. (required a significant refactor to improve readability which took a long time)
+- I wish I could have employed some smarter techniques for developing efficient machine code (time constraints)
+- I think I have done a good job in regards to clean coding, but the class tree of the nodes of the parser may be unnecessarily complicated (node interface)
+- 
+
 * Conclusions
 ** summary
 ** future plans
