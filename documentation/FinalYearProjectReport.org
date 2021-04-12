@@ -820,25 +820,61 @@ the commands within to efficiently compile the Java project (only invoke
 the java compiler for files that havent been compiled before or changed
 since last compilation), and then run it.
 
-As I decided that compile times weren't that important to me for developing
-this project, I decided to write a simple bash script to invoke the compiler
-for all Java files in my src directory. This introduced me to many Java
-concepts such as the classpath, and how to use the command line development
-tools for Java, javac (the command to invoke the compiler) and java (the
-command to run the compiled files on the JVM). This dispelled a lot of
-the mystery surrounding what happens when I click the magic go button in
-the IDE, and improved my understanding of the important role that compilers
-play in programming.
+As I decided that compilation times weren't that important to me for this
+particular project, I decided to write a simple bash script to invoke the
+compiler for all Java files in my src directory instead of wasting time
+learning how a build system worked. This introduced me to many Java concepts
+such as the classpath, and how to use the command line development tools
+for Java, javac (the command to invoke the compiler) and java (the command
+to run the compiled files on the JVM). This dispelled a lot of the mystery
+surrounding what happens when I click the magic go button in the IDE, and
+improved my understanding of the important role that compilers play in
+programming.
+
+- learnt a lot regarding the basics of assembly
+
+The final stage of compilation in JPLcompiler is the generation of assembly.
+Before I could write code that would output assembly, I first needed to
+learn the basics of an assembly language so I could have an idea of what
+the input to the assembly generator (the intermediate representation) would
+look like in equivalent assembly.
+
+Topics I learned about included:
+
+- The basic structure of an assembly file.
+- The syntax of assembly language.
+- Allocation of memory to constants and variables.
+- Loading values into the registers of the CPU.
+- Storing values loaded into a register into a memory location.
+- Performing simple mathematical operations on the values loaded into the registers (necessary to basic maths in JPL).
+- Comparing values stored in registers (necessary for if and while statements).
+- Including other assembly files into the current file (useful for reusing any assembly "functions").
+- Using return and call instructions to jump to different labels in the assembly (necessary for flow control and function calls).
+
+
 
 - discovered many of the flaws of java
 - aquired a lot of experience working in an object oriented style on a large project.
-- learnt a lot regarding the basics of assembly
+
 - the benefits of using a clean coding style when going back to code written a long time ago.
 - the drawbacks of oop
+
+
 - history of compiler and its significance in computing
 - what does a compiler do
 - how does a compiler work
-- 
+
+The function of compilers in general was something that I had only a dim
+awareness of before starting work on this project. This all changed during
+the literature review for this project where I gained a great appreciation
+for the significance of compilers, and how they have shaped, and continue
+to shape, programming language design and use. 
+
+I gained an understanding of how compilers can target certain CPUs or managed
+environments such as the JVM (Java Virutal Machine) or CLR (Common Language
+Runtime). And of course the tremendous journey that is the process of compilation
+into one of these target languages.
+
 
 *** what competencies/skills did you develop?
 
