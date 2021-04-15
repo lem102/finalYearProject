@@ -851,42 +851,60 @@ Topics I learned about included:
 - Including other assembly files into the current file (useful for reusing any assembly "functions").
 - Using return and call instructions to jump to different labels in the assembly (necessary for flow control and function calls).
 
-
-
-- discovered many of the flaws of java
-- aquired a lot of experience working in an object oriented style on a large project.
-
 - the benefits of using a clean coding style when going back to code written a long time ago.
-- the drawbacks of oop
 
+Whenever writing code, it is important to follow certain guidelines to
+ensure your code is simple to read, such as splitting functions into smaller
+functions where possible and giving intention-revealing names to variables
+and functions. A trivial example of a non-intention-revealing function
+name would be naming a function $getThem()$ instead of $getNodes()$. 
+
+Because I followed these practices when writing JPLcompiler, the code base
+is readable. It is so readable that I can go back to code I have written
+four months ago (for example to fix a bug) and understand it within five
+minutes. This makes adding new features, bugfixing, and other development
+tasks much easier. It allows me to use my brain to solve the problem, instead
+of understanding my code!
 
 - history of compiler and its significance in computing
-- what does a compiler do
-- how does a compiler work
 
 The function of compilers in general was something that I had only a dim
 awareness of before starting work on this project. This all changed during
 the literature review for this project where I gained a great appreciation
 for the significance of compilers, and how they have shaped, and continue
-to shape, programming language design and use. 
+to shape, programming language design and use.
 
-I gained an understanding of how compilers can target certain CPUs or managed
-environments such as the JVM (Java Virutal Machine) or CLR (Common Language
-Runtime). And of course the tremendous journey that is the process of compilation
+- what does a compiler do
+
+This project allowed me to develop an understanding of the main purpose
+of a compiler, which is allowing a programmer to use a higher level language
+to describe what he wants the computer to do, instead of writing lots of
+repetitive and time-consuming code in a low-level language where he has
+to think about the inner workings of a CPU as well as the problem he is
+trying to solve.
+
+- how does a compiler work
+
+Additionally I gained an understanding of the process of compilation and
+the algorithms used in professional compilers. I learned how compilers
+are actually a combination of two programs, a compiler front end an a compiler
+back end. The front end creates the intermediate representation, and the
+backend translates this into a specific target language. this target language
+could be for certain types of CPUs or managed environments such as the
+JVM (Java Virutal Machine) or the CLR (Common Language Runtime). And of
+course I learned about the tremendous journey that is the process of compilation
 into one of these target languages.
-
 
 *** what competencies/skills did you develop?
 
 - clean coding
 - writing assembly
 - writing java
+  - discovered many of the flaws of java
 - writing bash
 - designing a large solo project (computer science thinking)
 - use of git
 - 
-
-
 *** self-criticism/reflection
 
 - should have put more thought into the design of the parser before i started writing it. (required a significant refactor to improve readability which took a long time)
@@ -907,3 +925,4 @@ structure of the program will be stored in the README.org file found at
 the root of the project. 
 
 \bibliography{bibliography.bib}
+ 
