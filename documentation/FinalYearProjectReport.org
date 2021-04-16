@@ -907,19 +907,54 @@ have needed to be extremely careful with regards to the naming of classes,
 functions and variables so I don't get confused. 
 
 - writing assembly
+
+While working on this project, I have developed a new skill writing assembly
+code. I did this by writing some simple programs in assembly for the purpose
+of aquiring an understanding of how to write programs in assembly. This
+was well worth doing, as being a low-level language it is quite different
+to Java or other high-level languages that I am familiar with. There is
+a lot of focus on memory management, and you need to instruct the CPU exactly
+what to do. All programs are made up of operators and arguments for those
+operators. Each operator will have differing ways of using the arguments,
+an argument might have to be loaded into a specific register for instance.
+  
 - writing java
-  - discovered many of the flaws of java
+
+My Java writing skills also improved while working on this project. I became
+familiar with many of the classes and methods from the Java standard library,
+especially the different types of collection and the string, char and array
+helper classes. 
+
 - writing bash
+
+As described above, I made use of a bash script to automate the process
+of:
+
+- Compiling JPLcompiler.
+- Running it on a JPL source code file provided as an argument to the script.
+- Assembling the output of JPLcompiler with NASM.
+- Linking the object file produced by NASM with the ld command.
+- And finally running the executable file produced by the ld command.
+
+Writing the script to perform the above required me to increase my knowledge
+of how commands are called in bash, learn how to read the "man" (short
+for manual) pages for each command in order to figure out which command
+flags I need, and understand how I can use if statements to prevent further
+parts of the script from running if there is a problem when running any
+of the commands in the script.
+
 - designing a large solo project (computer science thinking)
 - use of git
-- 
+-
 
 *** self-criticism/reflection
 
 - should have put more thought into the design of the parser before i started writing it. (required a significant refactor to improve readability which took a long time)
 - I wish I could have employed some smarter techniques for developing efficient machine code (time constraints)
 - I think I have done a good job in regards to clean coding, but the class tree of the nodes of the parser may be unnecessarily complicated (node interface)
-- 
+-
+- discovered many of the flaws of java
+
 
 * Conclusions
 ** summary
