@@ -1,4 +1,4 @@
-#+options: ':nil *:t -:t ::t <:t H:4 \n:nil ^:t arch:headline
+#+options: ':nil *:t -:t ::t :t H:4 \n:nil ^:t arch:headline
 #+options: author:t broken-links:nil c:nil creator:nil
 #+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
 #+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
@@ -897,7 +897,15 @@ into one of these target languages.
 
 *** what competencies/skills did you develop?
 
+As this project is quite complex in nature I developed several of my existing
+skills, and discovered some new ones.
+
 - clean coding
+
+The number of Java classes in the codebase (around forty) means that I
+have needed to be extremely careful with regards to the naming of classes,
+functions and variables so I don't get confused. 
+
 - writing assembly
 - writing java
   - discovered many of the flaws of java
@@ -905,6 +913,7 @@ into one of these target languages.
 - designing a large solo project (computer science thinking)
 - use of git
 - 
+
 *** self-criticism/reflection
 
 - should have put more thought into the design of the parser before i started writing it. (required a significant refactor to improve readability which took a long time)
