@@ -902,9 +902,11 @@ skills, and discovered some new ones.
 
 - clean coding
 
-The number of Java classes in the codebase (around forty) means that I
-have needed to be extremely careful with regards to the naming of classes,
-functions and variables so I don't get confused. 
+The number of Java classes in the codebase (around forty) and the need
+to keep functions small has meant that I need to be extremely careful with
+regards to the naming of classes, functions and variables so I don't get
+any of them confused. This difficulty gave me ample opportunity to develop
+my clean coding skills.
 
 - writing assembly
 
@@ -944,8 +946,22 @@ parts of the script from running if there is a problem when running any
 of the commands in the script.
 
 - designing a large solo project (computer science thinking)
+
+JPLcompiler is definitely the largest program I have written so far. Because
+of this I have had to think about the structure of the program in far greater
+detail than I ever have before in my previous work, where the program would
+be either trivial in size, or I would just be working on a small part of
+it (usually the case during my placement year). For instance, this is the
+first time I have had to consider class hierarchy in a program, or consider
+if I should make a class static or not.
+
 - use of git
--
+
+To prevent the loss of progress due to events out of my control, such as
+hard drive failure or powercuts, I made use of the git version control
+system. I have used git before, but again, never on a project of this scale.
+While working on this project I made use of branches whenever I was working
+on a new feature to protect the existing work on the master branch.
 
 *** self-criticism/reflection
 
@@ -955,7 +971,7 @@ of the commands in the script.
 -
 - discovered many of the flaws of java
 
-
+  
 * Conclusions
 ** summary
 ** future plans
