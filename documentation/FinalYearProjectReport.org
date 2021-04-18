@@ -32,7 +32,7 @@
 #+latex_compiler: pdflatex
 #+date: \today
 
-* Project Proposal
+* Introduction
 ** Problem Statement
 
 In the world of computer science, and computer programming in general,
@@ -92,33 +92,7 @@ in terms of their education in computer science or programmming.
 
 * Background Research
 ** Necessary Background Material
-*** Required Knowledge
-
-To understand the source code aspect of my project, a reader would need
-to understand basic programming concepts such as what a statement is, how
-basic logic such as if statements and loop statements work, and be decently
-familiar with either Java or another mainly object oriented language (for
-example, C#). They would also need to understand object oriented concepts,
-such as classes, objects and inheritance. A basic understanding of assembly
-would also be useful for the later parts of the compiler where we are creating
-machine code, but I will be documenting these quite intensely and intend
-to make them as simple as possible.
-
-I would also recommend reading the first chapter of Compilers: Principles
-techniques and tools (AKA The Dragon Book) \citep{dragon}. This chapter
-gives an overview of the various components of a compiler and the different
-transformations that the code that is being compiled needs to undergo before
-it can be processed by the CPU. An especially useful resource to understand
-these concepts is figure 1.7, which can be found on page 7. This figure
-shows how the code to be compiled will look through the various stages
-of compilation.
-
-Other topics of interest that are located within this chapter are the concepts
-of tokens, syntax trees and intermediate representation. These are what
-the source code of this project will be attempting to produce and then
-use in later parts of the compiler input's journey through the compiler.
-
-*** What is a compiler?
+*** What is a Compiler?
 
 In short, a compiler is a computer program that converts a source program
 into machine code that can be executed by a CPU. It does this by taking
@@ -126,7 +100,7 @@ its input, a program that is written in a human-readable programming language
 and performing multiple actions upon it. As a result of these actions,
 an executable program is produced that can be run by the computer.
 
-*** Why do we use compilers?
+*** Why Do We Use Compilers?
 
 Back in the 1950's, programmers wrote software in assembly language. This
 means that in order to tell the computer to do something, they would have
@@ -210,7 +184,7 @@ easier for programmers to write code, and are continually developed to
 make it even easier. So we owe a great deal to FORTRAN and to compilers
 for making these abstractions.
 
-*** The structure of a compiler
+*** The Structure of a Compiler
 
 The overall structure of compilers has not changed much since the creation
 of FORTRAN I, and the compiler I will create also mostly sticks to the
@@ -367,7 +341,35 @@ All of this information is gathered during the syntax analysis phase and
 validated during the semantic analysis phase. The data within the syntax
 table is important throughout nearly all the phases of compilation \citep{dragon}.
 
+*** Other Topics to Aid Understanding
+
+To understand the source code aspect of my project, a reader would need
+to understand basic programming concepts such as what a statement is, how
+basic logic such as if statements and loop statements work, and be decently
+familiar with either Java or another mainly object oriented language (for
+example, C#). They would also need to understand object oriented concepts,
+such as classes, objects and inheritance. A basic understanding of assembly
+would also be useful for the later parts of the compiler where we are creating
+machine code, but I will be documenting these quite intensely and intend
+to make them as simple as possible.
+
+I would also recommend reading the first chapter of Compilers: Principles
+techniques and tools (AKA The Dragon Book) \citep{dragon}. This chapter
+gives an overview of the various components of a compiler and the different
+transformations that the code that is being compiled needs to undergo before
+it can be processed by the CPU. An especially useful resource to understand
+these concepts is figure 1.7, which can be found on page 7. This figure
+shows how the code to be compiled will look through the various stages
+of compilation.
+
+Other topics of interest that are located within this chapter are the concepts
+of tokens, syntax trees and intermediate representation. These are what
+the source code of this project will be attempting to produce and then
+use in later parts of the compiler input's journey through the compiler.
+
 ** Related Work
+
+[todo: add more sources]
 
 *** A Compiler for Teaching about Compilers
 
@@ -448,7 +450,12 @@ The language that the compiler compiles from needs to be sufficiently complicate
 so as to illustrate the main issues regarding compilation, such as operator
 precedence, correct assembly generation, etc.
 
-** Choice of Tools
+Given the above, from the perspective of the user, the requirements would
+be:
+
+- A compiler that compiles from a high-level language into assembly.
+- Compiler is capable of showing the output of each different stage of compilation in a clear manner that illustrates the purpose of each stage.
+- Source code of said compiler is easily understandable.** Choice of Tools/Technqiues/Approach
 *** Programming Language
 
 An important decision I had to make early on is which programming language
@@ -486,6 +493,33 @@ Java, and it lowers the barrier to entry for reading the code of this project's
 compiler. The other main advantage of Java is its great object oriented
 features, such as polymorphism and inheritance, whcih allow for very productive
 coding.
+*** Relevance to Course
+
+The topic of compilation is an incredibly important topic in computer science
+due to it being a key technology used in the implementation of high level
+languages. Compilation as a process also involves the use of several algorithms
+and data structures. As such, this project which involves the creation
+of a compiler is highly relevant to this course.
+
+Out of the modules studied as a part of the course, the most relevant would
+be Language Translators, which was one of my inspirations for doing this
+project. The module was concerned with the process of parsing a toy language
+as seen in a compiler. We used a "parser generator" called javaCUP to write
+java code to create a parser that would parse the language that we had
+specified.
+
+As others have noted in the literature review, tools that automate the
+process of compiler creation, such as a parser generator like javaCUP,
+are unsuitable for educational purposes due to them causing students to
+spend more time getting the tool to work than actually completing their
+task, a theme unfortunately prevalent throughout computing generally.
+
+This project is very relevant to the Language Translators module, as it
+involves parsing, and it aims to solve one of the problems that I encountered
+during my taking of that module: the lack of simple tools that aided understanding.
+
+[todo: maybe write a bit about APD?]
+
 
 ** Risk Management
 
@@ -502,6 +536,8 @@ found, then the compiler will emit an error message. As this compiler is
 not intended for serious use, I can justify skipping over that section
 in favour of the others (which have a greater educational value), and coming
 back to it later if I have time.
+
+[todo: risk register?]
 
 ** Product Development Plan
 
@@ -523,6 +559,8 @@ Considering the difficulty levels of each stage and the order in which
 they have to be written, I think this is an appropriate plan:
 
 [[./ganntChart.png]]
+
+[todo: break up into more stages]
 
 * Design
 
@@ -786,7 +824,11 @@ features, and then using JPLcompiler to compile them. This approach to
 testing will allow me to test more difficult scenarios much more quickly
 than writing unit tests that only test trivial situations. It is worth
 noting that JPLcompiler would be very easy to unit test due to it being
-split into stages and the nature of each stages output.
+split into stages and the nature of each stages output. 
+
+To further enhance the above strategy, I will also ask other students on
+my course to try write code for my compiler. This will cause bugs to surface
+that I would not be able to discover by myself.
 
 * Evaluation
 ** product evaluation
