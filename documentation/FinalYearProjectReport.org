@@ -369,7 +369,7 @@ use in later parts of the compiler input's journey through the compiler.
 
 ** Related Work
 
-[todo: add more sources]
+[todo: add more sources, e.g. assembly for dummies, ideas taken from dragon book]
 
 *** A Compiler for Teaching about Compilers
 
@@ -425,12 +425,6 @@ therefore making the student totally understand the process of compilation
 ** Professional, Legal Ethical \amp Social Issues
 * Project Planning
 
-- User Requirements
-- Choice of tools/techniques/approach
-  - relevance to degree/course knowledge
-- Risk Management
-- Product Development Plan
-
 In this section, I will discuss the planning of this project.
 
 ** User Requirements
@@ -455,7 +449,9 @@ be:
 
 - A compiler that compiles from a high-level language into assembly.
 - Compiler is capable of showing the output of each different stage of compilation in a clear manner that illustrates the purpose of each stage.
-- Source code of said compiler is easily understandable.** Choice of Tools/Technqiues/Approach
+- Source code of said compiler is easily understandable.
+
+** Choice of Tools/Technqiues/Approach
 *** Programming Language
 
 An important decision I had to make early on is which programming language
@@ -493,7 +489,30 @@ Java, and it lowers the barrier to entry for reading the code of this project's
 compiler. The other main advantage of Java is its great object oriented
 features, such as polymorphism and inheritance, whcih allow for very productive
 coding.
-*** Relevance to Course
+*** NASM
+
+NASM (Netwide Assembler) is an assembler for the x86 CPU architecture. It's purpose in my project
+is to assemble the assembly code outputted by JPLcompiler into object code,
+which can be linked into an executable, which can then be executed by the
+CPU. 
+
+I chose NASM instead of other assemblers like GAS (GNU Assembler) or MASM
+(Microsoft Assembler) for several reasons. Firstly, it works with Linux,
+which is JPLcompiler's target platform and where command line programs
+are first class citizens. Secondly, I think that it has the best syntax.
+Thirdly, it seems that the majority of assembly programmers use it, so
+there is a lot of useful information available about it.
+
+https://cs.lmu.edu/~ray/notes/x86assembly/
+
+[todo: add reference to nasm homepage]
+
+*** Bash
+
+Bash was chosen as the scripting language to write the script that automates
+the building and running of JPLcompiler simply because it is the default
+shell scripting language on Linux, and I have previous experience with
+it.*** Relevance to Course
 
 The topic of compilation is an incredibly important topic in computer science
 due to it being a key technology used in the implementation of high level
@@ -505,7 +524,7 @@ Out of the modules studied as a part of the course, the most relevant would
 be Language Translators, which was one of my inspirations for doing this
 project. The module was concerned with the process of parsing a toy language
 as seen in a compiler. We used a "parser generator" called javaCUP to write
-java code to create a parser that would parse the language that we had
+Java code to create a parser that would parse the language that we had
 specified.
 
 As others have noted in the literature review, tools that automate the
@@ -518,8 +537,16 @@ This project is very relevant to the Language Translators module, as it
 involves parsing, and it aims to solve one of the problems that I encountered
 during my taking of that module: the lack of simple tools that aided understanding.
 
-[todo: maybe write a bit about APD?]
-
+There are a few other relevant modules, a couple of which are from the
+first year of the course. Studio 1, specifically the portion where we learned
+about writing shell scripts using the bash scripting language. The things
+I learned about using Linux and writing shell scripts were very helpful
+to me in understanding how to automate many repetitive tasks such as automating
+the compile-run cycle of this project. Another module that was useful was
+the module where we were first introduced to Java, and object oriented
+programming in general. In the second year of the course, Algorithms Processes
+and Data further improved my Java skills, and I used some of the concepts
+taught, in particular the tree concept in this project.
 
 ** Risk Management
 
@@ -830,6 +857,10 @@ To further enhance the above strategy, I will also ask other students on
 my course to try write code for my compiler. This will cause bugs to surface
 that I would not be able to discover by myself.
 
+** Installation
+
+[todo: installation instructions]
+
 * Evaluation
 ** product evaluation
 ** project evaluation
@@ -1027,4 +1058,3 @@ structure of the program will be stored in the README.org file found at
 the root of the project. 
 
 \bibliography{bibliography.bib}
- 
