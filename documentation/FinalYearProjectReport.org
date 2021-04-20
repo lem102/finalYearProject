@@ -424,7 +424,7 @@ therefore making the student totally understand the process of compilation
 
 ** Professional, Legal Ethical \amp Social Issues
 * Project Planning
-
+  
 In this section, I will discuss the planning of this project.
 
 ** User Requirements
@@ -568,11 +568,22 @@ back to it later if I have time.
 
 ** Product Development Plan
 
-I think I can split the development of the compiler into four main stages:
-- The Tokeniser
-- The Parser
-- The Intermediate Code Generator
-- The Assembly Generator
+I think I can split the development of the compiler into four main stages,
+each of which can be broken up into substages:
+
+- the Tokeniser
+  - Preparing the Source Code
+  - Splitting the Prepared Source Code into Tokens
+- the Parser
+  - Loop Through the Tokens
+  - Decide What Type of Statement
+  - Populate Statement Node with Values of Following Tokens
+  - Organise Nodes into a Tree Structure
+- the Intermediate Code Generator
+  - for Each Node of the Tree Create An Intermediate Representation
+- the Assembly Generator
+  - Assigning Memory
+  - Converting Intermediate Code Instructions into Assembly Operations
 
 In regards to how much time each stage of the compiler will take to write,
 I suspect that the most complicated part of the code base will be the assembly
@@ -585,9 +596,9 @@ them in order to make sure they work well together.
 Considering the difficulty levels of each stage and the order in which
 they have to be written, I think this is an appropriate plan:
 
-[[./ganntChart.png]]
+[todo: make an updated gannt chart]
 
-[todo: break up into more stages]
+[[./ganntChart.png]]
 
 * Design
 
@@ -620,7 +631,7 @@ they would be able to note the differences in output.
 This image from the dragon book is a great illustration of the inputs and
 outputs of each stage:
 
-todo: put dragon book diagram here
+[todo: put dragon book diagram here]
 
 * Implementation
 ** Skills and Knowledge required for Development
@@ -659,7 +670,7 @@ write code that is unreadable.
 In this section I will discuss my implementation of certain parts of the
 compiler.
 
-*** structure of compiler in comparison to other compiler
+*** structure of compiler in comparison to other compilers
 
 JPLcompiler's structure is rather bare bones compared to a traditional
 compiler. Many of the steps required to enforce the correctness of the
@@ -859,7 +870,24 @@ that I would not be able to discover by myself.
 
 ** Installation
 
-[todo: installation instructions]
+JPLcompiler is only designed to run on Linux. To set it up, you can run
+the following commands on a debian based distribution.
+
+#+begin_src bash
+  # refresh your package listings
+  sudo apt-get update
+
+  # install necessary software
+  sudo apt-get install git
+  sudo apt-get install nasm
+  sudo apt-get install openjdk-8-jre
+
+  # clone the projects repository
+  git clone https://github.com/lem102/finalYearProject.git
+#+end_src
+
+Once JPLcompiler has been cloned, use the script named compileAndRun.bash
+with a source code file as an argument to run the compiler. 
 
 * Evaluation
 ** product evaluation
@@ -973,7 +1001,7 @@ into one of these target languages.
 As this project is quite complex in nature I developed several of my existing
 skills, and discovered some new ones.
 
-- clean coding
+**** clean coding
 
 The number of Java classes in the codebase (around forty) and the need
 to keep functions small has meant that I need to be extremely careful with
@@ -981,7 +1009,7 @@ regards to the naming of classes, functions and variables so I don't get
 any of them confused. This difficulty gave me ample opportunity to develop
 my clean coding skills.
 
-- writing assembly
+**** Writing Assembly
 
 While working on this project, I have developed a new skill writing assembly
 code. I did this by writing some simple programs in assembly for the purpose
@@ -993,14 +1021,14 @@ what to do. All programs are made up of operators and arguments for those
 operators. Each operator will have differing ways of using the arguments,
 an argument might have to be loaded into a specific register for instance.
   
-- writing java
+**** Writing Java
 
 My Java writing skills also improved while working on this project. I became
 familiar with many of the classes and methods from the Java standard library,
 especially the different types of collection and the string, char and array
 helper classes. 
 
-- writing bash
+**** Writing Bash
 
 As described above, I made use of a bash script to automate the process
 of:
@@ -1018,17 +1046,17 @@ flags I need, and understand how I can use if statements to prevent further
 parts of the script from running if there is a problem when running any
 of the commands in the script.
 
-- designing a large solo project (computer science thinking)
+**** Designing a Large Solo Project (computer science thinking)
 
 JPLcompiler is definitely the largest program I have written so far. Because
 of this I have had to think about the structure of the program in far greater
 detail than I ever have before in my previous work, where the program would
 be either trivial in size, or I would just be working on a small part of
 it (usually the case during my placement year). For instance, this is the
-first time I have had to consider class hierarchy in a program, or consider
-if I should make a class static or not.
+first time I have had to consider class hierarchy in a program. It is also
+my first serious use of inheritance.
 
-- use of git
+**** Use of Git
 
 To prevent the loss of progress due to events out of my control, such as
 hard drive failure or powercuts, I made use of the git version control
@@ -1039,12 +1067,19 @@ on a new feature to protect the existing work on the master branch.
 *** self-criticism/reflection
 
 - should have put more thought into the design of the parser before i started writing it. (required a significant refactor to improve readability which took a long time)
+
+When I started the second major stage of JPLcompiler (the parser), I foolishly
+tried to write it with very little planning. This resulted in a single,
+very large class that I eventually had to perform major refactoring on;
+I couldn't make progress on implementing the rest of the parser as the
+code was needlessly hard to understand.
+
 - I wish I could have employed some smarter techniques for developing efficient machine code (time constraints)
 - I think I have done a good job in regards to clean coding, but the class tree of the nodes of the parser may be unnecessarily complicated (node interface)
 -
 - discovered many of the flaws of java
 
-  
+
 * Conclusions
 ** summary
 ** future plans
