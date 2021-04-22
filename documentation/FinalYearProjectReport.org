@@ -1072,11 +1072,27 @@ When I started the second major stage of JPLcompiler (the parser), I foolishly
 tried to write it with very little planning. This resulted in a single,
 very large class that I eventually had to perform major refactoring on;
 I couldn't make progress on implementing the rest of the parser as the
-code was needlessly hard to understand.
+code was so needlessly complicated. If I had spent some time thinking about
+the parser's structure before jumping in, I could have saved myself a lot
+of pain.
 
-- I wish I could have employed some smarter techniques for developing efficient machine code (time constraints)
+- I wish I could have employed some smarter techniques for developing efficient machine code
+
+In the code generation section, I would have liked to implement a more
+advanced algorithm for generating efficient machine code. A commerical
+compiler would be able to reduce the number of instructions required to
+create equivalent but faster assembly. A commerical compiler would also
+be able to reduce the number of temporary variables used in evaluating
+expressions, and additionally make better use of the temporary variables
+created. 
+
+[todo: more reference to dragon book]
+
 - I think I have done a good job in regards to clean coding, but the class tree of the nodes of the parser may be unnecessarily complicated (node interface)
--
+
+For the parser, I made use of several node classes to represent the AST
+(Abstract Syntax Tree)
+
 - discovered many of the flaws of java
 
 
