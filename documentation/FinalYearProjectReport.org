@@ -1089,11 +1089,16 @@ created.
 
 [todo: more reference to dragon book]
 
-
 - I think I have done a good job in regards to clean coding, but the class tree of the nodes of the parser may be unnecessarily complicated (node interface)
 
 For the parser, I made use of several node classes to represent the AST
-(Abstract Syntax Tree)
+(Abstract Syntax Tree). There was one node for each type of statement.
+all of the nodes extended a StatementNode class, which implemented a Node
+interface. Examples of such nodes would be a DeclarationNode, which is
+the node created to correspond to a variable declaration in the source
+code. I think that this structure may be unnecessarily complicated, as
+I'm not sure what purpose the Node interface serves. This could have been
+avoided if I had thought more carefully about the class structure beforehand.
 
 - discovered many of the flaws of java
 
