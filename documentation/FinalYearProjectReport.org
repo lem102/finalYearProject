@@ -1072,9 +1072,14 @@ When I started the second major stage of JPLcompiler (the parser), I foolishly
 tried to write it with very little planning. This resulted in a single,
 very large class that I eventually had to perform major refactoring on;
 I couldn't make progress on implementing the rest of the parser as the
-code was needlessly hard to understand.
+code was needlessly hard to understand. After the refactoring development
+proceeded smoothly as I had split up the code and moved the various sections
+to more relevant classes.
 
 - I wish I could have employed some smarter techniques for developing efficient machine code (time constraints)
+
+
+
 - I think I have done a good job in regards to clean coding, but the class tree of the nodes of the parser may be unnecessarily complicated (node interface)
 -
 - discovered many of the flaws of java
