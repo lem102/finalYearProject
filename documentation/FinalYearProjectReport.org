@@ -1102,6 +1102,10 @@ avoided if I had thought more carefully about the class structure beforehand.
 
 - discovered many of the flaws of java
 
+One of my regrets of this project is that i could not come up with a better
+language to write it in than Java. Java is not a bad language, but i feel
+it is very complicated sometimes to do things that should be simple; and
+these solutions are often quite difficult to read due to their verbosity.
 
 * Conclusions
 ** summary
