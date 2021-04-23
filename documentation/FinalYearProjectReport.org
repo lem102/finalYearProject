@@ -892,7 +892,7 @@ with a source code file as an argument to run the compiler.
 * Evaluation
 ** product evaluation
 ** project evaluation
-*** what did you learn?
+*** What Have I Learned?
 
 - learned more about OOP.
 
@@ -952,7 +952,7 @@ Topics I learned about included:
 - Including other assembly files into the current file (useful for reusing any assembly "functions").
 - Using return and call instructions to jump to different labels in the assembly (necessary for flow control and function calls).
 
-- the benefits of using a clean coding style when going back to code written a long time ago.
+- The Benefits of Using a Clean Coding Style When Going Back to Code Written a Long Time Ago
 
 Whenever writing code, it is important to follow certain guidelines to
 ensure your code is simple to read, such as splitting functions into smaller
@@ -967,7 +967,7 @@ minutes. This makes adding new features, bugfixing, and other development
 tasks much easier. It allows me to use my brain to solve the problem, instead
 of understanding my code!
 
-- history of compiler and its significance in computing
+- History of Compiler and Its Significance in Computing
 
 The function of compilers in general was something that I had only a dim
 awareness of before starting work on this project. This all changed during
@@ -975,7 +975,7 @@ the literature review for this project where I gained a great appreciation
 for the significance of compilers, and how they have shaped, and continue
 to shape, programming language design and use.
 
-- what does a compiler do
+- What Does a Compiler Do
 
 This project allowed me to develop an understanding of the main purpose
 of a compiler, which is allowing a programmer to use a higher level language
@@ -984,7 +984,7 @@ repetitive and time-consuming code in a low-level language where he has
 to think about the inner workings of a CPU as well as the problem he is
 trying to solve.
 
-- how does a compiler work
+- How Does a Compiler Work
 
 Additionally I gained an understanding of the process of compilation and
 the algorithms used in professional compilers. I learned how compilers
@@ -996,12 +996,12 @@ JVM (Java Virutal Machine) or the CLR (Common Language Runtime). And of
 course I learned about the tremendous journey that is the process of compilation
 into one of these target languages.
 
-*** what competencies/skills did you develop?
+*** What Competencies/Skills Have I Developed?
 
 As this project is quite complex in nature I developed several of my existing
 skills, and discovered some new ones.
 
-**** clean coding
+**** Clean Coding
 
 The number of Java classes in the codebase (around forty) and the need
 to keep functions small has meant that I need to be extremely careful with
@@ -1064,9 +1064,9 @@ system. I have used git before, but again, never on a project of this scale.
 While working on this project I made use of branches whenever I was working
 on a new feature to protect the existing work on the master branch.
 
-*** self-criticism/reflection
+*** Self-Criticism/Reflection
 
-- should have put more thought into the design of the parser before i started writing it. (required a significant refactor to improve readability which took a long time)
+- I Should Have Put More Thought into the Design of the Parser Before I Started Writing It
 
 When I started the second major stage of JPLcompiler (the parser), I foolishly
 tried to write it with very little planning. This resulted in a single,
@@ -1077,7 +1077,7 @@ smoothly as I had split up the code and moved the various sections to more
 relevant classes. If I had spent some time thinking about the parser's
 structure before jumping in, I could have saved myself a lot of pain.
 
-- I wish I could have employed some smarter techniques for developing efficient machine code (time constraints)
+- I Wish I Could Have Employed Some Smarter Techniques for Developing Efficient Machine Code (time constraints)
 
 In the code generation section, I would have liked to implement a more
 advanced algorithm for generating efficient machine code. A commerical
@@ -1089,7 +1089,7 @@ created.
 
 [todo: more reference to dragon book]
 
-- I think I have done a good job in regards to clean coding, but the class tree of the nodes of the parser may be unnecessarily complicated (node interface)
+- I Think I Have Done a Good Job in Regards to Clean Coding, But the Class Tree of the Nodes of the Parser May be Unnecessarily Complicated
 
 For the parser, I made use of several node classes to represent the AST
 (Abstract Syntax Tree). There was one node for each type of statement.
