@@ -1108,15 +1108,17 @@ it is very complicated sometimes to do things that should be simple; and
 these solutions are often quite difficult to read due to their verbosity.
 
 * Conclusions
-** summary
+** Summary
+
+Overall, I think this project has gone very well. I successfully created
+a working compiler that can assist the learning of students in this area
+to some extent. There were a couple of times during development that I
+had doubts about whether I was capable of creating anything that would
+be functional, however I am very pleased with the fact that it actually
+works! This project has really put my skills to the test, and pushed me
+to develop a much deeper understanding of compilers, programming languages
+and more.
+
 ** future plans
-* MISC
-
-** comments
-
-Inline comments within the source code will be kept to a minimum, this
-is done to prevent noise when reading the source code. An overview of the
-structure of the program will be stored in the README.org file found at
-the root of the project. 
 
 \bibliography{bibliography.bib}
