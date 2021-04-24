@@ -891,6 +891,13 @@ with a source code file as an argument to run the compiler.
 
 * Evaluation
 ** product evaluation
+*** compiler is functional
+
+the best thing about the product is the fact that it contains a functional
+compiler that can compile a high level language into a low level language.
+in of itself this is not significant, but if you consider the fact that
+it has been written in a readable way
+
 ** project evaluation
 *** What Have I Learned?
 
@@ -1105,7 +1112,17 @@ avoided if I had thought more carefully about the class structure beforehand.
 One of my regrets of this project is that i could not come up with a better
 language to write it in than Java. Java is not a bad language, but i feel
 it is very complicated sometimes to do things that should be simple; and
-these solutions are often quite difficult to read due to their verbosity.
+these solutions are often quite difficult to read due to their verbosity. 
+
+A good example of complexity can be found in Java's concept of collection.
+in python, there is the list datatype. that is the only type in the language
+that concerns itself with a collection of single items. in java however,
+there is the traditional array, then 33 classes that are all different
+types of collection! this can waste a lot of development time, as i needed
+to think about which was the most suitable one to use. some of these lists
+seem to be "deprecated", as newer versions of java have added collections
+that seem to do very little differently to their older counterparts but
+are somehow "better".
 
 * Conclusions
 ** Summary
