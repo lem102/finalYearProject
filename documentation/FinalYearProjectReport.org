@@ -512,7 +512,9 @@ https://cs.lmu.edu/~ray/notes/x86assembly/
 Bash was chosen as the scripting language to write the script that automates
 the building and running of JPLcompiler simply because it is the default
 shell scripting language on Linux, and I have previous experience with
-it.*** Relevance to Course
+it.
+
+*** Relevance to Course
 
 The topic of compilation is an incredibly important topic in computer science
 due to it being a key technology used in the implementation of high level
@@ -890,15 +892,82 @@ Once JPLcompiler has been cloned, use the script named compileAndRun.bash
 with a source code file as an argument to run the compiler. 
 
 * Evaluation
-** product evaluation
-*** compiler is functional
+** Product Evaluation
+*** Compiler is Functional
 
-the best thing about the product is the fact that it contains a functional
-compiler that can compile a high level language into a low level language.
-in of itself this is not significant, but if you consider the fact that
-it has been written in a readable way
+The most important requirement for me to deliver as part of this project is a
+functional compiler that compiles a high-level language into a low-level
+language. 
 
-** project evaluation
+The compiler can be used to write programs that make use of variables,
+flow control (such as if statements and while loops) and functions which
+take parameters. 
+
+The only data type that can be handled by the compiler is a non-negative
+integer. there is also a print statement to allow output. With just these
+simple features a huge variety of useful programs can be written and then
+compiled with this compiler.
+
+*** Educational Output
+
+Another requirement of the compiler, is to emit readable output to the
+user. The purpose of this output is to elucidate several concept of compilation
+such as tokens syntax trees and intermediate representation. 
+
+The compiler meets this requirement by being able to output the results
+of each stage of compilation (for example the tokens created by the tokenizer).
+The results can then be inspected to allow the user to gain a greater understanding
+of a given part of the compilation process. 
+
+***  Flaws of the Compiler
+
+- Parameter Namespace Collision
+
+The biggest problem with the compiler can be observed if, somewhere in
+your program, you have a variable called apple and somewhere else you have
+a parameter also called apple. In a commercial compiler this would not
+cause a problem; however in JPLcompiler this will cause a problem because
+the compiler will make two variables of the same name. This causes illegal
+assembly to be generated, which NASM will refuse to compile. 
+
+This problem could be avoided by implementing a special procedure that
+generates variable names to be used to refer to parameters within assembly
+in a similar way to how variable names for temporary variables are generated
+for use in expressions.
+
+- Only One Type
+
+In the compiler there is only one data type, an unsigned integer. There
+is only one data type because I was concerned if I spent too long implementing
+other data types, like string or boolean, I would be more pressed for time
+when it came to developing the intermediate code generator and the assembly
+generator. 
+
+I chose an unsigned integer as the single data type to implement because
+I thought it would be the simplest to implement whilst additionally allowing
+for the greatest variety of programs. Due to how I have implemented the
+compiler, it would be simple to add support for additional data types.
+This is because I have made use of switch statements and enums in my code;
+both of which can be easily extended.
+
+- Inefficient Usage of Temporary Variables
+
+The compiler uses temporary variables to hold the results of parts of expressions.
+For example, the result of a single addition would be stored in a single
+temporary variable. This works well, however it is not very memory efficient.
+This is due to the fact that if there is a function that is only called
+once that contains an expression, then the memory required for that expression
+will always be in use. It would be better if that memory was freed up so
+it could be used to store the result of another expression instead, or
+the temporary variable was reused.
+
+I chose to take a brute force approach to solve this problem in order to
+deliver a functioning product as I decided that this would be too difficult
+to implement in the time that I had available. This problem could be resolved
+by studying in greater depth the algorithms described in the dragon book
+and implementing them. 
+
+** Project Evaluation
 *** What Have I Learned?
 
 - learned more about OOP.
