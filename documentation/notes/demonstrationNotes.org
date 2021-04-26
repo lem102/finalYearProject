@@ -1,0 +1,15 @@
+* what to do for demonstration
+
+slides for introduction
+   
+discuss project in general (10 mins)
+choose highlights of report
+target audience
+purpose
+what i chose to do it with
+code highlights
+
+then
+
+demo program and features (10 mins)
+discuss evaluation section of report briefly

@@ -368,9 +368,7 @@ the source code of this project will be attempting to produce and then
 use in later parts of the compiler input's journey through the compiler.
 
 ** Related Work
-   
-[todo: add more sources, e.g. assembly for dummies, ideas taken from dragon book]
-
+ 
 *** A Compiler for Teaching about Compilers
 
 This paper sounds like it has a comparable spirit to this project in that
@@ -426,9 +424,10 @@ therefore making the student totally understand the process of compilation
 
 A professional issue that I face is the first item in the "Show what you
 know, learn what you don't" section of the bcs code of conduct: "only undertake
-to do work or provide a service that is within your professional competence" \citep{bcs}.
-To resolve this issue I have conducted research into the subject matter
-of compilation to ensure I possess the skills to deliver a worthy product.
+to do work or provide a service that is within your professional competence"
+\citep{bcs}. To resolve this issue I have conducted research into the subject
+matter of compilation to ensure I possess the skills to deliver a worthy
+product.
 
 An ethical issue that my project faces is the possibility of the compiler
 being used to create a program that is used in an unethical way (e.g. compiling
@@ -508,21 +507,17 @@ coding.
 
 *** NASM
 
-NASM (Netwide Assembler) is an assembler for the x86 CPU architecture. It's purpose in my project
-is to assemble the assembly code outputted by JPLcompiler into object code,
-which can be linked into an executable, which can then be executed by the
-CPU. 
+NASM (Netwide Assembler) is an assembler for the x86 CPU architecture \citep{nasm}.
+It's purpose in my project is to assemble the assembly code outputted by
+JPLcompiler into object code, which can be linked into an executable, which
+can then be executed by the CPU. 
 
 I chose NASM instead of other assemblers like GAS (GNU Assembler) or MASM
 (Microsoft Assembler) for several reasons. Firstly, it works with Linux,
 which is JPLcompiler's target platform and where command line programs
 are first class citizens. Secondly, I think that it has the best syntax.
 Thirdly, it seems that the majority of assembly programmers use it, so
-there is a lot of useful information available about it.
-
-https://cs.lmu.edu/~ray/notes/x86assembly/
-
-[todo: add reference to nasm homepage]
+there is a lot of useful information available about it \citep{gas&masm}.
 
 *** Bash
 
@@ -583,8 +578,6 @@ not intended for serious use, I can justify skipping over that section
 in favour of the others (which have a greater educational value), and coming
 back to it later if I have time.
 
-[todo: risk register?]
-
 ** Product Development Plan
 
 I think I can split the development of the compiler into four main stages,
@@ -615,9 +608,7 @@ them in order to make sure they work well together.
 Considering the difficulty levels of each stage and the order in which
 they have to be written, I think this is an appropriate plan:
 
-[todo: make an updated gannt chart]
-
-[[./ganntChart.png]]
+[[./fypGanntChart2.PNG]]
 
 * Design
 
@@ -648,9 +639,9 @@ would be able to alter the source code that the compiler is compiling from,
 they would be able to note the differences in output.
 
 This image from the dragon book is a great illustration of the inputs and
-outputs of each stage:
+outputs of each stage \citep{dragon}{p. 7}:
 
-[todo: put dragon book diagram here]
+[[./compilerDesign.png]]
 
 * Implementation
 ** Skills and Knowledge required for Development
@@ -807,8 +798,8 @@ It holds three strings and a instance of an enum. The enum refers to the
 type of instruction (e.g. assignment, goto), two of the strings refer to
 the arguments of the operation (which can be a value or the name of a variable),
 and the final string refers to where the result will be stored. This design
-is based on the quadruple concept discussed in the Dragon book [todo: insert
-reference].
+is based on the quadruple concept discussed in the Dragon book \citep{dragon}{p.
+366}.
 
 You might wonder why I chose to use a string as the datatype for the arguments
 and the result regardless of whether the value of the argument is an integer
@@ -825,7 +816,10 @@ for variables in the .bss section of a NASM file. For example, if you wanted
 to have a variable called exampleNumber, you would need some code like
 this:
 
-[todo: insert example code]
+#+begin_src asm
+  section .bss
+      exampleNumber:   resb   4
+#+end_src
 
 In the assembly code that JPLcompiler emits, variables like the one above
 are declared in order to reserve memory for three different types of variable.
@@ -836,9 +830,12 @@ are declared in order to reserve memory for three different types of variable.
 
 - Parameter variables, used to hold values passed as arguments to functions declared in the source program.
 
-These memory locations are then used in the .text section like this:
+These memory locations are then used in the .text section like this \citep{assembly}:
 
-[todo: insert more example code]
+#+begin_src asm
+  section .text
+      mov     eax     [exampleNumber]
+#+end_src
 
 This method of handling the storage definitely has its drawbacks (detailed
 later on in this report) but it is a relatively uncomplicated solution
@@ -1178,9 +1175,7 @@ compiler would be able to reduce the number of instructions required to
 create equivalent but faster assembly. A commerical compiler would also
 be able to reduce the number of temporary variables used in evaluating
 expressions, and additionally make better use of the temporary variables
-created. 
-
-[todo: more reference to dragon book]
+created \citep{dragon}{p. 544}.
 
 **** I Think I Have Done a Good Job in Regards to Clean Coding, But the Class Tree of the Nodes of the Parser May be Unnecessarily Complicated
 
@@ -1244,39 +1239,5 @@ Thirdly, I would like to improve the efficiency of the output of the assembly
 generator so that the assembly code generated makes more efficiant use
 of registers and memory. This would benefit the project as it would allow
 the student to see more complex assembly generation.
-
-
-
-* things to ask supervisor
-
-the future plans section
-
-what could i do with more time
-more data types
-parser graphical output
-
-what to do for demonstration
-
-slides for introduction
-   
-discuss project in general (10 mins)
-choose highlights of report
-target audience
-purpose
-what i chose to do it with
-code highlights
-
-then
-
-demo program and features (10 mins)
-discuss evaluation section of report briefly
-
-risk register
-optional
-list of what if scenarios
-contains risk, severity, how to handle the risk
-
-put sub sections in gannt chart
-also put report work in gannt chart 
 
 \bibliography{bibliography.bib}
