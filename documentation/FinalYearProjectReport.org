@@ -368,7 +368,7 @@ the source code of this project will be attempting to produce and then
 use in later parts of the compiler input's journey through the compiler.
 
 ** Related Work
-
+   
 [todo: add more sources, e.g. assembly for dummies, ideas taken from dragon book]
 
 *** A Compiler for Teaching about Compilers
@@ -423,6 +423,22 @@ therefore making the student totally understand the process of compilation
 \citep{aSetOfToolsToTeachCompilerConstruction}.
 
 ** Professional, Legal Ethical \amp Social Issues
+
+A professional issue that I face is the first item in the "Show what you
+know, learn what you don't" section of the bcs code of conduct: "only undertake
+to do work or provide a service that is within your professional competence" \citep{bcs}.
+To resolve this issue I have conducted research into the subject matter
+of compilation to ensure I possess the skills to deliver a worthy product.
+
+An ethical issue that my project faces is the possibility of the compiler
+being used to create a program that is used in an unethical way (e.g. compiling
+a program that is used to perform calculations to assist in the development
+of weaponry). Unfortunately, there is nothing I can do to prevent this.
+
+My compiler will have a positive social effect, as it can be used in the
+classroom to teach students. Achieving this is one of the goals of the
+project.
+
 * Project Planning
   
 In this section, I will discuss the planning of this project.
@@ -489,6 +505,7 @@ Java, and it lowers the barrier to entry for reading the code of this project's
 compiler. The other main advantage of Java is its great object oriented
 features, such as polymorphism and inheritance, whcih allow for very productive
 coding.
+
 *** NASM
 
 NASM (Netwide Assembler) is an assembler for the x86 CPU architecture. It's purpose in my project
@@ -970,7 +987,7 @@ and implementing them.
 ** Project Evaluation
 *** What Have I Learned?
 
-- learned more about OOP.
+**** learned more about OOP.
 
 As JPLcompiler is written in the extremely object oriented language Java,
 I became much more comfortable with several object oriented concepts. I
@@ -985,7 +1002,7 @@ which need to make use of methods inherited from their parent class. Writing
 this code has made me much more aware of the benefits of these concepts,
 and much more comfortable using them in future work.
 
-- learned about how to run Java projects without an IDE or build tool
+**** learned about how to run Java projects without an IDE or build tool
 
 During my previous university work that has involved Java, we were directed
 to make use of the IntelliJ IDE. One of the features of this IDE is a GUI
@@ -1008,7 +1025,7 @@ surrounding what happens when I click the magic go button in the IDE, and
 improved my understanding of the important role that compilers play in
 programming.
 
-- learnt a lot regarding the basics of assembly
+**** learnt a lot regarding the basics of assembly
 
 The final stage of compilation in JPLcompiler is the generation of assembly.
 Before I could write code that would output assembly, I first needed to
@@ -1028,7 +1045,7 @@ Topics I learned about included:
 - Including other assembly files into the current file (useful for reusing any assembly "functions").
 - Using return and call instructions to jump to different labels in the assembly (necessary for flow control and function calls).
 
-- The Benefits of Using a Clean Coding Style When Going Back to Code Written a Long Time Ago
+**** The Benefits of Using a Clean Coding Style When Going Back to Code Written a Long Time Ago
 
 Whenever writing code, it is important to follow certain guidelines to
 ensure your code is simple to read, such as splitting functions into smaller
@@ -1043,7 +1060,7 @@ minutes. This makes adding new features, bugfixing, and other development
 tasks much easier. It allows me to use my brain to solve the problem, instead
 of understanding my code!
 
-- History of Compiler and Its Significance in Computing
+**** History of Compiler and Its Significance in Computing
 
 The function of compilers in general was something that I had only a dim
 awareness of before starting work on this project. This all changed during
@@ -1051,7 +1068,7 @@ the literature review for this project where I gained a great appreciation
 for the significance of compilers, and how they have shaped, and continue
 to shape, programming language design and use.
 
-- What Does a Compiler Do
+**** What Does a Compiler Do
 
 This project allowed me to develop an understanding of the main purpose
 of a compiler, which is allowing a programmer to use a higher level language
@@ -1060,7 +1077,7 @@ repetitive and time-consuming code in a low-level language where he has
 to think about the inner workings of a CPU as well as the problem he is
 trying to solve.
 
-- How Does a Compiler Work
+**** How Does a Compiler Work
 
 Additionally I gained an understanding of the process of compilation and
 the algorithms used in professional compilers. I learned how compilers
@@ -1142,7 +1159,7 @@ on a new feature to protect the existing work on the master branch.
 
 *** Self-Criticism/Reflection
 
-- I Should Have Put More Thought into the Design of the Parser Before I Started Writing It
+**** I Should Have Put More Thought into the Design of the Parser Before I Started Writing It
 
 When I started the second major stage of JPLcompiler (the parser), I foolishly
 tried to write it with very little planning. This resulted in a single,
@@ -1153,7 +1170,7 @@ smoothly as I had split up the code and moved the various sections to more
 relevant classes. If I had spent some time thinking about the parser's
 structure before jumping in, I could have saved myself a lot of pain.
 
-- I Wish I Could Have Employed Some Smarter Techniques for Developing Efficient Machine Code (time constraints)
+**** I Wish I Could Have Employed Some Smarter Techniques for Developing Efficient Machine Code (time constraints)
 
 In the code generation section, I would have liked to implement a more
 advanced algorithm for generating efficient machine code. A commerical
@@ -1165,7 +1182,7 @@ created.
 
 [todo: more reference to dragon book]
 
-- I Think I Have Done a Good Job in Regards to Clean Coding, But the Class Tree of the Nodes of the Parser May be Unnecessarily Complicated
+**** I Think I Have Done a Good Job in Regards to Clean Coding, But the Class Tree of the Nodes of the Parser May be Unnecessarily Complicated
 
 For the parser, I made use of several node classes to represent the AST
 (Abstract Syntax Tree). There was one node for each type of statement.
@@ -1176,7 +1193,7 @@ code. I think that this structure may be unnecessarily complicated, as
 I'm not sure what purpose the Node interface serves. This could have been
 avoided if I had thought more carefully about the class structure beforehand.
 
-- discovered many of the flaws of java
+**** Discovered Many of the Flaws of Java
 
 One of my regrets of this project is that i could not come up with a better
 language to write it in than Java. Java is not a bad language, but i feel
@@ -1205,6 +1222,61 @@ works! This project has really put my skills to the test, and pushed me
 to develop a much deeper understanding of compilers, programming languages
 and more.
 
-** future plans
+** Future Plans
+
+If I had another year to work on this project there are a few things I
+would add.
+
+Firstly, I would add more data types, for instance strings and boolean values.
+More data types would allow for more useful programs to be created, espesially
+in the case of strings as this would allow for text to be displayed and
+user input to be read. Including this feature would also allow for interesting
+and complex topics such as type systems to be explored within the compiler.
+
+Secondly, I would like to make the parser output (syntax tree) be more
+legible. I would do this by writing a class that takes the syntax tree
+as input and creates a graphical reprisentation of the syntax tree. I would
+like to add this feature to the compiler because unlike the other outputs
+of the compiler, the text reprisentation of the syntax tree is very difficult
+to read, and therefore difficult to understand for the user.
+
+Thirdly, I would like to improve the efficiency of the output of the assembly
+generator so that the assembly code generated makes more efficiant use
+of registers and memory. This would benefit the project as it would allow
+the student to see more complex assembly generation.
+
+
+
+* things to ask supervisor
+
+the future plans section
+
+what could i do with more time
+more data types
+parser graphical output
+
+what to do for demonstration
+
+slides for introduction
+   
+discuss project in general (10 mins)
+choose highlights of report
+target audience
+purpose
+what i chose to do it with
+code highlights
+
+then
+
+demo program and features (10 mins)
+discuss evaluation section of report briefly
+
+risk register
+optional
+list of what if scenarios
+contains risk, severity, how to handle the risk
+
+put sub sections in gannt chart
+also put report work in gannt chart 
 
 \bibliography{bibliography.bib}
