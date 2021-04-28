@@ -1,8 +1,9 @@
-#+options: ':nil *:t -:t ::t :t H:4 \n:nil ^:t arch:headline
+#+options: ':nil *:t -:t ::t <:t H:4 \n:nil ^:t arch:headline
 #+options: author:t broken-links:nil c:nil creator:nil
 #+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
 #+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
 #+options: timestamp:t title:t toc:t todo:t |:t
+
 #+title: Final Year Project Report
 #+author: Jacob Leeming
 #+language: en
@@ -647,7 +648,7 @@ would be able to alter the source code that the compiler is compiling from,
 they would be able to note the differences in output.
 
 This image from the dragon book is a great illustration of the inputs and
-outputs of each stage \citep{dragon}{p. 7}:
+outputs of each stage \citep[p.~7]{dragon}:
 
 [[./compilerDesign.png]]
 
@@ -806,8 +807,7 @@ It holds three strings and a instance of an enum. The enum refers to the
 type of instruction (e.g. assignment, goto), two of the strings refer to
 the arguments of the operation (which can be a value or the name of a variable),
 and the final string refers to where the result will be stored. This design
-is based on the quadruple concept discussed in the Dragon book \citep{dragon}{p.
-366}.
+is based on the quadruple concept discussed in the Dragon book \citep[p.~366]{dragon}.
 
 You might wonder why I chose to use a string as the datatype for the arguments
 and the result regardless of whether the value of the argument is an integer
@@ -1186,7 +1186,7 @@ compiler would be able to reduce the number of instructions required to
 create equivalent but faster assembly. A commerical compiler would also
 be able to reduce the number of temporary variables used in evaluating
 expressions, and additionally make better use of the temporary variables
-created \citep{dragon}{p. 544}.
+created \citep[p.~544]{dragon}.
 
 **** I Think I Have Done a Good Job in Regards to Clean Coding, But the Class Tree of the Nodes of the Parser May be Unnecessarily Complicated
 
