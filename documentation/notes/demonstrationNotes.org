@@ -2,14 +2,168 @@
 
 slides for introduction
    
-discuss project in general (10 mins)
-choose highlights of report
+** discuss project in general (10 mins)
 target audience
+choose highlights of report
 purpose
 what i chose to do it with
 code highlights
 
 then
 
-demo program and features (10 mins)
+** demo program and features (10 mins)
 discuss evaluation section of report briefly
+* script 
+** discuss project in general (10 mins)   
+*** purpose 
+
+the purpose of this project is to provide a compiler that is written in
+such a way that it can be easily reverse engineered, studied and understood.
+Additionally, the compiler can output useful information that creates opportunities
+for learning about various aspects of compilation.
+
+*** target audience
+
+The target audience of this project are computer science students of second
+year level or higher who are interested in learning more about compilers,
+without using external tools such as "compiler compilers" or parser generators.
+
+*** what i chose to do it with
+
+I chose to write this compiler in the Java programming language because
+it is one of the most popular languages in use by university students at
+the undergraduate level. choosing a popular language such as Java was done
+to lower the barrier for entry; compilation is a complex enough topic as
+it is without the additional strain of having to learn a new language.
+Java also has strong support for OOP, which is extremely useful for moddeling
+many of the concepts in compilation.
+
+*** highlights of report
+
+**** design
+
+Had to consider: 
+
+- How are compilers usually structured? 
+- how can i make the code readable? 
+- How should I go about outputting educational output back to the user?
+
+the process of compilation is split into several stages.
+
+i should put each stage into its own class. this makes the code more modular and understandable.
+
+we can output the result of each stage 
+
+This image from the dragon book is a great illustration of the inputs and
+outputs of each stage:
+
+[[./compilerDesign.png]]
+
+
+**** Intermidiate representation details
+
+the intermediate representation takes the form of a collection
+of a custom Java object called IntermediateCodeInstruction.
+
+#+begin_src java
+  package com.jpl.fyp.classLibrary;
+
+  public class IntermediateCodeInstruction {
+
+      private IntermediateCodeInstructionType operator;
+      private String argument1;
+      private String argument2;
+      private String result;
+
+      public IntermediateCodeInstruction(IntermediateCodeInstructionType operator,
+                                         String argument1,
+                                         String argument2,
+                                         String result) {
+          this.operator = operator;
+          this.argument1 = argument1;
+          this.argument2 = argument2;
+          this.result = result;
+      }
+  }
+
+#+end_src
+
+The enum refers to the type of instruction (e.g. assignment, goto), two
+of the strings refer to the arguments of the operation (which can be a
+value or the name of a variable), and the final string refers to where
+the result will be stored. 
+
+strings are used to make conversion into assembly easier.
+
+**** expression parsing 
+
+The compiler can parse expressions like the following:
+
+#+begin_src text
+int number = 2 + 3 * 4;
+#+end_src
+
+After the expression is parsed it is stored in a tree structure. To decide
+the position of the operators and operands in this tree structure we need
+to find the root element.
+
+#+begin_src text
+2 + 3
+#+end_src
+
+The $+$ is the root element. For a more complicated example:
+
+#+begin_src text
+2 + 3 * 4 - 5
+#+end_src
+
+The * is the root element. JPLcompiler finds the root element using the
+following method:
+
+#+begin_src java
+      private static int findRootElementIndex(Token[] tokens) throws JPLException {
+          // Order is important.
+          TokenType[] types = {
+              TokenType.And,
+              TokenType.Or,
+              TokenType.Equal,
+              TokenType.NotEqual,
+              TokenType.GreaterThan,
+              TokenType.LessThan,
+              TokenType.GreaterThanOrEqualTo,
+              TokenType.LessThanOrEqualTo,
+              TokenType.Subtract,
+              TokenType.Add,
+              TokenType.Multiply,
+              TokenType.Divide,
+          };
+
+          for (TokenType type : types) {
+              if (tokensContainType(tokens, type)) {
+                  return findFirstOccuranceOfTypeInTokens(tokens, type);
+              }
+          }
+          return 0;
+      }
+#+end_src
+
+another example:
+
+#+begin_src text
+print 2 + 3 * 4;
+#+end_src
+
+becomes:
+
+#+begin_src text
+  {Multiply        3               4               t0             }
+  {Add             2               t0              t1             }
+  {Print           null            null            t1             }
+#+end_src
+
+
+
+*** code highlights
+** demo program and features (10 mins)
+*** discuss evaluation
+*** demo program and features

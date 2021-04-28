@@ -368,7 +368,11 @@ the source code of this project will be attempting to produce and then
 use in later parts of the compiler input's journey through the compiler.
 
 ** Related Work
- 
+
+[todo: discuss JavaCup]
+
+[todo: look for other tools used to teach compilers]
+
 *** A Compiler for Teaching about Compilers
 
 This paper sounds like it has a comparable spirit to this project in that
@@ -421,6 +425,10 @@ therefore making the student totally understand the process of compilation
 \citep{aSetOfToolsToTeachCompilerConstruction}.
 
 ** Professional, Legal Ethical \amp Social Issues
+
+[todo: add legal issue, talk about computer missuse act]
+
+[todo: add some more issues across the catagories; shoot self]
 
 A professional issue that I face is the first item in the "Show what you
 know, learn what you don't" section of the bcs code of conduct: "only undertake
@@ -621,7 +629,7 @@ several things. How are compilers usually structured? What can I do to
 build a compiler in such a way that it is easily understandable to a student?
 How should I go about outputting educational output back to the user? 
 
-As we saw in the structure of a compiler subsection earlier, the process
+As we saw in the "structure of the compiler" subsection earlier, the process
 of compilation is split into several stages. Given this, it would make
 sense to group the code by these stages, possibly putting each stage into
 its own class. In doing this we make the code more modular and understandable.
@@ -726,7 +734,7 @@ int number = 2 + 3 * 4;
 JPLcompiler parses this expression by turning it into a tree structure
 to make sure that the operations are evaluated in an order that respects
 operator precedence. First, it will search for the "root element" of the
-expression. For example, in the following example:
+expression. For example, in the following:
 
 #+begin_src text
 2 + 3
@@ -907,6 +915,10 @@ with a source code file as an argument to run the compiler.
 
 * Evaluation
 ** Product Evaluation
+
+[todo: write about third party evaluation]
+
+** Project Evaluation
 *** Compiler is Functional
 
 The most important requirement for me to deliver as part of this project is a
@@ -981,7 +993,6 @@ to implement in the time that I had available. This problem could be resolved
 by studying in greater depth the algorithms described in the dragon book
 and implementing them. 
 
-** Project Evaluation
 *** What Have I Learned?
 
 **** learned more about OOP.
@@ -1204,7 +1215,6 @@ to think about which was the most suitable one to use. some of these lists
 seem to be "deprecated", as newer versions of java have added collections
 that seem to do very little differently to their older counterparts but
 are somehow "better".
-
 * Conclusions
 ** Summary
 
@@ -1241,3 +1251,5 @@ of registers and memory. This would benefit the project as it would allow
 the student to see more complex assembly generation.
 
 \bibliography{bibliography.bib}
+
+[todo: Minor issue: Sentences in bold as headings for paragraphs don't look good]
