@@ -68,16 +68,17 @@ In order to rectify this problem, I propose the following:
 
 ** Product Description
 
-The product that I will produce at the end of this project is a compiler
-for a general purpose programming language of my own creation. The compiler
-will be able to compile a program written in said programming language
-into assembly language targeting the x86 CPU architecture. The compiler
-will be written in a modular, easily understandable way using the Java
-programming language. It will be written in this way to encourage learning
-about the various stages of compilation. 
+The product that I will produce at the end of this project is a
+compiler (henceforth referred to as JPLcompiler) for a general purpose
+programming language of my own creation. JPLcompiler will be able to
+compile a program written in said programming language into assembly
+language targeting the x86 CPU architecture. JPLcompiler will be
+written in a modular, easily understandable way using the Java
+programming language. It will be written in this way to encourage
+learning about the various stages of compilation.
 
-As a supplement to the compiler I will also provide a learning plan in
-pdf form to demonstrate how the compiler could be used as a learning resource,
+As a supplement to JPLcompiler I will also provide a learning plan in
+pdf form to demonstrate how JPLcompiler could be used as a learning resource,
 including breakdowns of the more important parts of the code base and how
 they relate to the ideas featured in the design of compilers, such as tokens,
 syntax trees, etc.
@@ -89,7 +90,7 @@ who is interested in the inner workings of a compiler, and how they could
 go about creating their own compiler without leaning on other available
 tools. As compiler design is quite a technical subject, I would expect
 that the users of this project would be at university level or equivalent
-in terms of their education in computer science or programmming.
+in terms of their education in computer science or programming.
 
 * Background Research
 ** Necessary Background Material
@@ -192,7 +193,7 @@ of FORTRAN I, and the compiler I will create also mostly sticks to the
 ideas introduced by it. The structure of a compiler is made up of several
 stages:
 
-**** Lexical Analysis
+- Lexical Analysis
 
 In this first stage, the source code is split into groups of characters
 which have meaning called lexemes. For example, this:
@@ -226,7 +227,7 @@ respectively. Both of the numbers have the type integer and the value of
   (integer, 3)
 #+END_SRC
 
-**** Syntax Analysis
+- Syntax Analysis
 
 After the source code has been successfully split into tokens, a syntax
 tree needs to be produced using the tokens from the previous phase. The
@@ -236,7 +237,7 @@ would be the root token of the statement, the identifier before the assignment
 and the expression after the assignment would be the children of the assignment
 token.
 
-**** Semantic Analysis
+- Semantic Analysis
 
 After the syntax tree has been created, there needs to be additional analysis
 to determine the types of the various symbols referred to in the source
@@ -244,7 +245,7 @@ code, and keep this information in the syntax table. Once the types of
 the symbols have been determined, a process called type checking begins.
 This is where we check that the correct types are used in the correct way.
 For example, if we have a string and we attempt to divide it by an integer,
-we would want the compiler to throw an error as dividing a word by a number
+we would want JPLcompiler to throw an error as dividing a word by a number
 is obviously not intended.
 
 In some situations, for example if we are multiplying a floating point
@@ -255,12 +256,12 @@ table. These sort of conversions are also handled by the semantic analyser.
 In addition to the checking of types, we need to check that the usage of
 symbols are restricted to the correct scope. For example, if in the source
 code we have an if statement in which a variable called test is declared,
-we wouldn't want test to be accessable outside of the if statement, as
+we wouldn't want test to be accessible outside of the if statement, as
 test would be outside of the scope of the if statement. If source code
 was supplied to the compiler that attempted to refer to a variable in such
 a way, then we should throw an error.
 
-**** Intermediate Code Generator 
+- Intermediate Code Generator 
 
 This stage is the final stage of the "front end" of the compiler. Now that
 we have the syntax tree of the source code and the complete symbol table
@@ -292,7 +293,7 @@ This code can now be easily translated into an assembly language, as each
 line only uses basic operations. But before we do that, there is an additional
 stage that we must first put this intermediate code through.
 
-**** Code Optimisation
+- Code Optimisation
 
 This stage we look at the intermediate representation produced in the last
 step and try to improve its efficiency. We can do this by combining certain
@@ -317,7 +318,7 @@ There are many other techniques that can be used to optimise intermediate
 representation code that can get quite complicated. Finally, we get to
 the last stage:
 
-**** Code Generation
+- Code Generation
 
 For the code generation stage, we need to generate code in the target language
 using the intermediate representation that we have produced from the previous
@@ -327,7 +328,7 @@ hold the variables used in the program. After the variables have been sorted
 out, then code in the target language is generated that performs the exact
 same operations that were specified in each line of the intermediate code.
 
-**** The Symbol Table
+- The Symbol Table
 
 Throughout the process of compilation, a data structure known as the symbol
 table is used to store all information about any symbols referred to in
@@ -350,7 +351,7 @@ basic logic such as if statements and loop statements work, and be decently
 familiar with either Java or another mainly object oriented language (for
 example, C#). They would also need to understand object oriented concepts,
 such as classes, objects and inheritance. A basic understanding of assembly
-would also be useful for the later parts of the compiler where we are creating
+would also be useful for the later parts of JPLcompiler where we are creating
 machine code, but I will be documenting these quite intensely and intend
 to make them as simple as possible.
 
@@ -366,7 +367,7 @@ of compilation.
 Other topics of interest that are located within this chapter are the concepts
 of tokens, syntax trees and intermediate representation. These are what
 the source code of this project will be attempting to produce and then
-use in later parts of the compiler input's journey through the compiler.
+use in later parts of JPLcompiler input's journey through JPLcompiler.
 
 ** Related Work
 
@@ -485,7 +486,7 @@ In this section, I will discuss the planning of this project.
 
 The first and most important part of planning a project is gathering the
 user's requirements. I think the most important deliverable of this project
-would be the compiler itself, so the main requirement of this project would
+would be JPLcompiler itself, so the main requirement of this project would
 be a compiler that can translate code from a high level programming language
 into assembly code. 
 
@@ -494,7 +495,7 @@ way that is understandable to a second year computer science student, and
 it must be able to show the process that source code goes through on its
 journey to becoming assembly language.
 
-The language that the compiler compiles from needs to be sufficiently complicated
+The language that JPLcompiler compiles from needs to be sufficiently complicated
 so as to illustrate the main issues regarding compilation, such as operator
 precedence, correct assembly generation, etc.
 
@@ -509,11 +510,11 @@ be:
 *** Programming Language
 
 An important decision I had to make early on is which programming language
-should the compiler be written in. I chose to use Java, but considered
+should JPLcompiler be written in. I chose to use Java, but considered
 two other programming languages, Python and C#.
 
-I thought Python could be a good choice for the compiler due to its prevelance
-in eduction as well as its simpler syntax when compared to Java, which
+I thought Python could be a good choice for JPLcompiler due to its prevalence
+in education as well as its simpler syntax when compared to Java, which
 would allow students to be able to better understand the code. However,
 upon experimenting with the object oriented side of Python, I realised
 this syntactic simplicity was only present as long as the programmer was
@@ -521,9 +522,9 @@ writing procedural code. The final nail in the coffin was when I considered
 the fact that Python is a dynamically typed language, rather than being
 statically typed. Given the nature of my project, I think that a dynamically
 typed language would hinder me somewhat, as there will be many custom types
-in use at each stage of the compiler. A statically typed language would
+in use at each stage of JPLcompiler. A statically typed language would
 allow me to catch trivial bugs at compile time rather than having to waste
-time debugging something breaking during runtime.
+time debugging something breaking during run time.
 
 The other language that I was considering was C#. On the surface, C# is
 very similar to Java. C# has many advanced language features, such as a
@@ -535,13 +536,13 @@ doing, it is all too easy to get confused, and use them blindly without
 thinking. It is also likely that students will never have used C# before,
 compounding any potential confusion.
 
-I chose Java as the implementation language of the compiler because it
+I chose Java as the implementation language of JPLcompiler because it
 is a very common language, and although its use in industry is gradually
 decreasing, it is still the main language used at universities for the
 purposes of teaching. Because of this, many students will be familiar with
 Java, and it lowers the barrier to entry for reading the code of this project's
 compiler. The other main advantage of Java is its great object oriented
-features, such as polymorphism and inheritance, whcih allow for very productive
+features, such as polymorphism and inheritance, which allow for very productive
 coding.
 
 *** NASM
@@ -604,23 +605,23 @@ taught, in particular the tree concept in this project.
 ** Risk Management
 
 In every project, there are risks, and this project is no exception! The
-main risk to this project that I can forsee is running out of time before
-the central deliverable (the compiler) is completed. As I have no experience
+main risk to this project that I can foresee is running out of time before
+the central deliverable (JPLcompiler) is completed. As I have no experience
 with writing a compiler, or writing assembly, I have no idea how long it
 will take to write a given part of the codebase. There is something I can
 do to mitigate this risk, however. 
 
 As part of an ideal compiler, there would be a stage where the source code
-is checked for correctness, so if a syntactical or semantical error is
-found, then the compiler will emit an error message. As this compiler is
+is checked for correctness, so if a syntactical or semantic error is
+found, then JPLcompiler will emit an error message. As this compiler is
 not intended for serious use, I can justify skipping over that section
 in favour of the others (which have a greater educational value), and coming
 back to it later if I have time.
 
 ** Product Development Plan
 
-I think I can split the development of the compiler into four main stages,
-each of which can be broken up into substages:
+I think I can split the development of JPLcompiler into four main stages,
+each of which can be broken up into sub-stages:
 
 - the Tokeniser
   - Preparing the Source Code
@@ -636,7 +637,7 @@ each of which can be broken up into substages:
   - Assigning Memory
   - Converting Intermediate Code Instructions into Assembly Operations
 
-In regards to how much time each stage of the compiler will take to write,
+In regards to how much time each stage of JPLcompiler will take to write,
 I suspect that the most complicated part of the code base will be the assembly
 generator (mostly to do with the presence of assembly). The tokeniser should
 be relatively simple, with the parser and the intermediate code generator
@@ -651,11 +652,11 @@ they have to be written, I think this is an appropriate plan:
 
 * Design
 
-Now I will discuss the design of the compiler.
+Now I will discuss the design of JPLcompiler.
 
 ** Product Specification
 
-When thinking about how I was going to design the compiler, I had to consider
+When thinking about how I was going to design JPLcompiler, I had to consider
 several things. How are compilers usually structured? What can I do to
 build a compiler in such a way that it is easily understandable to a student?
 How should I go about outputting educational output back to the user? 
@@ -674,7 +675,7 @@ and present this output in a readable way to the user.
 If we were to allow for such output to be emitted after each stage, then
 this could be very useful in explaining many compilation concepts to students,
 such as tokens, abstract syntax trees and intermediate code. As the student
-would be able to alter the source code that the compiler is compiling from,
+would be able to alter the source code that JPLcompiler is compiling from,
 they would be able to note the differences in output.
 
 This image from the dragon book is a great illustration of the inputs and
@@ -685,22 +686,22 @@ outputs of each stage \citep[p.~7]{dragon}:
 * Implementation
 ** Skills and Knowledge required for Development
 
-To implement the compiler, I had to make use of several different skills
+To implement JPLcompiler, I had to make use of several different skills
 and bits of knowledge. In order to create anything, I first had to be able
-to program. Programming requires knowledge of a programming lanugage (Java)
+to program. Programming requires knowledge of a programming language (Java)
 and a text editing program (Emacs) to write code in that programming language,
 and others if necessary. To automate the many terminal commands that have
-to be run to allow for the compiler to be run, I wrote a shell script which
+to be run to allow for JPLcompiler to be run, I wrote a shell script which
 required knowledge of the bash scripting language. 
 
-When writing the compiler, I needed to know about the structure of a compiler
+When writing JPLcompiler, I needed to know about the structure of a compiler
 and the various transformations source code goes through during its journey
-through the compiler, detailed previously in this report. Additionally,
+through JPLcompiler, detailed previously in this report. Additionally,
 I will need to learn at least the basics of assembly language in order
-to write the code generator part of the compiler.
+to write the code generator part of JPLcompiler.
 
 Another thing I needed to be aware of is the cleanliness of my code when
-writing the compiler. Clean code means that it is easy to understand. Code
+writing JPLcompiler. Clean code means that it is easy to understand. Code
 being easy to understand makes it easier for students to read, and also
 makes it easier for me to fix any bugs that I find during the development
 process.
@@ -719,16 +720,16 @@ write code that is unreadable.
 In this section I will discuss my implementation of certain parts of the
 compiler.
 
-*** structure of compiler in comparison to other compilers
+*** Structure of Compiler in Comparison to Other Compilers
 
-JPLcompiler's structure is rather bare bones compared to a traditional
-compiler. Many of the steps required to enforce the correctness of the
-source code have been omitted in the interest of getting JPLcompiler to
-compile something within the time limit I have for this project. In a similar
-manner, many mainstream compilers are "optimising compilers" [insert reference
-to dragon book] as they perform several iterations over the intermediate
-representation in order to produce an intermediate representation that
-uses fewer instructions, and therefore generates more efficient assembly.
+JPLcompiler's Structure is Rather Bare Bones Compared to a Traditional
+Compiler. Many of the Steps Required to Enforce the Correctness of The
+Source Code Have Been Omitted in the Interest of Getting JPLcompiler To
+Compile Something Within the Time Limit I Have for This Project. in a Similar
+Manner, Many Mainstream Compilers Are "Optimising Compilers" [Insert Reference
+To Dragon Book] as They Perform Several Iterations Over the Intermediate
+Representation in Order to Produce An Intermediate Representation That
+Uses Fewer Instructions, and Therefore Generates More Efficient Assembly.
 
 *** Parser
 
@@ -754,8 +755,8 @@ that expression will be sent to an expression parsing function.
 
 *** Expression Parsing
 
-In the JPL langugage, there are expressions in a similar manner to
-C-like languages. For example, the following expression will evalutate
+In the JPL language, there are expressions in a similar manner to
+C-like languages. For example, the following expression will evaluate
 to 14, which will be stored in the variable number:
 
 #+begin_src text
@@ -836,7 +837,7 @@ becomes:
 *** Intermediate Representation Details
 
 In my compiler, the intermediate representation takes the form of a collection
-of a custom Java object, referred to in the compiler code as a IntermediateCodeInstruction.
+of a custom Java object, referred to in JPLcompiler code as a IntermediateCodeInstruction.
 It holds three strings and a instance of an enum. The enum refers to the
 type of instruction (e.g. assignment, goto), two of the strings refer to
 the arguments of the operation (which can be a value or the name of a variable),
@@ -884,7 +885,7 @@ later on in this report) but it is a relatively uncomplicated solution
 that is more understandable for a newcomer to assembly compared to an approach
 that would generate more efficient assembly code. 
 
-*** "build system"
+*** "Build System"
 
 As Java is itself a compiled language, and this project will involve many
 Java files, I wrote a small bash script to compile all the Java files in
@@ -901,14 +902,14 @@ don't think this is a significant disadvantage.
 A compiler is a difficult thing to test completely, as even a simple programming
 language can allow for an infinite number of different source programs,
 which will result in a plethora of different scenarios; each of which could
-cause the compiler to fail. 
+cause JPLcompiler to fail. 
 
 JPLcompiler has no automated testing, such as unit testing, because I felt
 it would not be a good use of my time in this particular project. When
 writing JPLcompiler, I have added many error checks to the code, so if
 there is a problem, I will find its source very quickly. Even if an error
 manages to get past the checks, the educational output that is one of the
-requirements of the compiler will be clearly different to what it should
+requirements of JPLcompiler will be clearly different to what it should
 be. For example, if I wrote a program in JPL that multiplies two numbers
 together and received assembly that divides two numbers, then I can look
 at the output for the tokenizer, parser and intermediate code generator
@@ -945,7 +946,7 @@ the following commands on a debian based distribution.
 #+end_src
 
 Once JPLcompiler has been cloned, use the script named compileAndRun.bash
-with a source code file as an argument to run the compiler. 
+with a source code file as an argument to run JPLcompiler. 
 
 * Evaluation
 ** Product Evaluation
@@ -960,9 +961,9 @@ final year students to use the product under my supervision via a
 Microsoft Teams call. I have recorded these calls and received useful
 feedback from both of them.
 
-The feedback I recieved can mostly be grouped into two groups. The
+The feedback I received can mostly be grouped into two groups. The
 first feedback group concerns the usability of the product. One piece
-of feedback I recieved was "It would be difficult for me to figure out
+of feedback I received was "It would be difficult for me to figure out
 how to use the product by myself." another piece of feedback I
 received was "The syntax tree is very difficult to read." from this
 feedback I realised that the product is somewhat user unfriendly. To
@@ -970,8 +971,8 @@ rectify this I could add a better, more detailed, help message. To
 resolve the parser readability issue I could change the output of the
 parser to look more like a tree.
 
-The second feedback group concerns problems with the compiler
-itself. I recieved feedback in which more datatypes were requested,
+The second feedback group concerns problems with JPLcompiler
+itself. I received feedback in which more datatypes were requested,
 and to allow for negative integers. I could have added more data types
 but chose not to in order to focus on assembly generation; however I
 have made it easy to extend JPLcompiler to add these datatypes.
@@ -989,35 +990,35 @@ The most important requirement for me to deliver as part of this project is a
 functional compiler that compiles a high-level language into a low-level
 language. 
 
-The compiler can be used to write programs that make use of variables,
+JPLcompiler can be used to write programs that make use of variables,
 flow control (such as if statements and while loops) and functions which
 take parameters. 
 
-The only data type that can be handled by the compiler is a non-negative
+The only data type that can be handled by JPLcompiler is a non-negative
 integer. there is also a print statement to allow output. With just these
 simple features a huge variety of useful programs can be written and then
 compiled with this compiler.
 
 *** Educational Output
 
-Another requirement of the compiler, is to emit readable output to the
+Another requirement of JPLcompiler, is to emit readable output to the
 user. The purpose of this output is to elucidate several concept of compilation
 such as tokens syntax trees and intermediate representation. 
 
-The compiler meets this requirement by being able to output the results
+JPLcompiler meets this requirement by being able to output the results
 of each stage of compilation (for example the tokens created by the tokenizer).
 The results can then be inspected to allow the user to gain a greater understanding
 of a given part of the compilation process. 
 
-***  Flaws of the Compiler
+*** Flaws of JPLcompiler
 
 - Parameter Namespace Collision
 
-The biggest problem with the compiler can be observed if, somewhere in
+The biggest problem with JPLcompiler can be observed if, somewhere in
 your program, you have a variable called apple and somewhere else you have
 a parameter also called apple. In a commercial compiler this would not
 cause a problem; however in JPLcompiler this will cause a problem because
-the compiler will make two variables of the same name. This causes illegal
+JPLcompiler will make two variables of the same name. This causes illegal
 assembly to be generated, which NASM will refuse to compile. 
 
 This problem could be avoided by implementing a special procedure that
@@ -1027,7 +1028,7 @@ for use in expressions.
 
 - Only One Type
 
-In the compiler there is only one data type, an unsigned integer. There
+In JPLcompiler there is only one data type, an unsigned integer. There
 is only one data type because I was concerned if I spent too long implementing
 other data types, like string or boolean, I would be more pressed for time
 when it came to developing the intermediate code generator and the assembly
@@ -1042,7 +1043,7 @@ both of which can be easily extended.
 
 - Inefficient Usage of Temporary Variables
 
-The compiler uses temporary variables to hold the results of parts of expressions.
+JPLcompiler uses temporary variables to hold the results of parts of expressions.
 For example, the result of a single addition would be stored in a single
 temporary variable. This works well, however it is not very memory efficient.
 This is due to the fact that if there is a function that is only called
@@ -1059,7 +1060,7 @@ and implementing them.
 
 *** What Have I Learned?
 
-**** learned more about OOP.
+- learned more about OOP.
 
 As JPLcompiler is written in the extremely object oriented language Java,
 I became much more comfortable with several object oriented concepts. I
@@ -1074,7 +1075,7 @@ which need to make use of methods inherited from their parent class. Writing
 this code has made me much more aware of the benefits of these concepts,
 and much more comfortable using them in future work.
 
-**** learned about how to run Java projects without an IDE or build tool
+- learned about how to run Java projects without an IDE or build tool
 
 During my previous university work that has involved Java, we were directed
 to make use of the IntelliJ IDE. One of the features of this IDE is a GUI
@@ -1083,7 +1084,7 @@ working on this project is that pressing this button will send a command
 to a build tool (e.g. gradle or maven). The build tool will then read a
 project file that has been created automatically by IntelliJ, and follow
 the commands within to efficiently compile the Java project (only invoke
-the java compiler for files that havent been compiled before or changed
+the java compiler for files that haven't been compiled before or changed
 since last compilation), and then run it.
 
 As I decided that compilation times weren't that important to me for this
@@ -1097,7 +1098,7 @@ surrounding what happens when I click the magic go button in the IDE, and
 improved my understanding of the important role that compilers play in
 programming.
 
-**** learnt a lot regarding the basics of assembly
+- learnt a lot regarding the basics of assembly
 
 The final stage of compilation in JPLcompiler is the generation of assembly.
 Before I could write code that would output assembly, I first needed to
@@ -1117,7 +1118,7 @@ Topics I learned about included:
 - Including other assembly files into the current file (useful for reusing any assembly "functions").
 - Using return and call instructions to jump to different labels in the assembly (necessary for flow control and function calls).
 
-**** The Benefits of Using a Clean Coding Style When Going Back to Code Written a Long Time Ago
+- The Benefits of Using a Clean Coding Style When Going Back to Code Written a Long Time Ago
 
 Whenever writing code, it is important to follow certain guidelines to
 ensure your code is simple to read, such as splitting functions into smaller
@@ -1132,7 +1133,7 @@ minutes. This makes adding new features, bugfixing, and other development
 tasks much easier. It allows me to use my brain to solve the problem, instead
 of understanding my code!
 
-**** History of Compiler and Its Significance in Computing
+- History of Compiler and Its Significance in Computing
 
 The function of compilers in general was something that I had only a dim
 awareness of before starting work on this project. This all changed during
@@ -1140,7 +1141,7 @@ the literature review for this project where I gained a great appreciation
 for the significance of compilers, and how they have shaped, and continue
 to shape, programming language design and use.
 
-**** What Does a Compiler Do
+- What Does a Compiler Do
 
 This project allowed me to develop an understanding of the main purpose
 of a compiler, which is allowing a programmer to use a higher level language
@@ -1149,7 +1150,7 @@ repetitive and time-consuming code in a low-level language where he has
 to think about the inner workings of a CPU as well as the problem he is
 trying to solve.
 
-**** How Does a Compiler Work
+- How Does a Compiler Work
 
 Additionally I gained an understanding of the process of compilation and
 the algorithms used in professional compilers. I learned how compilers
@@ -1157,7 +1158,7 @@ are actually a combination of two programs, a compiler front end an a compiler
 back end. The front end creates the intermediate representation, and the
 backend translates this into a specific target language. this target language
 could be for certain types of CPUs or managed environments such as the
-JVM (Java Virutal Machine) or the CLR (Common Language Runtime). And of
+JVM (Java Virtual Machine) or the CLR (Common Language Runtime). And of
 course I learned about the tremendous journey that is the process of compilation
 into one of these target languages.
 
@@ -1166,7 +1167,7 @@ into one of these target languages.
 As this project is quite complex in nature I developed several of my existing
 skills, and discovered some new ones.
 
-**** Clean Coding
+- Clean Coding
 
 The number of Java classes in the codebase (around forty) and the need
 to keep functions small has meant that I need to be extremely careful with
@@ -1174,11 +1175,11 @@ regards to the naming of classes, functions and variables so I don't get
 any of them confused. This difficulty gave me ample opportunity to develop
 my clean coding skills.
 
-**** Writing Assembly
+- Writing Assembly
 
 While working on this project, I have developed a new skill writing assembly
 code. I did this by writing some simple programs in assembly for the purpose
-of aquiring an understanding of how to write programs in assembly. This
+of acquiring an understanding of how to write programs in assembly. This
 was well worth doing, as being a low-level language it is quite different
 to Java or other high-level languages that I am familiar with. There is
 a lot of focus on memory management, and you need to instruct the CPU exactly
@@ -1186,14 +1187,14 @@ what to do. All programs are made up of operators and arguments for those
 operators. Each operator will have differing ways of using the arguments,
 an argument might have to be loaded into a specific register for instance.
   
-**** Writing Java
+- Writing Java
 
 My Java writing skills also improved while working on this project. I became
 familiar with many of the classes and methods from the Java standard library,
 especially the different types of collection and the string, char and array
 helper classes. 
 
-**** Writing Bash
+- Writing Bash
 
 As described above, I made use of a bash script to automate the process
 of:
@@ -1211,7 +1212,7 @@ flags I need, and understand how I can use if statements to prevent further
 parts of the script from running if there is a problem when running any
 of the commands in the script.
 
-**** Designing a Large Solo Project (computer science thinking)
+- Designing a Large Solo Project (computer science thinking)
 
 JPLcompiler is definitely the largest program I have written so far. Because
 of this I have had to think about the structure of the program in far greater
@@ -1221,17 +1222,17 @@ it (usually the case during my placement year). For instance, this is the
 first time I have had to consider class hierarchy in a program. It is also
 my first serious use of inheritance.
 
-**** Use of Git
+- Use of Git
 
 To prevent the loss of progress due to events out of my control, such as
-hard drive failure or powercuts, I made use of the git version control
+hard drive failure or power cuts, I made use of the git version control
 system. I have used git before, but again, never on a project of this scale.
 While working on this project I made use of branches whenever I was working
 on a new feature to protect the existing work on the master branch.
 
 *** Self-Criticism/Reflection
 
-**** I Should Have Put More Thought into the Design of the Parser Before I Started Writing It
+- I Should Have Put More Thought into the Design of the Parser Before I Started Writing It
 
 When I started the second major stage of JPLcompiler (the parser), I foolishly
 tried to write it with very little planning. This resulted in a single,
@@ -1242,17 +1243,17 @@ smoothly as I had split up the code and moved the various sections to more
 relevant classes. If I had spent some time thinking about the parser's
 structure before jumping in, I could have saved myself a lot of pain.
 
-**** I Wish I Could Have Employed Some Smarter Techniques for Developing Efficient Machine Code (time constraints)
+- I Wish I Could Have Employed Some Smarter Techniques for Developing Efficient Machine Code (time constraints)
 
 In the code generation section, I would have liked to implement a more
-advanced algorithm for generating efficient machine code. A commerical
+advanced algorithm for generating efficient machine code. A commercial
 compiler would be able to reduce the number of instructions required to
-create equivalent but faster assembly. A commerical compiler would also
+create equivalent but faster assembly. A commercial compiler would also
 be able to reduce the number of temporary variables used in evaluating
 expressions, and additionally make better use of the temporary variables
 created \citep[p.~544]{dragon}.
 
-**** I Think I Have Done a Good Job in Regards to Clean Coding, But the Class Tree of the Nodes of the Parser May be Unnecessarily Complicated
+- I Think I Have Done a Good Job in Regards to Clean Coding, But the Class Tree of the Nodes of the Parser May be Unnecessarily Complicated
 
 For the parser, I made use of several node classes to represent the AST
 (Abstract Syntax Tree). There was one node for each type of statement.
@@ -1263,7 +1264,7 @@ code. I think that this structure may be unnecessarily complicated, as
 I'm not sure what purpose the Node interface serves. This could have been
 avoided if I had thought more carefully about the class structure beforehand.
 
-**** Discovered Many of the Flaws of Java
+- Discovered Many of the Flaws of Java
 
 One of my regrets of this project is that i could not come up with a better
 language to write it in than Java. Java is not a bad language, but i feel
@@ -1297,23 +1298,21 @@ If I had another year to work on this project there are a few things I
 would add.
 
 Firstly, I would add more data types, for instance strings and boolean values.
-More data types would allow for more useful programs to be created, espesially
+More data types would allow for more useful programs to be created, especially
 in the case of strings as this would allow for text to be displayed and
 user input to be read. Including this feature would also allow for interesting
-and complex topics such as type systems to be explored within the compiler.
+and complex topics such as type systems to be explored within JPLcompiler.
 
 Secondly, I would like to make the parser output (syntax tree) be more
 legible. I would do this by writing a class that takes the syntax tree
-as input and creates a graphical reprisentation of the syntax tree. I would
-like to add this feature to the compiler because unlike the other outputs
-of the compiler, the text reprisentation of the syntax tree is very difficult
+as input and creates a graphical representation of the syntax tree. I would
+like to add this feature to JPLcompiler because unlike the other outputs
+of JPLcompiler, the text representation of the syntax tree is very difficult
 to read, and therefore difficult to understand for the user.
 
 Thirdly, I would like to improve the efficiency of the output of the assembly
-generator so that the assembly code generated makes more efficiant use
+generator so that the assembly code generated makes more efficient use
 of registers and memory. This would benefit the project as it would allow
 the student to see more complex assembly generation.
 
-\bibliography{bibliography.bib}
-
-[todo: Minor issue: Sentences in bold as headings for paragraphs don't look good]
+\bibliography{bibliography.bib} 
