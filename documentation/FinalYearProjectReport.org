@@ -370,82 +370,112 @@ use in later parts of the compiler input's journey through the compiler.
 
 ** Related Work
 
-[todo: discuss JavaCup]
-
-[todo: look for other tools used to teach compilers]
-
 *** A Compiler for Teaching about Compilers
 
-This paper sounds like it has a comparable spirit to this project in that
-it espouses similar ideas regarding how the use of compiler creation tools
-effect educational benefits, but the paper discusses a compiler that is
-designed in order to teach a course, whereas mine is simply a resource
-from which you can see how a compiler could be implemented without the
-use of compiler creation tools \citep{compilerForTeachingCompilers}.
+This paper sounds like it has a comparable spirit to this project in
+that it espouses similar ideas regarding how the use of compiler
+creation tools effect educational benefits, but the paper discusses a
+compiler that is designed in order to teach a course, whereas mine is
+simply a resource from which you can see how a compiler could be
+implemented without the use of compiler creation tools
+\citep{compilerForTeachingCompilers}.
 
-The compiler in this course is designed to be very modular, so that a student
-on the course could take out a component of the compiler and replace it
-with their own. This also means that the student would be able to replace
-parts of their own work with the teachers, which could be useful if they
-wanted to see how that part of the compiler is supposed to function.
+The compiler in this course is designed to be very modular, so that a
+student on the course could take out a component of the compiler and
+replace it with their own. This also means that the student would be
+able to replace parts of their own work with the teachers, which could
+be useful if they wanted to see how that part of the compiler is
+supposed to function.
 
-This project and my project are similar in that they both involve creating
-a compiler that needs to be modular and simple to understand so that students
-can learn the basic concepts of how compilers work from reading the provided
-source code. This means that both projects will need to have clean, readable
-code.
+This project and my project are similar in that they both involve
+creating a compiler that needs to be modular and simple to understand
+so that students can learn the basic concepts of how compilers work
+from reading the provided source code. This means that both projects
+will need to have clean, readable code.
 
-The projects differ in their purpose, however. My project is simply a supplement
-to an existing course, or perhaps just an example to showcase the inputs
-and outputs of different steps of compilation. The project described in
-the paper is meant to be at the centre of a university module, and is designed
-to be extremely modular to the point that students can remove some component
-and replace it with their own. Although my compiler will try to be modular
-in order to encourage experimentation, it is not the primary focus of my
-project, which is to demonstrate that a compiler can be built without needing
+The projects differ in their purpose, however. My project is simply a
+supplement to an existing course, or perhaps just an example to
+showcase the inputs and outputs of different steps of compilation. The
+project described in the paper is meant to be at the centre of a
+university module, and is designed to be extremely modular to the
+point that students can remove some component and replace it with
+their own. Although my compiler will try to be modular in order to
+encourage experimentation, it is not the primary focus of my project,
+which is to demonstrate that a compiler can be built without needing
 lots of theoretical knowledge.
 
 *** A Set Of Tools To Teach Compiler Construction
 
-This paper introduces a set of tools to aid in the teaching of compilers,
-as the authors of the paper found that some of the tools commonly used
-in compiler construction were either obsolete or lacking in terms of educational
-features. One example of how they remedied this is by making use of a modified
-GNU bison, which outputs a detailed description of the various states the
-parser is in whilst parsing the input tokens. This information was lacking
-in the original bison, making it very difficult to find errors in either
-the input or the parser code.
+This paper introduces a set of tools to aid in the teaching of
+compilers, as the authors of the paper found that some of the tools
+commonly used in compiler construction were either obsolete or lacking
+in terms of educational features. One example of how they remedied
+this is by making use of a modified GNU bison, which outputs a
+detailed description of the various states the parser is in whilst
+parsing the input tokens. This information was lacking in the original
+bison, making it very difficult to find errors in either the input or
+the parser code.
 
-My project differs from the tools described in the above paper quite significantly.
-In the paper, they still make use of tools to create code which skips over
-the gory details. These tools are better for education, which is an improvement,
-but I want to stick to just using a single programming language (Java)
-in my project. My intention with this is to reveal how a normal student
-could create a compiler with out the use of complicated tools and theories,
-therefore making the student totally understand the process of compilation
+My project differs from the tools described in the above paper quite
+significantly.  In the paper, they still make use of tools to create
+code which skips over the gory details. These tools are better for
+education, which is an improvement, but I want to stick to just using
+a single programming language (Java) in my project. My intention with
+this is to reveal how a normal student could create a compiler with
+out the use of complicated tools and theories, therefore making the
+student totally understand the process of compilation
 \citep{aSetOfToolsToTeachCompilerConstruction}.
+
+*** Javacup
+
+Javacup is a parser generator \citep{javacup}. You can use it to
+generate a parser by giving it a set of rules. Javacup is a good
+example of software used to teach compilation, indeed I used it during
+my second year at Huddersfield University in the Language Translators
+module. In my experience, it was good for understanding some of the
+theory behind parsing, but didn't give me much of an idea of how to
+implement my own parser from scratch.
+
+Unfortunately, Javacup shares a common problem with parser generators
+or "compiler compilers" in that it can be very hard to debug. This
+resulted in me and other students wasting a significant amount of time
+trying to find syntax errors we had made.
+
+Javacup greatly differs from my project in most aspects; aside from
+the fact that they are both meant to be used educationally. Javacup
+also specifically covers the parsing stage of compilation, whereas
+JPLcompiler provides opportunities for learning about all stages of
+compilation.
 
 ** Professional, Legal Ethical \amp Social Issues
 
-[todo: add legal issue, talk about computer missuse act]
+As a developer, I must be aware of and understand the Computer Misuse
+Act 1990. This is important so that i can avoid accidentally
+performing illegal acts when carrying out my work. Fortunately,
+JPLcompiler does not involve any functionality that could break this
+law.
 
-[todo: add some more issues across the catagories; shoot self]
+As for Intellectual Property, JPLcompiler made use of the legal
+concept known as "Fair Dealing" from the Copyright, Designs and
+Patents Act 1988 during its creation and development as it is intended
+to be used as a learning tool.
 
-A professional issue that I face is the first item in the "Show what you
-know, learn what you don't" section of the bcs code of conduct: "only undertake
-to do work or provide a service that is within your professional competence"
-\citep{bcs}. To resolve this issue I have conducted research into the subject
-matter of compilation to ensure I possess the skills to deliver a worthy
-product.
+A professional issue that I face is the first item in the "Show what
+you know, learn what you don't" section of the bcs code of conduct:
+"only undertake to do work or provide a service that is within your
+professional competence" \citep{bcs}. To resolve this issue I have
+conducted research into the subject matter of compilation to ensure I
+possess the skills to deliver a worthy product.
 
-An ethical issue that my project faces is the possibility of the compiler
-being used to create a program that is used in an unethical way (e.g. compiling
-a program that is used to perform calculations to assist in the development
-of weaponry). Unfortunately, there is nothing I can do to prevent this.
+An ethical issue that my project faces is the possibility of the
+compiler being used to create a program that is used in an unethical
+way (e.g. compiling a program that is used to perform calculations to
+assist in the development of weaponry). Unfortunately, there is
+nothing I can do to prevent this.
 
-My compiler will have a positive social effect, as it can be used in the
-classroom to teach students. Achieving this is one of the goals of the
-project.
+My compiler will have a positive social effect, as it can be used in
+the classroom to teach students. Achieving this is one of the goals of
+the project.
 
 * Project Planning
   
@@ -724,18 +754,18 @@ that expression will be sent to an expression parsing function.
 
 *** Expression Parsing
 
-In the JPL langugage, there are expressions in a similar manner to C-like
-languages. For example, the following expression will evalutate to 14,
-which will be stored in the variable number:
+In the JPL langugage, there are expressions in a similar manner to
+C-like languages. For example, the following expression will evalutate
+to 14, which will be stored in the variable number:
 
 #+begin_src text
 int number = 2 + 3 * 4;
 #+end_src
 
 JPLcompiler parses this expression by turning it into a tree structure
-to make sure that the operations are evaluated in an order that respects
-operator precedence. First, it will search for the "root element" of the
-expression. For example, in the following:
+to make sure that the operations are evaluated in an order that
+respects operator precedence. First, it will search for the "root
+element" of the expression. For example, in the following:
 
 #+begin_src text
 2 + 3
@@ -747,7 +777,7 @@ The $+$ is the root element. For a more complicated example:
 2 + 3 * 4 - 5
 #+end_src
 
-The * is the root element. JPLcompiler finds the root element using the
+The - is the root element. JPLcompiler finds the root element using the
 following method:
 
 #+begin_src java
@@ -778,20 +808,24 @@ following method:
 #+end_src
 
 At the beginning of the method, there is an array of TokenTypes called
-types. This array is then iterated over in a foreach loop to see if a type
-is present in the provided tokens and returns its position in the list
-of tokens if it is, exiting the method. The order of the array is important,
-the operations with the greatest precedence are located towards the end
-of the array. This means that when the intermediate representation is generated,
-the operators with greater precedence are evaluated first, as they are
-closest to the furthest away leaves of the tree created by the expression.
-For example:
+types. This array is then iterated over in a foreach loop to see if a
+type is present in the provided tokens and returns its position in the
+list of tokens if it is, exiting the method.
+
+The order of the array is important, the operations with the greatest
+precedence are located towards the end of the array. This means that
+when the intermediate representation is generated, the operators with
+greater precedence are evaluated first, as they are closest to the
+furthest away leaves of the tree created by the expression.  For
+example:
 
 #+begin_src text
 print 2 + 3 * 4;
 #+end_src
 
 becomes:
+
+[[./expressionTree.PNG]]
 
 #+begin_src text
   {Multiply        3               4               t0             }
@@ -916,7 +950,37 @@ with a source code file as an argument to run the compiler.
 * Evaluation
 ** Product Evaluation
 
-[todo: write about third party evaluation]
+My initial strategy for evaluating the product was to get second year
+university students to use the product and record any comments they
+would make regarding its usefulness in learning.
+
+Unfortunately, due to the global Coronavirus pandemic I have been
+unable to do this. Instead, I have opted to get a couple of my fellow
+final year students to use the product under my supervision via a
+Microsoft Teams call. I have recorded these calls and received useful
+feedback from both of them.
+
+The feedback I recieved can mostly be grouped into two groups. The
+first feedback group concerns the usability of the product. One piece
+of feedback I recieved was "It would be difficult for me to figure out
+how to use the product by myself." another piece of feedback I
+received was "The syntax tree is very difficult to read." from this
+feedback I realised that the product is somewhat user unfriendly. To
+rectify this I could add a better, more detailed, help message. To
+resolve the parser readability issue I could change the output of the
+parser to look more like a tree.
+
+The second feedback group concerns problems with the compiler
+itself. I recieved feedback in which more datatypes were requested,
+and to allow for negative integers. I could have added more data types
+but chose not to in order to focus on assembly generation; however I
+have made it easy to extend JPLcompiler to add these datatypes.
+
+A critical problem was discovered where if you have a parameter that
+is the same name as a variable, the assembly generator will create
+assembly which has two variables of the same name, which is illegal. I
+could fix this using a similar method to how i name temporary
+variables, this would avoid the namespace collision.
 
 ** Project Evaluation
 *** Compiler is Functional
