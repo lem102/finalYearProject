@@ -648,6 +648,7 @@ them in order to make sure they work well together.
 Considering the difficulty levels of each stage and the order in which
 they have to be written, I think this is an appropriate plan:
 
+#+ATTR_LATEX: :width 1.3\linewidth
 [[./fypGanntChart2.PNG]]
 
 * Design
@@ -826,7 +827,10 @@ print 2 + 3 * 4;
 
 becomes:
 
+#+ATTR_LATEX: :width 0.3\linewidth
 [[./expressionTree.PNG]]
+
+Which then becomes:
 
 #+begin_src text
   {Multiply        3               4               t0             }
